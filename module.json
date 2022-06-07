@@ -1,0 +1,50 @@
+{
+  "name": "die-hard",
+  "title": "Die Hard",
+  "description": "Modifications to dice value generation, including random number generator, fudging, and karmic adjustments",
+  "version": "This is auto replaced",
+  "library": "false",
+  "manifestPlusVersion": "1.0.0",
+  "minimumCoreVersion": "9",
+  "compatibleCoreVersion": "9",
+  "authors": [
+    {
+      "name": "The League of Extraordinary FVTT Developers",
+      "url": "https://github.com/League-of-Foundry-Developers",
+      "discord": "discordID#0001"
+    },
+    {
+      "name": "Jeremy",
+      "url": "https://github.com/UranusBytes"
+    }
+  ],
+  "dependencies": [
+
+  ],
+  "conflicts": [
+    
+  ],
+  "esmodules": [
+    "scripts/module.js"
+  ],
+  "scripts": [
+    "scripts/lib/lib.js"
+  ],
+  "styles": [
+    "styles/module.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+  "url": "This is auto replaced",
+  "manifest": "This is auto replaced",
+  "download": "This is auto replaced",
+  "license": "LICENSE",
+  "readme": "README.md",
+  "media": [
+  ]
+}
