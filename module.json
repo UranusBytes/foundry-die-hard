@@ -2,7 +2,7 @@
   "name": "die-hard",
   "title": "Die Hard",
   "description": "Modifications to dice value generation, including random number generator, fudging, and karmic adjustments",
-  "version": "This is auto replaced",
+  "version": "0.0.1",
   "library": "false",
   "manifestPlusVersion": "1.0.0",
   "minimumCoreVersion": "9",
