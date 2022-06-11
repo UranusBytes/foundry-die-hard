@@ -1,0 +1,33 @@
+{
+  "name": "foundry-die-hard",
+  "title": "Die Hard",
+  "description": "TBD",
+  "author": "Jeremy",
+  "version": "0.0.2",
+  "minimumCoreVersion": "9",
+  "compatibleCoreVersion": "9",
+  "esmodules": [
+    "scripts/die-hard.js"
+  ],
+  "styles": [
+    "styles/die-hard.css"
+  ],
+  "dependencies": [
+    {
+      "name": "lib-wrapper",
+      "type": "module"
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "TBD",
+  "manifest": "TBD",
+  "readme": "TBD",
+  "changelog": "TBD",
+  "download": "TBD"
+}

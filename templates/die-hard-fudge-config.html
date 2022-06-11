@@ -1,0 +1,37 @@
+<form id="die-hard-fudge-config">
+    <h3 class="form-header">Who should this fudge be targetted at?</h3>
+    {{#each whoActors}}
+        <div class="form-group">
+            <label><input type="radio" name="draftFudgeWho" value="{{ key }}">{{ name }}</label>
+        </div>
+    {{/each}}
+
+    <h3 class="form-header">What dice roll should be fudged?</h3>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="skill_roll">Skill Roll</label>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="ability_save">Ability Save</label>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="ability_test">Ability Test</label>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="death_save">Death Save</label>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="weapons_to_hit">Weapons To Hit</label>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="spells_to_hit">Spells To Hit</label>
+    </div>
+    <div class="form-group">
+        <label><input type="radio" name="draftFudgeWhat" value="next_d20roll">Next DnD5e D20Roll</label>
+    </div>
+
+    <h3 class="form-header">What should the end total be?</h3>
+    <div class="form-group">
+      <label for="fudge-formula">Formula:</label>
+      <input type="text" class="form-control" name="draftFudgeFormula">
+    </div>
+</form>

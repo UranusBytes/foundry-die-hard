@@ -1,0 +1,8 @@
+CONFIG
+CONST
+canvas
+cookieStore
+document
+foundry
+game
+
