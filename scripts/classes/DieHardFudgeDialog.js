@@ -1,3 +1,5 @@
+import {dieHardLog} from "../lib/helpers.js";
+
 export class DieHardFudgeDialog extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
@@ -14,26 +16,50 @@ export class DieHardFudgeDialog extends FormApplication {
     });
   }
 
+  constructor() {
+    dieHardLog('DieHardFudgeDialog - constructor')
+    super();
+
+  }
+
   getData() {
-    let whoActors = []
-    console.log('Actor IDs')
-    console.log(game.actors.keys())
-    for (let actorId of game.actors.keys()) {
-      console.log('actorID: ' + actorId)
-      let curActor = game.actors.get(actorId);
-      if(curActor.data.type === 'character') {
-        whoActors.push({key: actorId, name: curActor.name})
-      }
-    }
-    console.log('whoActors')
-    console.log(whoActors)
-    return {
-        whoActors: whoActors
-      };
+    dieHardLog('DieHardFudgeDialog - getData')
+    let dialogData = {
+      whoActors: game.diehard.system.getFudgeActors(),
+      whatOptions: game.diehard.system.getFudgeWhatOptions()
+    };
+    console.log(dialogData);
+    return dialogData;
+  }
+
+  getActiveFudge() {
+    dieHardLog('DieHardFudgeDialog - getData')
+    let activeFudge = {}
+
   }
 
   async _updateObject(event, formData) {
-    console.log(formData);
+    dieHardLog('DieHardFudgeDialog : _updateObject')
+
+    if (event.submitter?.name === 'save') {
+      dieHardLog('DieHardFudgeDialog : Create fudge')
+
+      game.dieHard.fudge.who = null;
+      game.dieHard.fudge.what = null;
+      game.dieHard.fudge.formula = null;
+      return;
+    }
+
+    if (event.submitter?.name === 'cancel') {
+      dieHardLog('DieHardFudgeDialog : Cancel fudge')
+
+      game.dieHard.fudge.who = null;
+      game.dieHard.fudge.what = null;
+      game.dieHard.fudge.formula = null;
+      return;
+    }
+
+
     if(formData.draftFudgeWho != null) {
       game.dieHard.fudge.who = formData.draftFudgeWho;
     }
@@ -43,26 +69,6 @@ export class DieHardFudgeDialog extends FormApplication {
     if(formData.draftFudgeFormula != null) {
       game.dieHard.fudge.formula = formData.draftFudgeFormula;
     }
-    //Object.entries(formData).forEach(async ([key, val]) => {
-    //   // If setting is an opacity slider, convert from 1-100 to 0-1
-    //   if (['gmAlpha', 'playerAlpha', 'vThreshold'].includes(key)) val /= 100;
-    //   // If setting is a color value, convert webcolor to hex before saving
-    //   if (['gmTint', 'playerTint'].includes(key)) val = webToHex(val);
-    //   // Save settings to scene
-    //   await canvas.simplefog.setSetting(key, val);
-    //   // If saveDefaults button clicked, also save to user's defaults
-    //   if (event.submitter?.name === 'saveDefaults') {
-    //     canvas.simplefog.setUserSetting(key, val);
-    //   }
-    // });
 
-    // If save button was clicked, close app
-    //     if (event.submitter?.name === 'submit') {
-    //       Object.values(ui.windows).forEach((val) => {
-    //         if (val.id === 'simplefog-scene-config') val.close();
-    //       });
-    //     }
-    //   }
-    // }
   }
 }

@@ -1,6 +1,8 @@
+import {dieHardLog} from "../lib/helpers.js";
+
 export class DieHardSystem{
   constructor() {
-
+    dieHardLog('DieHardSystem - constructor');
   }
 
   init() {
@@ -22,11 +24,9 @@ export class DieHardSystem{
     })
   }
 
-  _dieHardDebugLog(data, force = false) {
-    if (CONFIG.debug.dieHard || force) {
-      if (typeof data === 'string') console.log(`DieHard | ${data}`);
-      else console.log('DieHard |', data);
-    }
+
+  hookReady() {
+    dieHardLog('System Hook - Ready')
   }
 
   _getRandomInt(max) {

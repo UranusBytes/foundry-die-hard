@@ -1,14 +1,21 @@
 
-import {
-  dnd5e_Actor5e_rollAbilitySave,
-  dnd5e_d20Roll_evaluate
-} from './classes/DieHardDnd5e.js'
+import {dieHardLog} from "./lib/helpers.js";
 
-import DieHardFudgeDialog from "./classes/DieHardFudgeDialog.js";
+'./lib/helpers.js';
+import {DieHardDnd5e} from './classes/DieHardDnd5e.js'
+import {DieHardFudgeDialog} from "./classes/DieHardFudgeDialog.js";
+import DieHardConfig from "./classes/DieHardConfig.js";
 
+// Debug
+if (CONFIG.debug.dieHard === null) {
+  CONFIG.debug.dieHard = true;
+} else {
+  // Do something
+  CONFIG.debug.dieHard = true;
+}
 
 Hooks.once('init', () => {
-  console.log('Die Hard | Initializing...')
+  dieHardLog('Initializing...', true)
 
   // init die-hard settings
   Object.defineProperty(game, 'diehard', {
@@ -19,41 +26,25 @@ Hooks.once('init', () => {
     });
 
   if (game.system.id == 'dnd5e') {
-    class FudgeD20Roll extends game.dnd5e.dice.D20Roll {
-      // This is a simple extension
-      constructor(formula, data, options) {
-        super(formula, data, options);
-      }
-    }
-    CONFIG.Dice.FudgeD20Roll = FudgeD20Roll;
-
-    CONFIG.debug.FudgeD20RollLoopIndex = 15;
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', dnd5e_Actor5e_rollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', dnd5e_d20Roll_evaluate, 'WRAPPER');
-    //libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype.constructor', dnd5e_d20Roll_constructor, 'WRAPPER');
-
-    // Can't, as configurable: false
-    //libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.d20Roll', dnd5e_d20Roll, 'MIXED');
+    dieHardLog('Configuring for dndn5e system', true)
+    game.diehard.system = new DieHardDnd5e;
 
   } else {
-    console.log('Unsupport game system: ' + game.system.id)
+    dieHardLog('Unsupport game system: ' + game.system.id, true)
   }
 });
 
 Hooks.once('ready', () => {
-  console.log('Die Hard | Ready...')
+  dieHardLog('Ready...', true)
+  game.diehard.system.hookReady();
 });
 
 Hooks.on('renderSidebarTab', (app, html, data) => {
   // Only display for GM
   if (!game.user.isGM) return;
 
-  console.log('renderSidebarTab');
-
-  //let button = $(`<button class='die-hard-fudge'><i class="fas fa-poop"></i></button>`);
-  // let button = $(`<div class="control-buttons"><a class="die-hard-fudge" title="Die Hard Fudge"><i class="fas fa-poop"></i></a></div>`);
+  dieHardLog('Render side bar')
   let button = $(`<label class="die-hard-fudge-icon"><i class="fas fa-poop"></i></label>`);
-
   button.click(async (ev) => {
                 new DieHardFudgeDialog().render(true);
             });
