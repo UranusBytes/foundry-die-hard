@@ -2,7 +2,7 @@
     <h3 class="form-header"><span style="font-weight: bold;">WHO: </span>Who should this fudge be targetted at?</h3>
     {{#each whoActors}}
         <div class="form-group.slim">
-            <label><input type="radio" name="draftFudgeWho" value="{{ key }}">{{ name }}</label>
+            <label><input type="radio" name="draftFudgeWho" value="{{ id }}">{{ name }}</label>
         </div>
     {{/each}}
 
@@ -10,7 +10,7 @@
     <h3 class="form-header"><span style="font-weight: bold;">WHAT: </span>What dice roll should be fudged?</h3>
     {{#each whatOptions}}
         <div class="form-group.slim">
-            <label><input type="radio" name="draftFudgeWhat" value="{{ key }}">{{ name }}</label>
+            <label><input type="radio" name="draftFudgeWhat" value="{{ id }}">{{ name }}</label>
         </div>
     {{/each}}
 
@@ -19,11 +19,12 @@
     <div class="form-group">
       <label for="fudge-formula">Formula:</label>
       <input type="text" class="form-control" name="draftFudgeFormula">
+      <i class="fas fa-question-circle" onclick="()"></i>
     </div>
 
     <div style="height:15px"></div>
     <div class="form-group">
-        <button type="submit" name="save">
+        <button type="submit" name="create">
             <i class="fas fa-check-circle"></i> Create Fudge
         </button>
         <button type="submit" name="cancel">
@@ -33,7 +34,7 @@
 
     <div style="height:30px"></div>
     <h3 class="form-header">Active Fudges</h3>
-    <table id="activeFudges">
+    <table>
         <thead>
             <tr>
                 <th>Who</th>
@@ -45,8 +46,18 @@
                 <th>Del</th>
             </tr>
         </thead>
-        <tbody id="activeFudge">
-
+        <tbody id="activeFudges">
+            {{#each activeFudge}}
+                <tr>
+                    <td>{{ whoName }}</td>
+                    <th>|</th>
+                    <td>{{ whatName }}</td>
+                    <th>|</th>
+                    <td style="text-align:center">{{ how }}</td>
+                    <th>|</th>
+                    <td class="delete-fudge" style="text-align:center" data-actor="{{ who }}" data-fudge="{{ id }}"><i class="fas fa-trash-alt"></i></td>
+                </tr>
+            {{/each}}
         </tbody>
     </table>
 

@@ -10,3 +10,7 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
 #die-hard-fudge-config .die-hard-radio {
 
 }
+
+#delete-fudge {
+  cursor: pointer;
+}

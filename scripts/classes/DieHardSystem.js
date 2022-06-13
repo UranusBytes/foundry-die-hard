@@ -2,7 +2,7 @@ import {dieHardLog} from "../lib/helpers.js";
 
 export class DieHardSystem{
   constructor() {
-    dieHardLog('DieHardSystem - constructor');
+    dieHardLog(false, 'DieHardSystem - constructor');
   }
 
   init() {
@@ -26,7 +26,7 @@ export class DieHardSystem{
 
 
   hookReady() {
-    dieHardLog('System Hook - Ready')
+    dieHardLog(false, 'System Hook - Ready')
   }
 
   _getRandomInt(max) {

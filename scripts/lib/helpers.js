@@ -1,6 +1,10 @@
-export function dieHardLog(data, force = false) {
-  if (CONFIG.debug.dieHard || force) {
-    if (typeof data === 'string') console.log(`DieHard | ${data}`);
-    else console.log('DieHard |', data);
-  }
+export function dieHardLog(force, ...args) {
+  try {
+    const isDebugging = game.modules.get('_dev-mode')?.api?.getPackageDebugValue('foundry-die-hard');
+
+    if (force || isDebugging) {
+      console.log('DieHard', '|', ...args);
+    }
+  } catch (e) {}
 }
+
