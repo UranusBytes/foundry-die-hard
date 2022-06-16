@@ -1,0 +1,24 @@
+/*
+Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/foundry-vtt-dice-calculator/-/blob/master/css/dice-calculator.css
+ */
+
+#chat-controls .die-hard-fudge-icon {
+  flex: 0 0 0;
+  padding-left: 5px;
+}
+
+/*#die-hard-fudge-config .die-hard-radio {*/
+
+/*}*/
+
+.delete-fudge {
+  cursor: pointer;
+}
+
+.blink_me {
+  animation: blinker 1s linear 5;
+}
+
+@keyframes blinker {
+  50% { opacity: 0; }
+}

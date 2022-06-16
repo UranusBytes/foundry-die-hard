@@ -1,0 +1,64 @@
+{
+  "event": {
+    "originalEvent": {
+      "isTrusted": true
+    },
+    "type": "click",
+    "target": {
+      "jQuery360044594390183764031": {
+        "events": {
+          "click": [
+            {
+              "type": "click",
+              "origType": "click",
+              "data": null,
+              "guid": 186,
+              "namespace": ""
+            }
+          ]
+        }
+      }
+    },
+    "currentTarget": {
+      "jQuery360044594390183764031": {
+        "events": {
+          "click": [
+            {
+              "type": "click",
+              "origType": "click",
+              "data": null,
+              "guid": 186,
+              "namespace": ""
+            }
+          ]
+        }
+      }
+    },
+    "relatedTarget": null,
+    "timeStamp": 7954.399999976158,
+    "jQuery36004459439018376403": true,
+    "delegateTarget": {
+      "jQuery360044594390183764031": {
+        "events": {
+          "click": [
+            {
+              "type": "click",
+              "origType": "click",
+              "data": null,
+              "guid": 186,
+              "namespace": ""
+            }
+          ]
+        }
+      }
+    },
+    "handleObj": {
+      "type": "click",
+      "origType": "click",
+      "data": null,
+      "guid": 186,
+      "namespace": ""
+    },
+    "data": null
+  }
+}

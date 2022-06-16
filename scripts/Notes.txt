@@ -1,0 +1,30 @@
+CONFIG
+CONST
+canvas
+cookieStore
+document
+foundry
+game
+
+
+
+
+
+
+
+
+
+
+
+
+// ---- Actor
+// rollSkill
+// rollAbilitySave
+// rollAbilityTest
+// rollDeathSave
+// roll
+// items: weapons
+// items: spells
+
+
+
