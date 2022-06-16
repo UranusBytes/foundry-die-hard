@@ -22,7 +22,8 @@ export class DieHardFudgeDialog extends FormApplication {
     this.pendingWho = null;
     this.pendingWhat = null;
     this.pendingHow = null;
-
+    this.operator = null;
+    this.operatorValue = null;
   }
 
   getData() {
@@ -35,17 +36,6 @@ export class DieHardFudgeDialog extends FormApplication {
     };
     return dialogData;
   }
-
-  // async _renderActiveFudge() {
-  //   dieHardLog(false, 'DieHardFudgeDialog - _renderActiveFudge')
-  //   renderTemplate('./modules/foundry-die-hard/templates/die-hard-fudge-config-active.html', {activeFudge: this.getAllActiveFudges()}).then(this.updateActiveFudge);
-  // }
-
-  // updateActiveFudge(renderedContent) {
-  //   dieHardLog(false, 'DieHardFudgeDialog - updateActiveFudge')
-  //   $('#activeFudges').html(renderedContent)
-  //   this._render();
-  // }
 
   getAllActiveFudges() {
     let activeFudges = [];
@@ -77,10 +67,96 @@ export class DieHardFudgeDialog extends FormApplication {
        (c ^ (window.crypto || window.msCrypto).getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
    }
 
+   // Inspired by https://github.com/troygoode/fvtt-fudge/blob/main/modules/hooks.js
+   _parseFormula(rawFormula) {
+    const TARGET_FORMAT = /([^\d]*)[\s]*([\d]+)/;
+    const match = rawFormula.match(TARGET_FORMAT);
+    if (match == null) {
+      return undefined;
+    }
+    const operator = match[1].trim();
+    const operatorValue = parseInt(match[2].trim());
+    switch (operator) {
+      case "lt":
+      case "<":
+        return {
+          how: '< ' + operatorValue,
+          operator: "<",
+          operatorValue: operatorValue
+        };
+
+      case "lte":
+      case "<=":
+        return {
+          how: '<= ' + operatorValue,
+          operator: "<=",
+          operatorValue: operatorValue
+        };
+      case "gt":
+      case ">":
+        return {
+          how: '> ' + operatorValue,
+          operator: ">",
+          operatorValue: operatorValue
+        };
+      case "gte":
+      case ">=":
+        return {
+          how: '>= ' + operatorValue,
+          operator: ">=",
+          operatorValue: operatorValue
+        };
+      case "eq":
+      case "=":
+      case "==":
+      case "===":
+        return {
+          how: '= ' + operatorValue,
+          operator: "=",
+          operatorValue: operatorValue
+        };
+      case "<>":
+      case "!=":
+      case "ne":
+        return {
+          how: '!= ' + operatorValue,
+          operator: "!=",
+          operatorValue: operatorValue
+        };
+      default:
+        return undefined;
+    };
+  };
+
+
   async _updateObject(event, formData) {
     dieHardLog(false, 'DieHardFudgeDialog : _updateObject')
 
-    console.log('pendingWho', formData)
+    if (formData.draftFudgeWho != null) {
+      this.pendingWho = formData.draftFudgeWho;
+    }
+    if (formData.draftFudgeWhat != null) {
+      this.pendingWhat = formData.draftFudgeWhat;
+    }
+    if (formData.draftFudgeFormula != null) {
+      //validate the formula
+      this.pendingHow = formData.draftFudgeFormula;
+      let parsedHow = this._parseFormula(formData.draftFudgeFormula)
+      if (formData.draftFudgeFormula === '') {
+        // Do nothing
+      }
+      else if (parsedHow === undefined) {
+        document.getElementById('draftFudgeFormula').style.backgroundColor = "#ff6961"
+        return;
+      } else {
+        document.getElementById('draftFudgeFormula').style.backgroundColor = ""
+        this.pendingHow = parsedHow.how;
+        this.pendingHowOperator = parsedHow.operator;
+        this.pendingHowOperatorValue = parsedHow.operatorValue;
+        document.getElementById('draftFudgeFormula').value = this.pendingHow;
+      }
+    }
+
     if (event.submitter?.name === 'create') {
       dieHardLog(false, 'DieHardFudgeDialog : Create fudge for ' + this.pendingWho)
 
@@ -91,7 +167,9 @@ export class DieHardFudgeDialog extends FormApplication {
       actorFudges.push({
           id: this._uuidv4(),
           what: this.pendingWhat,
-          how: this.pendingHow
+          how: this.pendingHow,
+          operator: this.pendingHowOperator,
+          operatorValue: this.pendingHowOperatorValue
         }
       )
 
@@ -100,6 +178,8 @@ export class DieHardFudgeDialog extends FormApplication {
       this.pendingWho = null;
       this.pendingWhat = null;
       this.pendingHow = null;
+      this.operator = null;
+      this.operatorValue = null;
 
       formData.draftFudgeWho = null;
       formData.draftFudgeWhat = null;
@@ -109,29 +189,17 @@ export class DieHardFudgeDialog extends FormApplication {
       return;
     }
 
-    //this._renderActiveFudge()
-
     if (event.submitter?.name === 'cancel') {
       dieHardLog(false, 'DieHardFudgeDialog : Cancel fudge')
 
       this.pendingWho = null;
       this.pendingWhat = null;
       this.pendingHow = null;
+      this.operator = null;
+      this.operatorValue = null;
       this.close();
       return;
     }
-
-
-    if (formData.draftFudgeWho != null) {
-      this.pendingWho = formData.draftFudgeWho;
-    }
-    if (formData.draftFudgeWhat != null) {
-      this.pendingWhat = formData.draftFudgeWhat;
-    }
-    if (formData.draftFudgeFormula != null) {
-      this.pendingHow = formData.draftFudgeFormula;
-    }
-
   }
 
   _deleteFudge(event) {
@@ -145,10 +213,14 @@ export class DieHardFudgeDialog extends FormApplication {
     this.render()
   }
 
+  _helpFudge(event) {
+    // ToDo: build this out
+  }
   activateListeners(html) {
     dieHardLog(false, 'DieHardFudgeDialog : activateListeners')
     super.activateListeners(html);
     html.find(".delete-fudge").on('click', this._deleteFudge.bind(this));
+    html.find(".fudge-help").on('click', this._helpFudge.bind(this));
   }
 }
 

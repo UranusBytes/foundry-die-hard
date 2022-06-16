@@ -7,10 +7,18 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   padding-left: 5px;
 }
 
-#die-hard-fudge-config .die-hard-radio {
+/*#die-hard-fudge-config .die-hard-radio {*/
 
+/*}*/
+
+.delete-fudge {
+  cursor: pointer;
 }
 
-#delete-fudge {
-  cursor: pointer;
+.blink_me {
+  animation: blinker 1s linear 5;
+}
+
+@keyframes blinker {
+  50% { opacity: 0; }
 }

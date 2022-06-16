@@ -32,23 +32,4 @@ export class DieHardSystem{
   _getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
-  // function sleep(milliseconds) {
-  //   const date = Date.now();
-  //   let currentDate = null;
-  //   do {
-  //     currentDate = Date.now();
-  //   } while (currentDate - date < milliseconds);
-  // }
-  //
-  //
-  //
-  // function get_new_result() {
-  //   const minResult = 15;
-  //   var newResult = 0;
-  //   while (newResult < minResult) {
-  //     newResult = getRandomInt(20)
-  //   }
-  //   return newResult;
-  // }
-
 }
