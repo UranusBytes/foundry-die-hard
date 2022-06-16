@@ -1,8 +1,8 @@
 {
   "name": "foundry-die-hard",
   "title": "Die Hard",
-  "description": "TBD",
-  "author": "Jeremy",
+  "description": "Adjustments for DND5e die rolls like fudging...",
+  "author": "Jeremy (UranusBytes)",
   "version": "0.0.2",
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",
@@ -25,9 +25,9 @@
       "path": "lang/en.json"
     }
   ],
-  "url": "TBD",
+  "url": "https://github.com/UranusBytes/foundry-die-hard",
   "manifest": "TBD",
-  "readme": "TBD",
-  "changelog": "TBD",
+  "readme": "https://github.com/UranusBytes/foundry-die-hard/blob/main/README.md",
+  "changelog": "https://github.com/UranusBytes/foundry-die-hard/blob/main/CHANGELOG.md",
   "download": "TBD"
 }
