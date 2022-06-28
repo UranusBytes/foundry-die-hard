@@ -1,64 +1,99 @@
 <form id="die-hard-fudge-config">
-    <h3 class="form-header"><span style="font-weight: bold;">WHO: </span>Who should this fudge be targetted at?</h3>
-    {{#each whoActors}}
-        <div class="form-group.slim">
-            <label><input type="radio" name="draftFudgeWho" value="{{ id }}">{{ name }}</label>
-        </div>
-    {{/each}}
-
-    <div style="height:15px"></div>
-    <h3 class="form-header"><span style="font-weight: bold;">WHAT: </span>What dice roll should be fudged?</h3>
-    {{#each whatOptions}}
-        <div class="form-group.slim">
-            <label><input type="radio" name="draftFudgeWhat" value="{{ id }}">{{ name }}</label>
-        </div>
-    {{/each}}
-
-        <div style="height:15px"></div>
-    <h3 class="form-header"><span style="font-weight: bold;">HOW: </span>How should the end total be fudged?</h3>
-    <div class="form-group">
-      <label for="fudge-formula">Formula:</label>
-      <input type="text" class="form-control" name="draftFudgeFormula" id="draftFudgeFormula">
-      <i class="fas fa-question-circle fudge-help"></i>
-    </div>
-
-    <div style="height:15px"></div>
-    <div class="form-group">
-        <button type="submit" name="create">
-            <i class="fas fa-check-circle"></i> Create Fudge
-        </button>
-        <button type="submit" name="cancel">
-            <i class="fas fa-ban"></i> Cancel
-        </button>
-    </div>
-
-    <div style="height:30px"></div>
-    <h3 class="form-header">Active Fudges</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Who</th>
-                <th>|</th>
-                <th>What</th>
-                <th>|</th>
-                <th>How</th>
-                <th>|</th>
-                <th>Del</th>
-            </tr>
-        </thead>
-        <tbody id="activeFudges">
-            {{#each activeFudge}}
-                <tr>
-                    <td>{{ whoName }}</td>
-                    <th>|</th>
-                    <td>{{ whatName }}</td>
-                    <th>|</th>
-                    <td style="text-align:center">{{ how }}</td>
-                    <th>|</th>
-                    <td class="delete-fudge" style="text-align:center" data-actor="{{ who }}" data-fudge="{{ id }}"><i class="fas fa-trash-alt"></i></td>
-                </tr>
+<div>
+    <div class="die-hard-column" style="">
+            <h3 class="form-header" id="fudgeWhoHeader"><span style="font-weight: bold;">WHO: </span>Who should this fudge be targetted at?</h3>
+            <div class="die-hard-form-group">
+                <input type="checkbox" name="fudgeWho" value="gameMaster" class="die-hard-checkbox" id="fudgeWho-gameMaster"><label for="fudgeWho-gameMaster">Game Master</label>
+            </div>
+            <div class="die-hard-form-group">
+            {{#each whoActors}}
+                <input type="checkbox" name="fudgeWho" value="{{ id }}" class="die-hard-checkbox" id="fudgeWho-{{ id }}"><label for="fudgeWho-{{ id }}">{{ name }}</label>
             {{/each}}
-        </tbody>
-    </table>
+            </div>
 
+            <div style="height:15px"></div>
+            <h3 class="form-header" id="fudgeWhatHeader"><span style="font-weight: bold;">WHAT: </span>What roll result should be fudged?</h3>
+
+            <div class="die-hard-form-group" style="flex-wrap: wrap; flex-direction: row;">
+            {{#each whatOptions}}
+                <input type="radio" name="fudgeWhat" value="{{ id }}" class="die-hard-radio" id="fudgeWhat-{{ id }}"><label for="fudgeWhat-{{ id }}">{{ name }}</label>
+            {{/each}}
+            </div>
+            <h3 class="form-header" id="fudgeWhatHeader" style="border: 0px;"><span style="font-weight: bold; padding-left:25px;">OR: </span>What raw dice roll should be fudged?</h3>
+            <div class="die-hard-form-group" style="flex-wrap: wrap; flex-direction: row;">
+                <input type="radio" name="fudgeWhat" value="rawd100" class="die-hard-radio" id="fudgeWhat-rawd100"><label for="fudgeWhat-rawd100">d100</label>
+                <input type="radio" name="fudgeWhat" value="rawd20" class="die-hard-radio" id="fudgeWhat-rawd20"><label for="fudgeWhat-rawd20">d20</label>
+                <input type="radio" name="fudgeWhat" value="rawd12" class="die-hard-radio" id="fudgeWhat-rawd12"><label for="fudgeWhat-rawd12">d12</label>
+                <input type="radio" name="fudgeWhat" value="rawd10" class="die-hard-radio" id="fudgeWhat-rawd10"><label for="fudgeWhat-rawd10">d10</label>
+                <input type="radio" name="fudgeWhat" value="rawd8" class="die-hard-radio" id="fudgeWhat-rawd8"><label for="fudgeWhat-rawd8">d8</label>
+                <input type="radio" name="fudgeWhat" value="rawd6" class="die-hard-radio" id="fudgeWhat-rawd6"><label for="fudgeWhat-rawd6">d6</label>
+                <input type="radio" name="fudgeWhat" value="rawd4" class="die-hard-radio" id="fudgeWhat-rawd4"><label for="fudgeWhat-rawd4">d4</label>
+            </div>
+                <div style="height:15px"></div>
+            <h3 class="form-header" id="fudgeHowHeader"><span style="font-weight: bold;">HOW: </span>How should the end total be fudged?</h3>
+            <div class="form-group">
+              <label for="fudge-formula">Formula:</label>
+              <input type="text" class="form-control die-hard-column-input-formula" name="fudgeFormula" id="fudgeFormula" value="">
+              <i class="fas fa-question-circle fudge-help"></i>
+              <label for="fudge-formula">Times:</label>
+              <input type="text" class="form-control die-hard-column-input-times" name="fudgeTimes" id="fudgeTimes">
+            </div>
+
+            <div style="height:15px"></div>
+            <div class="form-group">
+                <button type="submit" name="create">
+                    <i class="fas fa-check-circle"></i> Create Fudge
+                </button>
+                <button type="submit" name="cancel">
+                    <i class="fas fa-ban"></i> Cancel
+                </button>
+            </div>
+
+    </div>
+    <div class="die-hard-column">
+        <h3 class="form-header">Active Fudges</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Who</th>
+                    <th>|</th>
+                    <th>What</th>
+                    <th>|</th>
+                    <th>How</th>
+                    <th>|</th>
+                    <th>Status</th>
+                    <th>|</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="activeFudges">
+                {{#each actorFudges }}
+                    <tr>
+                        <td>{{ whoName }}</td>
+                        <th>|</th>
+                        <td>{{ whatName }}</td>
+                        <th>|</th>
+                        <td style="text-align:center">{{ how }}</td>
+                        <th>|</th>
+                        <td class="toggle-fudge" data-actor="{{ who }}" data-fudge="{{ id }}">
+                            {{#if statusActive}}
+                                <i class="fas fa-toggle-off" title="Disable Fudge"></i>
+                            {{else}}
+                                <i class="fas fa-toggle-on" title="Enable Fudge"></i>
+                            {{/if}}
+                        </td>
+                        <th>|</th>
+                        <td class="delete-fudge" data-actor="{{ who }}" data-fudge="{{ id }}">
+                            <!--
+                            <i class="fas fa-pause-circle"></i>
+                            <i class="fas fa-play-circle"></i>
+                            -->
+                            <i class="fas fa-trash-alt" title="Delete"></i>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
 </form>

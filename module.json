@@ -3,7 +3,7 @@
   "title": "Die Hard",
   "description": "Adjustments for DND5e die rolls like fudging...",
   "author": "Jeremy (UranusBytes)",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",
   "esmodules": [

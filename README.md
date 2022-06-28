@@ -52,6 +52,8 @@ The way Fudge works is that the next die roll of that type for that Actor will b
 
 ![die-hard-fudge-4](docs/die-hard-fudge-4.jpg)
 
+### Known Issues
+* TBD
 
 ## Future Planned Functionality
 ### Karmic dice

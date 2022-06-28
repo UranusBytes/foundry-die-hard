@@ -55,17 +55,6 @@ export class DieHardDnd5e extends DieHardSystem{
     dieHardLog(false, 'Dnd 5e System Hook - Ready');
   }
 
-  getFudgeActors() {
-    dieHardLog(false, 'DieHardDnd5e - getFudgeActors');
-    let whoActors = []
-    for (let actorId of game.actors.keys()) {
-      let curActor = game.actors.get(actorId);
-      if(curActor.data.type === 'character') {
-        whoActors.push({id: actorId, name: curActor.name})
-      }
-    }
-    return whoActors;
-  }
 
   getFudgeWhatOptions() {
     return this.fudgeWhatOptions;
@@ -188,6 +177,8 @@ export class DieHardDnd5e extends DieHardSystem{
       // Delete the fudge from the actor
       let deletedFudge = actorFudges.splice(fudgeIndex,1)
       game.actors.get(actorId).setFlag('foundry-die-hard', 'activeFudges', actorFudges);
+      // Check if still have active fudges;
+      this.refreshActiveFudgesIcon();
     }
   }
 
@@ -220,5 +211,7 @@ export class DieHardDnd5e extends DieHardSystem{
     game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
     wrapped(options);
   }
+
+
 }
 

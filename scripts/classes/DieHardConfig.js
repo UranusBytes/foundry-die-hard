@@ -45,7 +45,8 @@ export default class DieHardConfig {
       system: null,
       fudgeConfig: {
         maxFudgeAttemptsPerRoll: 150
-      }
+      },
+      gmFudges: []
     };
 
     if (game.system.id == 'dnd5e') {
