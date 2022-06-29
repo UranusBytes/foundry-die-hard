@@ -8,3 +8,6 @@ export function dieHardLog(force, ...args) {
   } catch (e) {}
 }
 
+export function insertAfter(newNode, existingNode) {
+    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}

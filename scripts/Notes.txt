@@ -28,3 +28,8 @@ game
 
 
 
+
+
+Fudges are maintained as:
+- For PC actors, as flags within the actor
+- For GM, as Setting - scope world
