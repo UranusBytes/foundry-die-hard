@@ -216,7 +216,6 @@ export class DieHardFudgeDialog extends FormApplication {
           fudgeTimes = Number.parseInt(formData.fudgeTimes);
         }
 
-        console.log('debug0')
         let whatName = whatOptions.find(element => element.id === formData.fudgeWhat).name;
         for (let loopIndex = 0; loopIndex < fudgeTimes; loopIndex++) {
           actorFudges.push({
@@ -233,7 +232,6 @@ export class DieHardFudgeDialog extends FormApplication {
           )
         }
         if (actorId === 'gameMaster') {
-          console.log('debug1')
           game.settings.get('foundry-die-hard', 'dieHardSettings').gmFudges = actorFudges;
         } else {
           game.actors.get(actorId).setFlag('foundry-die-hard', 'actorFudges', actorFudges);
