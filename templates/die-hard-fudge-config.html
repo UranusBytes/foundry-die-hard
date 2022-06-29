@@ -2,6 +2,8 @@
 <div>
     <div class="die-hard-column" style="">
             <h3 class="form-header" id="fudgeWhoHeader"><span style="font-weight: bold;">WHO: </span>Who should this fudge be targetted at?</h3>
+            <!-- ugly hack to make single checkbox still an array -->
+            <input type="checkbox" name="fudgeWho" value="hidden" class="die-hard-checkbox" id="fudgeWho-hidden" style="visibility: hidden">
             <div class="die-hard-form-group">
                 <input type="checkbox" name="fudgeWho" value="gameMaster" class="die-hard-checkbox" id="fudgeWho-gameMaster"><label for="fudgeWho-gameMaster">Game Master</label>
             </div>
@@ -33,7 +35,7 @@
             <h3 class="form-header" id="fudgeHowHeader"><span style="font-weight: bold;">HOW: </span>How should the end total be fudged?</h3>
             <div class="form-group">
               <label for="fudge-formula">Formula:</label>
-              <input type="text" class="form-control die-hard-column-input-formula" name="fudgeFormula" id="fudgeFormula" value="">
+              <input type="text" class="form-control die-hard-column-input-formula" name="fudgeFormula" id="fudgeFormula" value="> 5">
               <i class="fas fa-question-circle fudge-help"></i>
               <label for="fudge-formula">Times:</label>
               <input type="text" class="form-control die-hard-column-input-times" name="fudgeTimes" id="fudgeTimes">
