@@ -29,11 +29,23 @@ export class DieHardSystem{
    */
   getActors() {
     dieHardLog(false, 'DieHardSystem - getActors');
+    let onlinePlayers = []
+    for (let playerId of game.users.keys()) {
+      if (!(game.users.get(playerId).isGM) && game.users.get(playerId).active) {
+        onlinePlayers.push(playerId)
+      }
+    }
     let actors = []
+    actorList:
     for (let actorId of game.actors.keys()) {
       let curActor = game.actors.get(actorId);
       if(curActor.data.type === 'character') {
-        actors.push({id: actorId, name: curActor.name})
+        for (let playerId of onlinePlayers) {
+          if (curActor.data.permission[playerId] !== undefined) {
+            actors.push({id: actorId, name: curActor.name})
+            continue actorList
+          }
+        }
       }
     }
     return actors;
