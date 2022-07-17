@@ -38,10 +38,11 @@ input.die-hard-checkbox {
   display:none !important;
 }
 input.die-hard-checkbox + label {
-  padding: 5px 10px;
-  margin: 2px 5px 2px 5px;
+  padding: 5px 5px;
+  margin: 5px 5px 5px 5px;
   background-color: #e7e7e7;
-  border-color: #ddd;
+  /* border-color: #ddd; */
+  border: 1px solid #3d3d3d;
   transition: background-color 0.3s ease-in-out;
   border-radius: 3px;
   cursor: pointer !important
@@ -56,10 +57,11 @@ input.die-hard-radio {
   display:none !important;
 }
 input.die-hard-radio + label {
-  padding: 5px 10px;
-  margin: 2px 5px 2px 5px;
+  padding: 5px 5px;
+  margin: 5px 5px 5px 5px;
   background-color: #e7e7e7;
-  border-color: #ddd;
+  /* border-color: #ddd; */
+  border: 1px solid #3d3d3d;
   transition: background-color 0.3s ease-in-out;
   border-radius: 3px;
   cursor: pointer !important

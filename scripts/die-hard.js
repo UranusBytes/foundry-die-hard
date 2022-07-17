@@ -1,5 +1,6 @@
 
 import {dieHardLog, insertAfter} from "./lib/helpers.js";
+import {registerDieHardTests} from "./classes/DieHardTests.js";
 
 import {DieHardFudgeDialog} from "./classes/DieHardFudgeDialog.js";
 import DieHardConfig from "./classes/DieHardConfig.js";
@@ -15,6 +16,7 @@ import DieHardConfig from "./classes/DieHardConfig.js";
 Hooks.once('init', () => {
   dieHardLog(true, 'Initializing...')
 
+  // CONFIG.diehard.allActors = true;
   DieHardConfig.registerSettings();
 
 });
@@ -60,3 +62,5 @@ Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag('foundry-die-hard');
 });
 
+// If FVTT-Quench installed, register tests
+Hooks.on('quenchReady', registerDieHardTests);

@@ -1,4 +1,4 @@
-export class DieHardFudge {
+export class DEPRECATED_DieHardFudge {
   constructor() {
 
   }
