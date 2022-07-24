@@ -9,3 +9,7 @@ Jun 25, 2022
 * Major refactor of system code to support flexibility
 * Adjust dialog to support new UI/UX
 * TOTALLY BROKEN fudging of rolls
+
+## v0.0.4-ALPHA.0
+Jul 23, 2022
+* Refactor of all

@@ -43,6 +43,9 @@ export default class DieHardConfig {
     dieHardLog(true, 'DieHardConfig - registerSettings')
     let dieHardSettings = {
       system: null,
+      debug: {
+        allActors: true
+      },
       fudgeConfig: {
         maxFudgeAttemptsPerRoll: 150
       },

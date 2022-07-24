@@ -1,0 +1,20 @@
+DND5e Hooks
+- preRollAbilitySave
+- preRollAbilityCheck
+- preRollDeathSave
+- preRollSkillCheck
+
+- RollAbilitySave
+- RollAbilityCheck
+- RollDeathSave
+- RollSkillCheck
+
+- preItemRoll
+- preAttackRoll
+- preDamageRoll
+
+- ItemRoll
+- AttackRoll (item, roll, actor, rollOptions)
+- Damageroll
+
+- itemTemplateSet ?

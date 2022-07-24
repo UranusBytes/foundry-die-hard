@@ -38,10 +38,11 @@ input.die-hard-checkbox {
   display:none !important;
 }
 input.die-hard-checkbox + label {
-  padding: 5px 10px;
-  margin: 2px 5px 2px 5px;
+  padding: 5px 5px;
+  margin: 5px 5px 5px 5px;
   background-color: #e7e7e7;
-  border-color: #ddd;
+  /* border-color: #ddd; */
+  border: 1px solid #3d3d3d;
   transition: background-color 0.3s ease-in-out;
   border-radius: 3px;
   cursor: pointer !important
@@ -56,10 +57,11 @@ input.die-hard-radio {
   display:none !important;
 }
 input.die-hard-radio + label {
-  padding: 5px 10px;
-  margin: 2px 5px 2px 5px;
+  padding: 5px 5px;
+  margin: 5px 5px 5px 5px;
   background-color: #e7e7e7;
-  border-color: #ddd;
+  /* border-color: #ddd; */
+  border: 1px solid #3d3d3d;
   transition: background-color 0.3s ease-in-out;
   border-radius: 3px;
   cursor: pointer !important
@@ -87,6 +89,17 @@ div.die-hard-form-group {
 }
 
 
+.endless-fudge {
+  cursor: pointer;
+  text-align:center;
+}
+.endless-fudge-enabled {
+  cursor: pointer;
+  text-align:center;
+  animation-name: die-hard-form-endless-fudge-enabled;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
 .delete-fudge {
   cursor: pointer;
   text-align:center;
@@ -123,6 +136,21 @@ div.die-hard-form-group {
   }
   100 {
     background-color: initial;
+  }
+}
+
+@keyframes die-hard-form-endless-fudge-enabled {
+  0% {
+    background-color: initial;
+    -webkit-text-stroke: 1px #77DD77;
+  }
+  50% {
+    background-color: #77DD77;
+    -webkit-text-stroke: 1px #77DD77;
+  }
+  100 {
+    background-color: initial;
+  -webkit-text-stroke: 1px #77DD77;
   }
 }
 
