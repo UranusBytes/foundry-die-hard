@@ -206,8 +206,11 @@ export class DieHardDnd5e extends DieHardSystem{
       if (userFudges[fudgeIndex].statusEndless) {
         dieHardLog(false, 'DieHardSystem.wrappedRoll - fudge is endless');
       } else {
+        // Disable the fudge
+        userFudges[fudgeIndex].statusActive = false
+
         // Delete the fudge from the user
-        let deletedFudge = userFudges.splice(fudgeIndex, 1)
+        // let deletedFudge = userFudges.splice(fudgeIndex, 1)
         game.users.current.setFlag('foundry-die-hard', 'fudges', userFudges);
         // Check if still have active fudges;
         this.refreshActiveFudgesIcon();

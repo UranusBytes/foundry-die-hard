@@ -94,6 +94,9 @@ export class DieHardSystem{
         }
         // dieHardLog(false, 'DieHardDnd5e - wrapRollEvaluate - die', this.dice[die]);
 
+        // Check if actor has an active raw fudge
+
+
         // Check if user has an active raw fudge
         let userFudges = game.users.current.getFlag('foundry-die-hard', 'fudges');
         if (! Array.isArray(userFudges)) {
@@ -108,8 +111,11 @@ export class DieHardSystem{
           if (userFudges[fudgeIndex].statusEndless) {
             dieHardLog(false, 'DieHardSystem.wrappedRoll - fudge is endless');
           } else {
+            // Disable the fudge
+            userFudges[fudgeIndex].statusActive = false
+
             // Delete the fudge from the user
-            let deletedFudge = userFudges.splice(fudgeIndex,1)
+            // let deletedFudge = userFudges.splice(fudgeIndex,1)
             game.users.current.setFlag('foundry-die-hard', 'fudges', userFudges);
             // Check if still have active fudges;
             game.settings.get('foundry-die-hard', 'dieHardSettings').system.refreshActiveFudgesIcon()
@@ -161,12 +167,11 @@ export class DieHardSystem{
                 dmMessage += ',' + new_roll.total;
               }
             }
+            if (SafetyLoopIndex === 0) {
+              dieHardLog(false, 'DieHardSystem - wrapRollEvaluate: Tried until retry safety killed...');
+              game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm('DieHard-Fudge: Gave up trying to fudge; loop safety reached...');
+            }
           }
-
-
-            // let newRoll = new DieHardFudgeRoll(this._formula, this.data, this.options)
-            // newRoll.evaluate({async:false})
-            // dieHardLog(false, 'DieHardDnd5e.wrappedRoll - new roll', newRoll);
         }
 
       } else {
