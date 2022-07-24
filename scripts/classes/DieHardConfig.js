@@ -1,5 +1,5 @@
 import {dieHardLog} from "../lib/helpers.js";
-import {DieHardDnd5e} from "./DieHardDnd5e.js";
+import DieHardDnd5e from "./DieHardDnd5e.js";
 
 export default class DieHardConfig {
   // static get defaultOptions() {

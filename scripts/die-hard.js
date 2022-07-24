@@ -2,7 +2,8 @@
 import {dieHardLog, insertAfter} from "./lib/helpers.js";
 import {registerDieHardTests} from "./classes/DieHardTests.js";
 
-import {DieHardFudgeDialog} from "./classes/DieHardFudgeDialog.js";
+import DieHard from "./classes/DieHard.js";
+import DieHardFudgeDialog from "./classes/DieHardFudgeDialog.js";
 import DieHardConfig from "./classes/DieHardConfig.js";
 
 // Debug

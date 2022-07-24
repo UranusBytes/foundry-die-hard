@@ -26,8 +26,11 @@ Extensive logging is used within the module, with debug logging enabled with the
 * Actors throwing raw It's possible to define a fudge that is impossible to achieve (especially when considering modifiers.  Or to define a fudge of "> 20" for a d20).  The failsafe is attempting to fudge 150 times, at which point the closest possible is provided.
 * When the fudge config dialog is open, fudge status/list is not updated if any are changed by other GMs and/or PC/Actor rolls
 
-## Currently Supported Functionality
-### Fudge
+# Current module Functionality
+## Fudge
+Allow the GM to influence die rolls
+
+# Fudge
 ![die-hard-fudge](docs/die-hard-fudge.jpg)
 
 With the module enabled, a poop icon will be displayed above the message tray. 
@@ -67,6 +70,6 @@ The way Fudge works is that the next die roll of that type (either system specif
 
 
 
-## Future Planned Functionality
-### Karmic dice
+# Future Planned Functionality
+## Karmic dice
 All for gradual adjustment/influence of player dice over time...

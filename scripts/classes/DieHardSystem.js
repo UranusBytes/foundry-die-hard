@@ -1,8 +1,8 @@
 import {dieHardLog} from "../lib/helpers.js";
-import {DieHardFudgeRoll} from "./DieHardFudgeRoll.js";
-import {DieHardFudgeD20Roll} from "./DieHardFudgeD20Roll.js";
+import DieHardFudgeRoll from "./DieHardFudgeRoll.js";
+import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
 
-export class DieHardSystem{
+export default class DieHardSystem{
   constructor() {
     dieHardLog(false, 'DieHardSystem - constructor');
 
