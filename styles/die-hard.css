@@ -89,6 +89,17 @@ div.die-hard-form-group {
 }
 
 
+.endless-fudge {
+  cursor: pointer;
+  text-align:center;
+}
+.endless-fudge-enabled {
+  cursor: pointer;
+  text-align:center;
+  animation-name: die-hard-form-endless-fudge-enabled;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
 .delete-fudge {
   cursor: pointer;
   text-align:center;
@@ -125,6 +136,21 @@ div.die-hard-form-group {
   }
   100 {
     background-color: initial;
+  }
+}
+
+@keyframes die-hard-form-endless-fudge-enabled {
+  0% {
+    background-color: initial;
+    -webkit-text-stroke: 1px #77DD77;
+  }
+  50% {
+    background-color: #77DD77;
+    -webkit-text-stroke: 1px #77DD77;
+  }
+  100 {
+    background-color: initial;
+  -webkit-text-stroke: 1px #77DD77;
   }
 }
 

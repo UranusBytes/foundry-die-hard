@@ -10,8 +10,10 @@ export class DieHardDnd5e extends DieHardSystem{
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
+
     libWrapper.register('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
+
     libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
 
     // See notes in DieHardFudgeD20Roll
@@ -52,22 +54,6 @@ export class DieHardDnd5e extends DieHardSystem{
     dieHardLog(false, 'Dnd 5e System Hook - Ready');
   }
 
-
-  getFudgeWhatOptions() {
-    return this.fudgeWhatOptions;
-  }
-
-  _evalFudge(result, operator, operatorValue) {
-    dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll - _evalFudge', result, operator, operatorValue);
-    switch (operator) {
-      case '>':   return result > operatorValue;
-      case '<':   return result < operatorValue;
-      case '>=':  return result >= operatorValue;
-      case '<=':  return result <= operatorValue;
-      case '!=':  return result !== operatorValue;
-      case '=': return result === operatorValue;
-    }
-  }
   isPromise(p) {
     if (typeof p === 'object' && typeof p.then === 'function') {
       return true;
@@ -78,15 +64,15 @@ export class DieHardDnd5e extends DieHardSystem{
 
   fudgeD20Roll(result, evaluate_options) {
     dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll');
-    dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll - result', result);
+    // dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll - result', result);
     let fudgeOperator = result.data.fudgeOperator
     let fudgeOperatorValue = result.data.fudgeOperatorValue
 
     let gen_new_result = false;
-    let evalResult = this._evalFudge(result.total, fudgeOperator, fudgeOperatorValue)
+    let evalResult = this.evalFudge(result.total, fudgeOperator, fudgeOperatorValue)
     if (evalResult) {
       dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: Fudge not needed, but still wiped from actor');
-      this._dmToGm('DieHard-Fudge: Fudge not needed, but still wiped from actor...');
+      this.dmToGm('DieHard-Fudge: Fudge not needed, but still wiped from actor...');
     } else {
       gen_new_result = true;
       let dmMessage = "Fudge (" + result.data.fudgeHow + ") values:" + result.total;
@@ -111,24 +97,29 @@ export class DieHardDnd5e extends DieHardSystem{
             halflingLucky: result.options.halflingLucky,
             reliableTalent: result.options.reliableTalent
           });
-
-        new_roll.evaluate({async: false, minimize: evaluate_options.minimize, maximize: evaluate_options.maximize});
+        new_roll.evaluate({ async: false, minimize: evaluate_options.minimize, maximize: evaluate_options.maximize });
         dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: New roll: ', new_roll)
 
-        evalResult = this._evalFudge(new_roll.total, fudgeOperator, fudgeOperatorValue)
+        evalResult = this.evalFudge(new_roll.total, fudgeOperator, fudgeOperatorValue)
         if (evalResult) {
           dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: New result: ' + new_roll.total)
           gen_new_result = false;
           foundry.utils.mergeObject(result, new_roll);
-          this._dmToGm(dmMessage);
+          this.dmToGm(dmMessage);
         } else {
-          dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: New result insufficient (' + new_roll.total + ").  Try again...")
+          // New roll is insufficient, but lets at least check if it is "closer"
+          if (this.isBetterFudge(result.total, new_roll.total, fudgeOperator, fudgeOperatorValue)) {
+            dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: New result insufficient, but at least better (' + new_roll.total + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
+            foundry.utils.mergeObject(result, new_roll);
+          } else {
+            dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: New result insufficient (' + new_roll.total + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
+          }
           dmMessage += ',' + new_roll.total;
         }
       }
       if (SafetyLoopIndex === 0) {
         dieHardLog(false, 'DieHardDnd5e - fudgeD20Roll: Tried until retry safety killed...');
-        this._dmToGm('DieHard-Fudge: Gave up trying to fudge; loop safety reached...');
+        this.dmToGm('DieHard-Fudge: Gave up trying to fudge; loop safety reached...');
       }
     }
 
@@ -137,14 +128,9 @@ export class DieHardDnd5e extends DieHardSystem{
   }
 
   d20rollEvaluate(wrapped, evaluate_options) {
-    wrapped(evaluate_options);
-    return
-    /*
-    dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate');
-    dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate - data', this.data);
+    dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate', this.data);
 
     let fudge = false;
-    //dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate - this', this);
     if (this.data.fudge === true) {
       evaluate_options.async = false;
 
@@ -159,15 +145,24 @@ export class DieHardDnd5e extends DieHardSystem{
     } else {
       dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate - No fudging planned for this roll');
     }
-    let result = wrapped(evaluate_options);
-    dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate - orig result', result);
 
+    let result = wrapped.call(evaluate_options)
+    // If a fudge re-roll is allowed
+    if (fudge){
+      result.then(function(value) {game.settings.get('foundry-die-hard', 'dieHardSettings').system.fudgeD20Roll(value, evaluate_options)})
+    }
+
+    /*
+    Original WORKING ???
+    //let result = wrapped(evaluate_options); - ORIGINAL
+    let result = wrapped.bind(this)(evaluate_options);
     // If a fudge re-roll is allowed
     if (fudge){
       result.then((value) => game.settings.get('foundry-die-hard', 'dieHardSettings').system.fudgeD20Roll(value, evaluate_options));
     }
-    dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate - result', result);
-    */
+     */
+
+    return result
   }
 
   /**
@@ -208,12 +203,15 @@ export class DieHardDnd5e extends DieHardSystem{
     if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
       dieHardLog(false, 'DieHardDnd5e.wrappedRoll - active user fudge', userFudges[fudgeIndex]);
       foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: userFudges[fudgeIndex].operator, fudgeOperatorValue: userFudges[fudgeIndex].operatorValue, fudgeHow: userFudges[fudgeIndex].howFormula }});
-      // Delete the fudge from the user
-      // ToDo: Re-enable below
-      //let deletedFudge = userFudges.splice(fudgeIndex,1)
-      game.users.current.setFlag('foundry-die-hard', 'fudges', userFudges);
-      // Check if still have active fudges;
-      this.refreshActiveFudgesIcon();
+      if (userFudges[fudgeIndex].statusEndless) {
+        dieHardLog(false, 'DieHardSystem.wrappedRoll - fudge is endless');
+      } else {
+        // Delete the fudge from the user
+        let deletedFudge = userFudges.splice(fudgeIndex, 1)
+        game.users.current.setFlag('foundry-die-hard', 'fudges', userFudges);
+        // Check if still have active fudges;
+        this.refreshActiveFudgesIcon();
+      }
     }
   }
 
@@ -243,8 +241,7 @@ export class DieHardDnd5e extends DieHardSystem{
 
   entityRollAttack(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.entityRollAttack', this);
-    dieHardLog(false, 'DieHardDnd5e.entityRollAttack', options);
-    //game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
+    game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
     wrapped(options);
   }
 

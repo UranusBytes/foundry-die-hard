@@ -74,7 +74,7 @@
                     <th>|</th>
                     <th>Status</th>
                     <th>|</th>
-                    <th>Actions</th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody id="activeFudges">
@@ -88,18 +88,35 @@
                         <th>|</th>
                         <td class="toggle-fudge" data-who="{{ whoId }}" data-fudge="{{ id }}">
                             {{#if statusActive}}
-                                <i class="fas fa-toggle-off" title="Disable Fudge"></i>
+                                <i class="fas fa-toggle-on" title="Enabled" style="color:green"></i>
                             {{else}}
-                                <i class="fas fa-toggle-on" title="Enable Fudge"></i>
+                                <i class="fas fa-toggle-off" title="Disabled" style="color:red"></i>
                             {{/if}}
                         </td>
                         <th>|</th>
+                        <td class="endless-fudge" data-who="{{ whoId }}" data-fudge="{{ id }}">
+                            {{#if statusEndless}}
+                                <i class="fas fa-retweet endless-fudge-enabled" title="Endless Reset Enabled"></i>
+                            {{else}}
+                                <i class="fas fa-retweet" title="Endless Reset Disabled"></i>
+                            {{/if}}
+                            <!--
+                            fas fa-recycle
+                            fas fa-history
+                            fas fa-redo
+                            fas fa-redo-alt
+                            fas fa-retweet
+                            -->
+                        </td>
                         <td class="delete-fudge" data-who="{{ whoId }}" data-fudge="{{ id }}">
                             <!--
                             <i class="fas fa-pause-circle"></i>
                             <i class="fas fa-play-circle"></i>
                             -->
                             <i class="fas fa-trash-alt" title="Delete"></i>
+                            <!--
+                            <i class="fas fa-trash-alt" title="Delete"></i>
+                            -->
                         </td>
                     </tr>
                 {{/each}}

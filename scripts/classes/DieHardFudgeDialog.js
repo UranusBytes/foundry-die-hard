@@ -202,15 +202,26 @@ export class DieHardFudgeDialog extends FormApplication {
 
   _getWho(whoId) {
     dieHardLog(false, 'DieHardFudgeDialog : _getWho');
+    let who = undefined
     try {
-      return game.users.get(whoId)
+      who = game.users.get(whoId)
+      dieHardLog(false, 'DieHardFudgeDialog : _getWho - who user', who);
+      if (who) {
+        dieHardLog(false, 'DieHardFudgeDialog : _getWho - returning user',);
+        return who
+      }
     }
     catch (e) {}
     try {
-      return game.actors.get(whoId)
+      who =  game.actors.get(whoId)
+      dieHardLog(false, 'DieHardFudgeDialog : _getWho - who actor', who);
+      if (who) {
+        dieHardLog(false, 'DieHardFudgeDialog : _getWho - returning actor',);
+        return who
+      }
     }
     catch (e) {}
-    dieHardLog(true, 'DieHardFudgeDialog : Who not found - ', whoId);
+    dieHardLog(true, 'DieHardFudgeDialog : _getWho - Who not found - ', whoId);
   }
 
   async _updateObject(event, formData) {
@@ -223,18 +234,24 @@ export class DieHardFudgeDialog extends FormApplication {
 
     if (event.submitter?.name === 'create') {
       dieHardLog(false, 'DieHardFudgeDialog : Create Fudge');
+      dieHardLog(false, 'DieHardFudgeDialog : formData', formData);
 
       for (let whoIndex = 0; whoIndex < formData.fudgeWho.length; whoIndex++) {
         let whoId = formData.fudgeWho[whoIndex];
         let who = this._getWho(whoId)
 
+        dieHardLog(false, 'DieHardFudgeDialog : whoId', whoId);
         dieHardLog(false, 'DieHardFudgeDialog : who', who);
         let whoFudges = who.getFlag('foundry-die-hard', 'fudges')
         if (!Array.isArray(whoFudges)) {
           whoFudges = []
         }
-
-        let whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
+        let whatOption = {}
+        if (formData.fudgeWhat.slice(0,3) === 'raw') {
+          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatBaseOptions().find(element => element.id === formData.fudgeWhat);
+        } else {
+          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
+        }
 
         let fudgeTimes = 1;
         if (Number.isInteger(Number.parseInt(formData.fudgeTimes))) {
@@ -250,6 +267,7 @@ export class DieHardFudgeDialog extends FormApplication {
                 whatId: whatOption.id,
                 whatName: whatOption.name,
                 statusActive: true,
+                statusEndless: false,
                 howFormula: formData.fudgeFormula,
                 operator: this.pendingHowOperator,
                 operatorValue: this.pendingHowOperatorValue
@@ -308,11 +326,33 @@ export class DieHardFudgeDialog extends FormApplication {
     this.render()
   }
 
+  _toggleEndlessFudge(event) {
+    dieHardLog(false, 'DieHardFudgeDialog : _toggleEndlessFudge', event)
+    dieHardLog(false, 'DieHardFudgeDialog : _toggleEndlessFudge dataset', event.currentTarget.dataset)
+
+    event.preventDefault();
+    let whoId = event.currentTarget.dataset.who;
+    let fudgeId = event.currentTarget.dataset.fudge;
+    let who = this._getWho(whoId)
+    let whoFudges = who.getFlag('foundry-die-hard', 'fudges')
+    let fudgeIndex = whoFudges.findIndex(element => { return element.id === fudgeId;});
+    whoFudges[fudgeIndex].statusEndless = !whoFudges[fudgeIndex].statusEndless
+    who.setFlag('foundry-die-hard', 'fudges', whoFudges);
+    this.render()
+  }
+
   _helpFudgeFormula(event) {
+    let content =
     Dialog.prompt({
      title: "Fudge Help - Formula",
-     content: "<p>Operators:</p>" +
-       "<ul><li>=</li><li>=</li><li>&gt;</li><li>&lt;</li></ul>",
+     content: "<p>Operators:</p><ul>" +
+       "<li>&gt;</li>" +
+       "<li>&lt;</li>" +
+       "<li>&gt;=</li>" +
+       "<li>&lt;=</li>" +
+       "<li>!=</li>" +
+       "<li>&lt;=</li>" +
+    "</ul>",
       callback: (ev) => {
         return;
       }
@@ -334,6 +374,7 @@ export class DieHardFudgeDialog extends FormApplication {
     super.activateListeners(html);
     html.find(".delete-fudge").on('click', this._deleteFudge.bind(this));
     html.find(".toggle-fudge").on('click', this._toggleFudge.bind(this));
+    html.find(".endless-fudge").on('click', this._toggleEndlessFudge.bind(this));
     html.find(".fudge-help-formula").on('click', this._helpFudgeFormula.bind(this));
     html.find(".fudge-help-times").on('click', this._helpFudgeTimes.bind(this));
   }
