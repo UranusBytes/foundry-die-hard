@@ -13,3 +13,11 @@ Jun 25, 2022
 ## v0.0.4-ALPHA.0
 Jul 23, 2022
 * Refactor of all
+
+
+## v0.0.5-BETA.0
+Jul 30, 2022
+* Initial release supporting PF2e system
+* Right-click of fudge icon to globally pause/disable all fudges
+* Config dialog UI improvements
+* Notification to DMs when new version installed/upgraded

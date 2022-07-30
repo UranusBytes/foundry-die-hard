@@ -20,6 +20,7 @@ export default class DieHardDnd5e extends DieHardSystem{
     // See notes in DieHardFudgeD20Roll
     CONFIG.Dice.DieHardFudgeD20Roll = DieHardFudgeD20Roll;
 
+    this.rawRollClassName = "Roll"
     this.fudgeWhatOptions = [
       {
         id: 'actorRollSkill',
@@ -188,11 +189,18 @@ export default class DieHardDnd5e extends DieHardSystem{
     if (fudgeIndex !== -1 && actorFudges[fudgeIndex].statusActive) {
       dieHardLog(false, 'DieHardDnd5e.wrappedRoll - active actor fudge', actorFudges[fudgeIndex]);
       foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: actorFudges[fudgeIndex].operator, fudgeOperatorValue: actorFudges[fudgeIndex].operatorValue, fudgeHow: actorFudges[fudgeIndex].howFormula }});
-      // Delete the fudge from the actor
-      let deletedFudge = actorFudges.splice(fudgeIndex,1)
-      game.actors.get(actorId).setFlag('foundry-die-hard', 'fudges', actorFudges);
-      // Check if still have active fudges;
-      this.refreshActiveFudgesIcon();
+      if (actorFudges[fudgeIndex].statusEndless) {
+        dieHardLog(false, 'DieHardSystem.wrappedRoll - fudge is endless');
+      } else {
+        // Disable the fudge
+        actorFudges[fudgeIndex].statusActive = false
+
+        // Delete the fudge from the actor
+        // let deletedFudge = actorFudges.splice(fudgeIndex, 1)
+        game.actors.get(actorId).setFlag('foundry-die-hard', 'fudges', actorFudges);
+        // Check if still have active fudges;
+        this.refreshActiveFudgesIcon();
+      }
     }
 
     // Check if user has an active fudge
@@ -221,31 +229,41 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollSkill(wrapped, skillId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollSkill', this);
-    game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollSkill')
+    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollSkill')
+    }
     wrapped(skillId, options);
   }
 
   actorRollAbilitySave(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilitySave', this);
-    game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilitySave')
+    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilitySave')
+    }
     wrapped(abilityId, options);
   }
 
   actorRollAbilityTest(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilityTest', this);
-    game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilityTest')
+    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilityTest')
+    }
     wrapped(abilityId, options);
   }
 
   actorRollDeathSave(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollDeathSave', this);
-    game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollDeathSave')
+    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollDeathSave')
+    }
     wrapped(options);
   }
 
   entityRollAttack(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.entityRollAttack', this);
-    game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
+    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
+    }
     wrapped(options);
   }
 

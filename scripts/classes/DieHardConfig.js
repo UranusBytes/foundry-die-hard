@@ -1,5 +1,6 @@
 import {dieHardLog} from "../lib/helpers.js";
 import DieHardDnd5e from "./DieHardDnd5e.js";
+import DieHardPf2e from "./DieHardPf2e.js";
 
 export default class DieHardConfig {
   // static get defaultOptions() {
@@ -47,7 +48,8 @@ export default class DieHardConfig {
         allActors: true
       },
       fudgeConfig: {
-        maxFudgeAttemptsPerRoll: 150
+        maxFudgeAttemptsPerRoll: 150,
+        globalDisable: false
       },
       gmFudges: []
     };
@@ -55,7 +57,9 @@ export default class DieHardConfig {
     if (game.system.id == 'dnd5e') {
       dieHardLog(true, 'Configuring for dndn5e system')
       dieHardSettings.system = new DieHardDnd5e;
-
+    } else if (game.system.id == 'pf2e') {
+      dieHardLog(true, 'Configuring for pf2e system')
+      dieHardSettings.system = new DieHardPf2e;
     } else {
       dieHardLog(true, 'Unsupport game system: ' + game.system.id)
     }

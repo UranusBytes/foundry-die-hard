@@ -6,6 +6,18 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   flex: 0 0 0;
   padding-left: 5px;
 }
+#chat-controls .die-hard-pause-fudge-overlay {
+  z-index: 99999999;
+  position: absolute;
+}
+#chat-controls .die-hard-fudge-pause-icon-hidden {
+  visibility: hidden;
+}
+#chat-controls #die-hard-pause-fudge-icon {
+  flex: 0 0 0;
+  padding-left: 2px;
+  color: #FFA500;
+}
 #chat-controls .die-hard-fudge-icon-active {
   animation-name: fudge-icon-color;
   animation-duration: 2s;
@@ -96,9 +108,14 @@ div.die-hard-form-group {
 .endless-fudge-enabled {
   cursor: pointer;
   text-align:center;
+  background-color: #77DD77;
+  -webkit-text-stroke: 1px #77DD77;
+  /*
   animation-name: die-hard-form-endless-fudge-enabled;
   animation-duration: 1s;
   animation-iteration-count: infinite;
+
+   */
 }
 .delete-fudge {
   cursor: pointer;

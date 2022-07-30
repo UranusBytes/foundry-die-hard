@@ -20,15 +20,22 @@
             {{/each}}
             </div>
 
+            {{#if whatOptions}}
             <div style="height:15px"></div>
-            <h3 class="form-header" id="fudgeWhatHeader"><span style="font-weight: bold;">WHAT: </span>What roll result should be fudged?</h3>
+            <h3 class="form-header" id="fudgeWhatHeader"><span style="font-weight: bold;">Applied To: </span>Which roll result should be fudged?</h3>
+            {{/if}}
 
             <div class="die-hard-form-group" style="flex-wrap: wrap; flex-direction: row;">
             {{#each whatOptions}}
                 <input type="radio" name="fudgeWhat" value="{{ id }}" class="die-hard-radio" id="fudgeWhat-{{ id }}"><label for="fudgeWhat-{{ id }}">{{ name }}</label>
             {{/each}}
             </div>
+            {{#if whatOptions}}
             <h3 class="form-header" id="fudgeWhatHeader"><span style="font-weight: bold;">OR: </span>What raw dice roll should be fudged?</h3>
+            {{else}}
+            <div style="height:15px"></div>
+            <h3 class="form-header" id="fudgeWhatHeader"><span style="font-weight: bold;">Applied To: </span>What raw dice roll should be fudged?</h3>
+            {{/if}}
             <!--<h3 class="form-header" id="fudgeWhatHeader" style="border: 0px;"><span style="font-weight: bold; padding-left:25px;">OR: </span>What raw dice roll should be fudged?</h3>-->
             <div class="die-hard-form-group" style="flex-wrap: wrap; flex-direction: row;">
                 <input type="radio" name="fudgeWhat" value="rawd100" class="die-hard-radio" id="fudgeWhat-rawd100"><label for="fudgeWhat-rawd100">d100</label>
@@ -40,10 +47,10 @@
                 <input type="radio" name="fudgeWhat" value="rawd4" class="die-hard-radio" id="fudgeWhat-rawd4"><label for="fudgeWhat-rawd4">d4</label>
             </div>
                 <div style="height:15px"></div>
-            <h3 class="form-header" id="fudgeHowHeader"><span style="font-weight: bold;">HOW: </span>How should the end total be fudged?</h3>
+            <h3 class="form-header" id="fudgeHowHeader"><span style="font-weight: bold;">Rule: </span>How should the end total be fudged?</h3>
             <div class="form-group">
               <label for="fudge-formula">Formula:</label>
-              <input type="text" class="form-control die-hard-column-input-formula" name="fudgeFormula" id="fudgeFormula" value="> 5">
+              <input type="text" class="form-control die-hard-column-input-formula" name="fudgeFormula" id="fudgeFormula" value="> 15">
               <i class="fas fa-question-circle fudge-help-formula" style="margin-left:5px"></i>
               <label for="fudge-formula">Times:</label>
               <input type="text" class="form-control die-hard-column-input-times" name="fudgeTimes" id="fudgeTimes">
@@ -68,9 +75,9 @@
                 <tr>
                     <th>Who</th>
                     <th>|</th>
-                    <th>What</th>
+                    <th>Applied To</th>
                     <th>|</th>
-                    <th>How</th>
+                    <th>Rule</th>
                     <th>|</th>
                     <th>Status</th>
                     <th>|</th>
@@ -96,9 +103,9 @@
                         <th>|</th>
                         <td class="endless-fudge" data-who="{{ whoId }}" data-fudge="{{ id }}">
                             {{#if statusEndless}}
-                                <i class="fas fa-retweet endless-fudge-enabled" title="Endless Reset Enabled"></i>
+                                <i class="fas fa-retweet endless-fudge-enabled" title="Persistent Mode On"></i>
                             {{else}}
-                                <i class="fas fa-retweet" title="Endless Reset Disabled"></i>
+                                <i class="fas fa-retweet" title="Persistent Mode Off"></i>
                             {{/if}}
                             <!--
                             fas fa-recycle

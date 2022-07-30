@@ -3,16 +3,8 @@ import {dieHardLog, insertAfter} from "./lib/helpers.js";
 import {registerDieHardTests} from "./classes/DieHardTests.js";
 
 import DieHard from "./classes/DieHard.js";
-import DieHardFudgeDialog from "./classes/DieHardFudgeDialog.js";
 import DieHardConfig from "./classes/DieHardConfig.js";
-
-// Debug
-// if (CONFIG.debug.dieHard === null) {
-//   CONFIG.debug.dieHard = true;
-// } else {
-//   // Do something
-//   CONFIG.debug.dieHard = true;
-// }
+import DieHardVersionNotification from "./classes/DieHardVersionNotification.js";
 
 Hooks.once('init', () => {
   dieHardLog(true, 'Initializing...')
@@ -24,7 +16,14 @@ Hooks.once('init', () => {
 
 Hooks.once('ready', () => {
   dieHardLog(true, 'Ready...')
+  if (game.settings.get('foundry-die-hard', 'dieHardSettings').system == null) {
+    dieHardLog(false, 'Unsupported system for world; not rendering side bar')
+    return
+  }
   game.settings.get('foundry-die-hard', 'dieHardSettings').system.hookReady();
+
+  // Check if new version; if so send DM to GM
+  DieHardVersionNotification.checkVersion()
 });
 
 Hooks.on('renderSidebarTab', (app, html, data) => {
@@ -33,29 +32,10 @@ Hooks.on('renderSidebarTab', (app, html, data) => {
 
   if (document.getElementById('die-hard-fudge-icon') == null) {
     // Button hasn't been added yet
-    dieHardLog(false, 'Render side bar')
-    let button = document.createElement('label');
-    button.setAttribute('id', 'die-hard-fudge-icon');
-    button.classList.add('die-hard-fudge-icon');
-    button.innerHTML = '<i class="fas fa-poop"></i>';
-
-    if (game.settings.get('foundry-die-hard', 'dieHardSettings').system.hasActiveFudges()) {
-      button.classList.add('die-hard-fudge-icon-active');
-    }
-
-    button.addEventListener("click", async (ev) => {
-                  new DieHardFudgeDialog().render(true);
-              });
-    button.addEventListener("contextmenu", async (ev) => {
-                  game.settings.get('foundry-die-hard', 'dieHardSettings').system.disableAllFudges();
-              });
-
-    // ToDo: Fix this ugly hack
-    // the document object isn't existing sometimes yet, so just ignore.  It'll eventually render
-    try {
-      insertAfter(button, document.querySelector('.chat-control-icon'));
-    }
-    catch (e) {  }
+    //dieHardLog(true, 'debounce...')
+    // ToDo: Figure out how to debounce this
+    DieHard.renderFudgeIcon()
+    // foundry.utils.debounce(() => , 100)
   }
 });
 

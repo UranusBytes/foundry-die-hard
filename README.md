@@ -1,3 +1,7 @@
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/UranusBytes/foundry-die-hard) ![GitHub Releases](https://img.shields.io/github/downloads/UranusBytes/foundry-die-hard/latest/total) ![GitHub Releases](https://img.shields.io/github/downloads/UranusBytes/foundry-die-hard/total)
+
+![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ffoundry-die-hard&colorB=4aa94a) ![Foundry Version](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https%3A%2F%2Fgithub.com%2FUranusBytes%2Ffoundry-die-hard%2Freleases%2Flatest%2Fdownload%2Fmodule.json) 
+
 Die Hard
 ========
 This Foundry VTT module is intended to provide functionality that modifies/adjusted die rolls in certain systems.
@@ -14,8 +18,6 @@ Currently being (quasi) managed here: https://github.com/users/UranusBytes/proje
 
 ## Currently Supported Systems
 * DND5e (current)
-
-## Future Supported Systems
 * PF2e
 
 ## Troubleshoot
@@ -23,8 +25,9 @@ Extensive logging is used within the module, with debug logging enabled with the
 
 ## Known Issues
 * Raw die rolls for actors not working (even if fudge defined on GM/Player)
-* Actors throwing raw It's possible to define a fudge that is impossible to achieve (especially when considering modifiers.  Or to define a fudge of "> 20" for a d20).  The failsafe is attempting to fudge 150 times, at which point the closest possible is provided.
+* It's possible to define a fudge that is impossible to achieve (especially when considering modifiers.  Or to define a fudge of "> 20" for a d20).  The failsafe is attempting to fudge 150 times, at which point the closest possible is provided.
 * When the fudge config dialog is open, fudge status/list is not updated if any are changed by other GMs and/or PC/Actor rolls
+* Completely incompatible with [Better Rolls for 5e](https://github.com/RedReign/FoundryVTT-BetterRolls5e) #6
 
 # Current module Functionality
 ## Fudge
@@ -73,3 +76,6 @@ The way Fudge works is that the next die roll of that type (either system specif
 # Future Planned Functionality
 ## Karmic dice
 All for gradual adjustment/influence of player dice over time...
+
+# Thanks
+None of this module would be possible without the inspiration, and continued guidance/support/feedback, from @apoapostolov.  Thank you!
