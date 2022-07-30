@@ -124,8 +124,8 @@ export default class DieHardSystem{
     if (! Array.isArray(userFudges)) {
       userFudges = []
     }
-    let fudgeIndex = userFudges.findIndex(element => { return element.whatId === ('rawd' + this.faces);});
-    if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
+    let fudgeIndex = userFudges.findIndex(element => { return ((element.whatId === ('rawd' + this.faces)) && (element.statusActive));});
+    if (fudgeIndex !== -1) {
       dieHardLog(false, functionLogName + ' - active user raw fudge', userFudges[fudgeIndex]);
 
       // Time to make the fudge
@@ -217,9 +217,9 @@ export default class DieHardSystem{
           userFudges = []
         }
 
-        let fudgeIndex = userFudges.findIndex(element => { return element.whatId === ('totald' + this.dice[die].faces);});
+        let fudgeIndex = userFudges.findIndex(element => { return ((element.whatId === ('totald' + this.dice[die].faces)) && (element.statusActive));});
         dieHardLog(false, functionLogName + ' - dice faces', this.dice[die].faces);
-        if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
+        if (fudgeIndex !== -1) {
           dieHardLog(false, functionLogName + ' - active user total fudge', userFudges[fudgeIndex]);
           foundry.utils.mergeObject(this, {data: {fudge: true, fudgeOperator: userFudges[fudgeIndex].operator, fudgeOperatorValue: userFudges[fudgeIndex].operatorValue, fudgeHow: userFudges[fudgeIndex].howFormula }});
 
@@ -437,11 +437,12 @@ export default class DieHardSystem{
 
   async refreshActiveFudgesIcon() {
     if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-fudge-pause-icon-hidden");
-      document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-fudge-icon-active");
+      document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-icon-hidden");
+      document.getElementById('die-hard-fudge-icon').classList.add("die-hard-icon-hidden");
       return;
     } else {
-      document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-fudge-pause-icon-hidden");
+      document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-icon-hidden");
+      document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-icon-hidden");
     }
     if (this.hasActiveFudges()) {
       document.getElementById('die-hard-fudge-icon').classList.add("die-hard-fudge-icon-active");
