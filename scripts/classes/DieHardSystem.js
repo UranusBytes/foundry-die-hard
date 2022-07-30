@@ -113,6 +113,12 @@ export default class DieHardSystem{
     dieHardLog(false, functionLogName + ' - this', this);
     dieHardLog(false, functionLogName + ' - eval_options', eval_options);
 
+    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      dieHardLog(true, functionLogName + ' - Globally disabled', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable);
+      // Globally disabled
+      return wrapped(eval_options)
+    }
+
     // Check if user has an active raw fudge
     let userFudges = game.users.current.getFlag('foundry-die-hard', 'fudges');
     if (! Array.isArray(userFudges)) {
