@@ -21,3 +21,8 @@ Jul 30, 2022
 * Right-click of fudge icon to globally pause/disable all fudges
 * Config dialog UI improvements
 * Notification to DMs when new version installed/upgraded
+
+## v0.0.6
+Jul 30, 2022
+* Fix attack/strike roll fudges for PF2e
+* Add concept of "Total Roll" (including modifiers) vs "Raw Die Roll" (only the die)
