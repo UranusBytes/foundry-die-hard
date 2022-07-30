@@ -8,9 +8,10 @@ export default class DieHardPf2e extends DieHardSystem {
     dieHardLog(false, 'DieHardPf2e - constructor');
     super();
 
-    libWrapper.register('foundry-die-hard', 'game.pf2e.Check.roll', this.wrappedCheckRoll, 'WRAPPER');
+    // ToDo: Disabled for now since not used
+    // libWrapper.register('foundry-die-hard', 'game.pf2e.Check.roll', this.wrappedCheckRoll, 'WRAPPER');
 
-    this.rawRollClassName = "CheckRoll"
+    this.totalRollClassName = ["CheckRoll", "StrikeAttackRoll"]
     this.fudgeWhatOptions = []
     /*
     this.fudgeWhatOptions = [

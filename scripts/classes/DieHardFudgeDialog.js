@@ -248,7 +248,9 @@ export default class DieHardFudgeDialog extends FormApplication {
         }
         let whatOption = {}
         if (formData.fudgeWhat.slice(0,3) === 'raw') {
-          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatBaseOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatRawOptions().find(element => element.id === formData.fudgeWhat);
+        } else  if (formData.fudgeWhat.slice(0,5) === 'total') {
+          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatTotalOptions().find(element => element.id === formData.fudgeWhat);
         } else {
           whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
         }
