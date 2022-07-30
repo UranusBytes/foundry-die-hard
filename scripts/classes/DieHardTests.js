@@ -1,4 +1,4 @@
-import {DieHardSystem} from "./DieHardSystem.js";
+import DieHardSystem from "./DieHardSystem.js";
 import {dieHardLog} from "../lib/helpers.js";
 
 export const registerDieHardTests = quench => {

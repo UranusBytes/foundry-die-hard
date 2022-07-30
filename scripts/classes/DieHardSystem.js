@@ -1,8 +1,8 @@
 import {dieHardLog} from "../lib/helpers.js";
-import {DieHardFudgeRoll} from "./DieHardFudgeRoll.js";
-import {DieHardFudgeD20Roll} from "./DieHardFudgeD20Roll.js";
+import DieHardFudgeRoll from "./DieHardFudgeRoll.js";
+import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
 
-export class DieHardSystem{
+export default class DieHardSystem{
   constructor() {
     dieHardLog(false, 'DieHardSystem - constructor');
 
@@ -12,6 +12,7 @@ export class DieHardSystem{
 
     CONFIG.Dice.DieHardFudgeRoll = DieHardFudgeRoll;
 
+    this.rawRollClassName = ""
     this.fudgeWhatOptions = []
     this.fudgeWhatBaseOptions = [
       {
@@ -77,13 +78,23 @@ export class DieHardSystem{
 
   wrapRollEvaluate(wrapped, eval_options) {
     dieHardLog(false, 'DieHardSystem : wrapRollEvaluate');
-    // dieHardLog(true, 'DieHardDnd5e - wrapRollEvaluate - this', this);
+    dieHardLog(false, 'DieHardSystem - wrapRollEvaluate - arguments', arguments);
+    dieHardLog(false, 'DieHardSystem - wrapRollEvaluate - this', this);
+    dieHardLog(false, 'DieHardSystem - wrapRollEvaluate - this.callee', this.callee);
+
     // dieHardLog(true, 'DieHardDnd5e - wrapRollEvaluate - this.constructor.name', this.constructor.name);
-    // dieHardLog(true, 'DieHardDnd5e - wrapRollEvaluate - eval_options', eval_options);
+    dieHardLog(false, 'DieHardSystem - wrapRollEvaluate - eval_options', eval_options);
     //dieHardLog(true, 'DieHardDnd5e - wrapRollEvaluate - game.users.current.data.name', game.users.current.data.name);
+    dieHardLog(true, 'DieHardSystem - wrapRollEvaluate - this.constructor.name', this.constructor.name);
+
+    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      dieHardLog(true, 'DieHardSystem - wrapRollEvaluate - Globally disabled', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable);
+      // Globally disabled
+      return wrapped(eval_options)
+    }
 
     // Check if a raw die roll (otherwise some type of system specific raw)
-    if (this.constructor.name === "Roll"){
+    if (this.constructor.name === game.settings.get('foundry-die-hard', 'dieHardSettings').system.rawRollClassName){
       dieHardLog(false, 'DieHardSystem - wrapRollEvaluate - raw roll; figure out if needs to be fudged or is a recursive fudge');
 
       let fudge = false;
@@ -95,7 +106,7 @@ export class DieHardSystem{
         // dieHardLog(false, 'DieHardDnd5e - wrapRollEvaluate - die', this.dice[die]);
 
         // Check if actor has an active raw fudge
-
+        // ToDo: something goes here...
 
         // Check if user has an active raw fudge
         let userFudges = game.users.current.getFlag('foundry-die-hard', 'fudges');
@@ -103,6 +114,7 @@ export class DieHardSystem{
           userFudges = []
         }
         // dieHardLog(true, 'DieHardDnd5e - wrapRollEvaluate - userFudges', userFudges);
+        dieHardLog(false, 'DieHardSystem.wrappedRoll - raw die faces', this.dice[die].faces);
         let fudgeIndex = userFudges.findIndex(element => { return element.whatId === ('rawd' + this.dice[die].faces);});
         if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
           dieHardLog(false, 'DieHardSystem.wrappedRoll - active user raw fudge', userFudges[fudgeIndex]);
@@ -257,7 +269,7 @@ export class DieHardSystem{
     Return an array of all users (map of id and name), defaulting to ones currently active
    */
   getUsers(activeOnly = true, includeFudges = false, getGM = false, userId = null) {
-    dieHardLog(false, 'DieHardSystem : getUsers');
+    dieHardLog(false, 'DieHardSystem : getUsers', activeOnly, includeFudges, getGM, userId);
     if (game.settings.get('foundry-die-hard', 'dieHardSettings').debug.allActors) {
       activeOnly = false
     }
@@ -321,6 +333,13 @@ export class DieHardSystem{
   }
 
   async refreshActiveFudgesIcon() {
+    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-fudge-pause-icon-hidden");
+      document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-fudge-icon-active");
+      return;
+    } else {
+      document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-fudge-pause-icon-hidden");
+    }
     if (this.hasActiveFudges()) {
       document.getElementById('die-hard-fudge-icon').classList.add("die-hard-fudge-icon-active");
     } else {
@@ -397,29 +416,12 @@ export class DieHardSystem{
     }
 
   }
-  //
-  // disableAllFudges() {
-  //   dieHardLog(false, 'DieHardSystem : disableAllFudges')
-  //   let actors = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getActors();
-  //   for (let actorIndex = 0; actorIndex < actors.length; actorIndex++) {
-  //     try {
-  //       let actorId = actors[actorIndex].id
-  //       let actorFudges = game.actors.get(actorId).getFlag('foundry-die-hard', 'fudges');
-  //       for (let fudgeIndex = 0; fudgeIndex < actorFudges.length; fudgeIndex++) {
-  //         actorFudges[fudgeIndex].statusActive = false;
-  //       }
-  //       game.actors.get(actorId).setFlag('foundry-die-hard', 'fudges', actorFudges);
-  //     }
-  //     catch (e) {}
-  //   }
-  //   let gmFudges = game.settings.get('foundry-die-hard', 'dieHardSettings').gmFudges;
-  //   for (let fudgeIndex = 0; fudgeIndex < gmFudges.length; fudgeIndex++) {
-  //     gmFudges[fudgeIndex].statusActive = false;
-  //   }
-  //   game.settings.get('foundry-die-hard', 'dieHardSettings').gmFudges = gmFudges;
-  //
-  //   game.settings.get('foundry-die-hard', 'dieHardSettings').system.refreshActiveFudgesIcon()
-  // }
+
+  disableAllFudges() {
+    dieHardLog(false, 'DieHardSystem : disableAllFudges', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable)
+    game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable = ! game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable
+    game.settings.get('foundry-die-hard', 'dieHardSettings').system.refreshActiveFudgesIcon();
+  }
 
   static registerTests = context => {
     dieHardLog(false, 'DieHardSystem : registerTests')

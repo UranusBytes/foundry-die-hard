@@ -1,9 +1,9 @@
 {
   "name": "foundry-die-hard",
   "title": "Die Hard",
-  "description": "Adjustments for DND5e die rolls like fudging...",
+  "description": "Adjustments for DND5e & PF2e die rolls like fudging...",
   "author": "Jeremy (UranusBytes)",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",
   "esmodules": [

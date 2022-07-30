@@ -1,6 +1,6 @@
 import {dieHardLog} from "../lib/helpers.js";
 
-export class DieHardFudgeDialog extends FormApplication {
+export default class DieHardFudgeDialog extends FormApplication {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ['form'],
