@@ -25,7 +25,7 @@ export default class DieHard {
     //fudgeButton.setAttribute('id', 'die-hard-fudge-icon');
     fudgeButton.classList.add('die-hard-fudge-icon');
     // fudgeButton.innerHTML = '<div class="die-hard-pause-fudge-overlay"><i id="die-hard-pause-fudge-icon" class="fas fa-pause-circle"></i></div><i id="die-hard-fudge-icon" class="fas fa-poop"></i>';
-    fudgeButton.innerHTML = '<i id="die-hard-pause-fudge-icon" class="fas fa-pause-circle die-hard-icon-hidden"></i><i id="die-hard-fudge-icon" class="fas fa-poop"></i>';
+    fudgeButton.innerHTML = '<span title="Fudge Paused"><i id="die-hard-pause-fudge-icon" class="fas fa-pause-circle die-hard-icon-hidden"></i></span><span title="Fudge"><i id="die-hard-fudge-icon" class="fas fa-poop"></i></span>';
 
     fudgeButton.addEventListener("click", async (ev) => {
                   new DieHardFudgeDialog().render(true);

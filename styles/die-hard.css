@@ -19,9 +19,13 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   color: #FFA500;
 }
 #chat-controls .die-hard-fudge-icon-active {
+  color: #FFA500;
+  /*
   animation-name: fudge-icon-color;
   animation-duration: 2s;
   animation-iteration-count: infinite;
+
+   */
 }
 
 
@@ -125,7 +129,7 @@ div.die-hard-form-group {
   cursor: pointer;
   text-align:center;
 }
-
+/*
 @keyframes fudge-icon-color {
   0% {
     color: #FFFFFF;
@@ -137,7 +141,7 @@ div.die-hard-form-group {
     color: #FFFFFF;
   }
 }
-
+*/
 .die-hard-form-error {
   animation-name: die-hard-form-error-color;
   animation-duration: 1s;
