@@ -18,6 +18,10 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   padding-left: 0px;
   color: #FFA500;
 }
+.die-hard-status-button {
+  margin-right: 5px;
+  margin-left: 5px;
+}
 #chat-controls .die-hard-fudge-icon-active {
   color: #FFA500;
   /*
