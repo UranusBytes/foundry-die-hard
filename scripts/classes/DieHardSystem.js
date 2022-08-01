@@ -113,13 +113,19 @@ export default class DieHardSystem{
     dieHardLog(false, functionLogName + ' - this', this);
     dieHardLog(false, functionLogName + ' - eval_options', eval_options);
 
+    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      dieHardLog(true, functionLogName + ' - Globally disabled', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable);
+      // Globally disabled
+      return wrapped(eval_options)
+    }
+
     // Check if user has an active raw fudge
     let userFudges = game.users.current.getFlag('foundry-die-hard', 'fudges');
     if (! Array.isArray(userFudges)) {
       userFudges = []
     }
-    let fudgeIndex = userFudges.findIndex(element => { return element.whatId === ('rawd' + this.faces);});
-    if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
+    let fudgeIndex = userFudges.findIndex(element => { return ((element.whatId === ('rawd' + this.faces)) && (element.statusActive));});
+    if (fudgeIndex !== -1) {
       dieHardLog(false, functionLogName + ' - active user raw fudge', userFudges[fudgeIndex]);
 
       // Time to make the fudge
@@ -202,8 +208,28 @@ export default class DieHardSystem{
           continue;
         }
 
+        dieHardLog(false, functionLogName + ' - DEBUG POINT');
         // Check if actor has an active total fudge
         // ToDo: something goes here...  #6
+        /*
+        // Check if actor has an active fudge
+        let actorFudges = game.actors.get(actorId).getFlag('foundry-die-hard', 'fudges');
+        if (! Array.isArray(actorFudges)) {
+          actorFudges = []
+        }
+        //dieHardLog(false, 'DieHardDnd5e.wrappedRoll - actorFudges', actorFudges);
+        let fudgeIndex = actorFudges.findIndex(element => { return element.whatId === rollType;});
+        if (fudgeIndex !== -1 && actorFudges[fudgeIndex].statusActive) {
+          dieHardLog(false, 'DieHardDnd5e.wrappedRoll - active actor fudge', actorFudges[fudgeIndex]);
+          foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: actorFudges[fudgeIndex].operator, fudgeOperatorValue: actorFudges[fudgeIndex].operatorValue, fudgeHow: actorFudges[fudgeIndex].howFormula }});
+          // Delete the fudge from the actor
+          let deletedFudge = actorFudges.splice(fudgeIndex,1)
+          game.actors.get(actorId).setFlag('foundry-die-hard', 'fudges', actorFudges);
+          // Check if still have active fudges;
+          this.refreshActiveFudgesIcon();
+        }
+
+         */
 
         // Check if user has an active total fudge
         let userFudges = game.users.current.getFlag('foundry-die-hard', 'fudges');
@@ -211,9 +237,9 @@ export default class DieHardSystem{
           userFudges = []
         }
 
-        let fudgeIndex = userFudges.findIndex(element => { return element.whatId === ('totald' + this.dice[die].faces);});
+        let fudgeIndex = userFudges.findIndex(element => { return ((element.whatId === ('totald' + this.dice[die].faces)) && (element.statusActive));});
         dieHardLog(false, functionLogName + ' - dice faces', this.dice[die].faces);
-        if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
+        if (fudgeIndex !== -1) {
           dieHardLog(false, functionLogName + ' - active user total fudge', userFudges[fudgeIndex]);
           foundry.utils.mergeObject(this, {data: {fudge: true, fudgeOperator: userFudges[fudgeIndex].operator, fudgeOperatorValue: userFudges[fudgeIndex].operatorValue, fudgeHow: userFudges[fudgeIndex].howFormula }});
 
@@ -314,13 +340,18 @@ export default class DieHardSystem{
 
   dmToGm(message) {
     var dm_ids = [];
-    for (let indexA = 0; indexA < game.users.length; indexA++) {
-      if (game.users[indexA].value.isGM) {
-        dm_ids.push(game.users[indexA].key)
+    // dieHardLog(false, 'DieHardSystem.dmToGm - game.users.values()', game.users.values());
+    for (let user of game.users.values()) {
+      // dieHardLog(false, 'DieHardSystem.dmToGm - user', user);
+      if (user.isGM) {
+        dm_ids.push(user.id)
+        // dieHardLog(false, 'DieHardSystem.dmToGm - Added', user);
       }
     }
+    // dieHardLog(false, 'DieHardSystem.dmToGm - dm_ids', dm_ids);
     let whisper_to_dm = ChatMessage.create({
       user: game.user.id,
+      type: CONST.CHAT_MESSAGE_TYPES.WHISPER,
       whisper: dm_ids,
       blind: true,
       content: message
@@ -431,11 +462,12 @@ export default class DieHardSystem{
 
   async refreshActiveFudgesIcon() {
     if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-fudge-pause-icon-hidden");
-      document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-fudge-icon-active");
+      document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-icon-hidden");
+      document.getElementById('die-hard-fudge-icon').classList.add("die-hard-icon-hidden");
       return;
     } else {
-      document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-fudge-pause-icon-hidden");
+      document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-icon-hidden");
+      document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-icon-hidden");
     }
     if (this.hasActiveFudges()) {
       document.getElementById('die-hard-fudge-icon').classList.add("die-hard-fudge-icon-active");

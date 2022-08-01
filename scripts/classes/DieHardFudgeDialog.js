@@ -256,9 +256,11 @@ export default class DieHardFudgeDialog extends FormApplication {
         }
 
         let fudgeTimes = 1;
+        /*
         if (Number.isInteger(Number.parseInt(formData.fudgeTimes))) {
           fudgeTimes = Number.parseInt(formData.fudgeTimes);
         }
+        */
 
         try {
           for (let loopIndex = 0; loopIndex < fudgeTimes; loopIndex++) {

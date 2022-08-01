@@ -155,6 +155,9 @@ export default class DieHardPf2e extends DieHardSystem {
   /**
    * Generic wrapper for all PF2e Check rolls
    */
+
+  // Currently not used, since can't find way to intercept lower level roll
+  /*
   wrappedCheckRoll(wrapped, check, context, event, callback) {
     dieHardLog(true, 'DieHardPf2e.wrappedCheckRoll - this', this);
     dieHardLog(true, 'DieHardPf2e.wrappedCheckRoll - arguments.length', arguments.length);
@@ -251,6 +254,7 @@ export default class DieHardPf2e extends DieHardSystem {
     let result = wrapped(check, context, event, callback);
     dieHardLog(false, 'DieHardPf2e.wrappedCheckRoll - result', result);
   }
+   */
 
 /*
   actorRollSave(wrapped, skillId, options = {}) {

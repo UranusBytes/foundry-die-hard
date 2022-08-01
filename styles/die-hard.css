@@ -10,18 +10,26 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   z-index: 99999999;
   position: absolute;
 }
-#chat-controls .die-hard-fudge-pause-icon-hidden {
-  visibility: hidden;
+#chat-controls .die-hard-icon-hidden {
+  display: none;
 }
 #chat-controls #die-hard-pause-fudge-icon {
   flex: 0 0 0;
-  padding-left: 2px;
+  padding-left: 0px;
   color: #FFA500;
 }
+.die-hard-status-button {
+  margin-right: 5px;
+  margin-left: 5px;
+}
 #chat-controls .die-hard-fudge-icon-active {
+  color: #FFA500;
+  /*
   animation-name: fudge-icon-color;
   animation-duration: 2s;
   animation-iteration-count: infinite;
+
+   */
 }
 
 
@@ -125,7 +133,7 @@ div.die-hard-form-group {
   cursor: pointer;
   text-align:center;
 }
-
+/*
 @keyframes fudge-icon-color {
   0% {
     color: #FFFFFF;
@@ -137,7 +145,7 @@ div.die-hard-form-group {
     color: #FFFFFF;
   }
 }
-
+*/
 .die-hard-form-error {
   animation-name: die-hard-form-error-color;
   animation-duration: 1s;

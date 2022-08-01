@@ -26,3 +26,13 @@ Jul 30, 2022
 Jul 30, 2022
 * Fix attack/strike roll fudges for PF2e
 * Add concept of "Total Roll" (including modifiers) vs "Raw Die Roll" (only the die)
+
+## v0.0.7
+Aug 1, 2022
+* Remove 'Times' functionality from fudge
+* Fix for raw die fudge still happening when global disabled
+* Issue where disabled fudge before enabled would prevent selection of enabled
+* Change fudge icon behavior for global disabled
+* Fudge icon adjustments #14
+* Fudge config adjustments #15
+* Fix fudge whispers going to more than GM #16

@@ -181,8 +181,8 @@ export default class DieHardDnd5e extends DieHardSystem{
       actorFudges = []
     }
     dieHardLog(false, functionLogName + ' - actorFudges', actorFudges);
-    let fudgeIndex = actorFudges.findIndex(element => { return element.whatId === rollType;});
-    if (fudgeIndex !== -1 && actorFudges[fudgeIndex].statusActive) {
+    let fudgeIndex = actorFudges.findIndex(element => { return ((element.whatId === rollType) && (element.statusActive));});
+    if (fudgeIndex !== -1) {
       dieHardLog(false, functionLogName + ' - active actor fudge', actorFudges[fudgeIndex]);
       foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: actorFudges[fudgeIndex].operator, fudgeOperatorValue: actorFudges[fudgeIndex].operatorValue, fudgeHow: actorFudges[fudgeIndex].howFormula }});
       if (actorFudges[fudgeIndex].statusEndless) {
@@ -205,8 +205,8 @@ export default class DieHardDnd5e extends DieHardSystem{
       userFudges = []
     }
     dieHardLog(false, functionLogName + ' - userFudges', userFudges);
-    fudgeIndex = userFudges.findIndex(element => { return element.whatId === rollType;});
-    if (fudgeIndex !== -1 && userFudges[fudgeIndex].statusActive) {
+    fudgeIndex = userFudges.findIndex(element => { return ((element.whatId === rollType) && (element.statusActive));});
+    if (fudgeIndex !== -1) {
       dieHardLog(false, functionLogName + ' - active user fudge', userFudges[fudgeIndex]);
       foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: userFudges[fudgeIndex].operator, fudgeOperatorValue: userFudges[fudgeIndex].operatorValue, fudgeHow: userFudges[fudgeIndex].howFormula }});
       if (userFudges[fudgeIndex].statusEndless) {
