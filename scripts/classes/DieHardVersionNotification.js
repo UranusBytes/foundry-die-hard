@@ -5,7 +5,7 @@ import {dieHardLog} from "../lib/helpers.js";
 export default class DieHardVersionNotification {
   static checkVersion() {
     let functionLogName = 'DieHardVersionNotification.checkVersion'
-    let notificationVersion = 2
+    let notificationVersion = 3
     if (game.user.isGM && game.user.getFlag('foundry-die-hard', 'versionNotification') !== notificationVersion) {
       dieHardLog(false, functionLogName + ' - Send version notification');
       let commonFooter = "<p>To report problems:<ul><li>open a GitHub issue <a href='https://github.com/UranusBytes/foundry-die-hard/issues' target='_blank'>here</a></li><li>send a message on Discord to <a href='https://discordapp.com/users/530108795796455437' target='_blank'>Glutious#7241</a></li></ul></p>"
@@ -21,6 +21,16 @@ export default class DieHardVersionNotification {
             "This version includes the following major changes:</p><ul>" +
           "<li>Fixes for PF2e strike attack fudges</li>" +
           "<li>Differentiate raw die rolls vs roll totals</li>" +
+          "</ul>",
+        3: "<b>Die Hard v0.0.7</b><p>" +
+            "This version includes the following major changes:</p><ul>" +
+          "<li>Remove 'Times' functionality from fudge</li>" +
+          "<li>Fix for raw die fudge still happening when global disabled</li>" +
+          "<li>Issue where disabled fudge before enabled would prevent selection of enabled</li>" +
+          "<li>Change fudge icon behavior for global disabled</li>" +
+          "<li>Fudge icon adjustments #14</li>" +
+          "<li>Fudge config adjustments #15</li>" +
+          "<li>Fix fudge whispers going to more than GM #16</li>" +
           "</ul>",
       }
       let finalMessage = ""
