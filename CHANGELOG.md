@@ -36,3 +36,7 @@ Aug 1, 2022
 * Fudge icon adjustments #14
 * Fudge config adjustments #15
 * Fix fudge whispers going to more than GM #16
+
+## v0.0.8
+Aug 2, 2022
+* Fix issue with fudges dialog from Times removal
