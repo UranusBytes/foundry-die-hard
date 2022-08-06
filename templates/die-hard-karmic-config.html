@@ -1,0 +1,56 @@
+<form id="die-hard-karmic-config">
+<div>
+    <div class="die-hard-column" style="">
+        <!-- ugly hack to make single checkbox still an array -->
+        <input type="checkbox" name="karmicSimple" value="hidden" class="die-hard-checkbox" id="karmicSimple-hidden" style="visibility: hidden">
+        <h3 class="form-header" id="karmicSimpleHeader"><span style="font-weight: bold;">Simple Karma: </span> Gentle nudges...</h3>
+
+        <div class="die-hard-form-group">
+            <input type="checkbox" name="karmicSimple" value="true" class="die-hard-checkbox" id="karmicSimple"><label for="karmicSimple">Enable Simple Karma</label>
+        </div>
+        <div class="form-group">
+            <label for="karmicSimpleNumDice">History</label>
+            <input type="range" name="karmicSimpleHistory" value="1" min="1" max="20" step="1" data-dtype="Number" /><span class="range-value">1</span>
+            <p class="notes">If the last N rolls are below the threshold.</p>
+        </div>
+        <div class="form-group">
+            <label for="karmicSimpleThreshold">Threshold</label>
+            <input type="range" name="karmicSimpleThreshold" value="2" min="1" max="20" step="1" data-dtype="Number" /><span class="range-value">3</span>
+            <p class="notes">The value the last N rolls must be below.</p>
+        </div>
+        <div class="form-group">
+            <label for="karmicSimpleDiceNextMin">Next Roll Floor</label>
+            <input type="range" name="karmicSimpleDiceNextMin" value="3" min="1" max="20" step="1" data-dtype="Number" /><span class="range-value">4</span>
+            <p class="notes">When triggered, the next roll will be above</p>
+        </div>
+        <h3 class="form-header" id="karmicSimpleHeader"><span style="font-weight: bold;">Player Stats</span></h3>
+           TBD
+
+    </div>
+    <div class="die-hard-column">
+        <!-- ugly hack to make single checkbox still an array -->
+        <input type="checkbox" name="karmicFormula1" value="hidden" class="die-hard-checkbox" id="karmicFormula1-hidden" style="visibility: hidden">
+        <h3 class="form-header" id="karmicFormula1Header"><span style="font-weight: bold;">Avg Karma: </span> Raise a below average streak...</h3>
+        <div class="die-hard-form-group">
+        <input type="checkbox" name="karmicFormula1" value="true" class="die-hard-checkbox" id="karmicFormula1"><label for="karmicFormula1">Enable Bell Curve Karma</label>
+        </div>
+        <div class="form-group">
+            <label for="karmicFormula1NumDice">History</label>
+            <input type="range" name="karmicFormula1eHistory" value="1" min="1" max="20" step="1" data-dtype="Number" /><span class="range-value">1</span>
+            <p class="notes">If the last X rolls average below the threshold.</p>
+        </div>
+        <div class="form-group">
+            <label for="karmicFormula1Threshold">Threshold</label>
+            <input type="range" name="karmicFormula1Threshold" value="2" min="1" max="20" step="1" data-dtype="Number" /><span class="range-value">3</span>
+            <p class="notes">The value (Y) the last N rolls must average below.</p>
+        </div>
+        <div class="form-group">
+            <label for="karmicFormula1Nudge">Next Roll Floor</label>
+            <input type="range" name="karmicFormula1Nudge" value="3" min="1" max="20" step="1" data-dtype="Number" /><span class="range-value">4</span>
+            <p class="notes">When triggered, rolls will be increased by up to Z until X is above Y.</p>
+        </div>
+        <h3 class="form-header" id="karmicSimpleHeader"><span style="font-weight: bold;">Player Stats</span></h3>
+
+    </div>
+</div>
+</form>

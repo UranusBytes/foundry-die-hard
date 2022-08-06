@@ -1,24 +1,20 @@
 import {dieHardLog} from "../lib/helpers.js";
 
 import DieHardSystem from "./DieHardSystem.js";
-import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
+import DISABLED_DieHardFudgeD20Roll from "./DISABLED_DieHardFudgeD20Roll.js";
+import {DieHardSetting} from "./DieHard.js";
 
 export default class DieHardDnd5e extends DieHardSystem{
   constructor() {
-    dieHardLog(false, 'DieHardDnd5e - constructor');
+    dieHardLog(false, 'DieHardDnd5e.constructor');
     super();
 
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
+    if (DieHardSetting('fudgeEnabled')) {
+      this.registerLibWraps()
+    }
 
-    libWrapper.register('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
-
-    libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
-
-    // See notes in DieHardFudgeD20Roll
-    CONFIG.Dice.DieHardFudgeD20Roll = DieHardFudgeD20Roll;
+    // See notes in DISABLED_DieHardFudgeD20Roll
+    CONFIG.Dice.DieHardFudgeD20Roll = DISABLED_DieHardFudgeD20Roll;
 
     this.totalRollClassName = ["Roll", "D20Roll"]
     this.fudgeWhatOptions = [
@@ -45,20 +41,33 @@ export default class DieHardDnd5e extends DieHardSystem{
     ]
   }
 
+  registerLibWraps() {
+    dieHardLog(false, 'DieHardDnd5e.registerLibWraps');
+    this.registerBaseLibWraps()
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
+  }
 
+  unregisterLibWraps() {
+    dieHardLog(false, 'DieHardDnd5e.registerLibWraps');
+    this.unregisterBaseLibWraps()
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
+    libWrapper.unregister('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
+  }
 
   hookReady() {
     dieHardLog(false, 'Dnd 5e System Hook - Ready');
   }
 
-  isPromise(p) {
-    if (typeof p === 'object' && typeof p.then === 'function') {
-      return true;
-    }
-
-    return false;
-  }
-
+  /*
   fudgeD20Roll(result, evaluate_options) {
     let functionLogName = 'DieHardDnd5e.fudgeD20Roll'
     dieHardLog(false, functionLogName);
@@ -81,7 +90,7 @@ export default class DieHardDnd5e extends DieHardSystem{
         SafetyLoopIndex--;
 
         // ToDo: Can a "clone()" or a "reroll()" be used instead?  https://foundryvtt.com/api/Roll.html#clone
-        const new_roll = new DieHardFudgeD20Roll(
+        const new_roll = new DISABLED_DieHardFudgeD20Roll(
           result.formula,
           result.data, {
             flavor: result.options.flavor,
@@ -125,6 +134,8 @@ export default class DieHardDnd5e extends DieHardSystem{
     return result
   }
 
+
+   */
   d20rollEvaluate(wrapped, evaluate_options) {
     dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate', this.data);
 
@@ -168,6 +179,7 @@ export default class DieHardDnd5e extends DieHardSystem{
    * @param actorId
    * @param rollType
    */
+
   wrappedRoll(options, actorId, rollType) {
     let functionLogName = 'DieHardDnd5e.wrappedRoll'
     //dieHardLog(false, 'DieHardDnd5e.wrappedRoll - this', this);
@@ -226,40 +238,40 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollSkill(wrapped, skillId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollSkill', this);
-    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollSkill')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollSkill')
     }
     wrapped(skillId, options);
   }
 
   actorRollAbilitySave(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilitySave', this);
-    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilitySave')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilitySave')
     }
     wrapped(abilityId, options);
   }
 
   actorRollAbilityTest(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilityTest', this);
-    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilityTest')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilityTest')
     }
     wrapped(abilityId, options);
   }
 
   actorRollDeathSave(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollDeathSave', this);
-    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollDeathSave')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollDeathSave')
     }
     wrapped(options);
   }
 
   entityRollAttack(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.entityRollAttack', this);
-    if (!game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
     }
     wrapped(options);
   }

@@ -1,11 +1,11 @@
 import {dieHardLog} from "../lib/helpers.js";
 
 import DieHardSystem from "./DieHardSystem.js";
-//import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
+//import DISABLED_DieHardFudgeD20Roll from "./DISABLED_DieHardFudgeD20Roll.js";
 
 export default class DieHardPf2e extends DieHardSystem {
   constructor() {
-    dieHardLog(false, 'DieHardPf2e - constructor');
+    dieHardLog(false, 'DieHardPf2e.constructor');
     super();
 
     // ToDo: Disabled for now since not used
@@ -43,6 +43,14 @@ export default class DieHardPf2e extends DieHardSystem {
      */
   }
 
+  registerLibWraps() {
+    dieHardLog(false, 'DieHardPf2e.registerLibWraps');
+    // No system specific lib wraps
+  }
+  unregisterLibWraps() {
+    dieHardLog(false, 'DieHardPf2e.unregisterLibWraps');
+    // No system specific lib wraps
+  }
 
   hookReady() {
     dieHardLog(false, 'PF2e System Hook - Ready');
@@ -77,7 +85,7 @@ export default class DieHardPf2e extends DieHardSystem {
         SafetyLoopIndex--;
 
         // ToDo: Can a "clone()" or a "reroll()" be used instead?  https://foundryvtt.com/api/Roll.html#clone
-        const new_roll = new DieHardFudgeD20Roll(
+        const new_roll = new DISABLED_DieHardFudgeD20Roll(
           result.formula,
           result.data, {
             flavor: result.options.flavor,
@@ -129,7 +137,7 @@ export default class DieHardPf2e extends DieHardSystem {
       evaluate_options.async = false;
 
 
-      if (this instanceof CONFIG.Dice.DieHardFudgeD20Roll) {
+      if (this instanceof CONFIG.Dice.DISABLED_DieHardFudgeD20Roll) {
         // This is a recursive roll; do sync
         evaluate_options.async = false;
       } else {

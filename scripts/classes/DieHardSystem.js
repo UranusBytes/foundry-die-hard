@@ -1,16 +1,13 @@
 import {dieHardLog} from "../lib/helpers.js";
 import DieHardFudgeRoll from "./DieHardFudgeRoll.js";
-import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
+import DieHard, {DieHardSetting} from "./DieHard.js";
 
 export default class DieHardSystem{
   constructor() {
-    dieHardLog(false, 'DieHardSystem - constructor');
+    dieHardLog(false, 'DieHardSystem.constructor');
 
     // Generic rolls
     CONFIG.Dice.Roll = Roll;
-    libWrapper.register('foundry-die-hard', 'CONFIG.Dice.Roll.prototype.evaluate', this.wrapRollEvaluate, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Dice.termTypes.DiceTerm.prototype.roll', this.wrapDiceTermRoll, 'MIXED');
-
     CONFIG.Dice.DieHardFudgeRoll = DieHardFudgeRoll;
 
     this.totalRollClassName = []
@@ -77,8 +74,20 @@ export default class DieHardSystem{
     ]    
   }
 
+  registerBaseLibWraps() {
+    dieHardLog(false, 'DieHardSystem.registerBaseLibWraps');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Dice.Roll.prototype.evaluate', this.wrapRollEvaluate, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Dice.termTypes.DiceTerm.prototype.roll', this.wrapDiceTermRoll, 'MIXED');
+  }
+
+  unregisterBaseLibWraps() {
+    dieHardLog(false, 'DieHardSystem.unregisterBaseLibWraps');
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Dice.Roll.prototype.evaluate', this.wrapRollEvaluate, 'WRAPPER');
+    libWrapper.unregister('foundry-die-hard', 'CONFIG.Dice.termTypes.DiceTerm.prototype.roll', this.wrapDiceTermRoll, 'MIXED');
+  }
+
   evalFudge(result, operator, operatorValue) {
-    dieHardLog(false, 'DieHardSystem - evalFudge', result, operator, operatorValue);
+    dieHardLog(false, 'DieHardSystem.evalFudge', result, operator, operatorValue);
     switch (operator) {
       case '>':   return result > operatorValue;
       case '<':   return result < operatorValue;
@@ -90,7 +99,7 @@ export default class DieHardSystem{
   }
 
   isBetterFudge(oldTotal, newTotal, operator, operatorValue) {
-    dieHardLog(false, 'DieHardSystem - isBetterFudge', oldTotal, newTotal, operator, operatorValue);
+    dieHardLog(false, 'DieHardSystem.isBetterFudge', oldTotal, newTotal, operator, operatorValue);
     switch (operator) {
       case '>':
         return newTotal > oldTotal;
@@ -109,12 +118,12 @@ export default class DieHardSystem{
 
   wrapDiceTermRoll(wrapped, eval_options) {
     let functionLogName = 'DieHardSystem.wrapDiceTermRoll'
-    dieHardLog(false, functionLogName);
-    dieHardLog(false, functionLogName + ' - this', this);
-    dieHardLog(false, functionLogName + ' - eval_options', eval_options);
+    //dieHardLog(false, functionLogName);
+    //dieHardLog(false, functionLogName + ' - this', this);
+    //dieHardLog(false, functionLogName + ' - eval_options', eval_options);
 
-    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
-      dieHardLog(true, functionLogName + ' - Globally disabled', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable);
+    if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      dieHardLog(true, functionLogName + ' - Globally disabled', DieHardSetting('dieHardSettings').fudgeConfig.globalDisable);
       // Globally disabled
       return wrapped(eval_options)
     }
@@ -131,7 +140,7 @@ export default class DieHardSystem{
       // Time to make the fudge
       let gen_new_result = true;
       let failedRolls = [];
-      let SafetyLoopIndex = game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.maxFudgeAttemptsPerRoll;
+      let SafetyLoopIndex = DieHardSetting('dieHardSettings').fudgeConfig.maxFudgeAttemptsPerRoll;
       let newResult = undefined
       let roll = {result: undefined, active: true};
       while (gen_new_result && SafetyLoopIndex > 0) {
@@ -142,16 +151,17 @@ export default class DieHardSystem{
         else if ( eval_options.maximize ) newResult = this.faces;
         else newResult = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
 
-        let evalResult = game.settings.get('foundry-die-hard', 'dieHardSettings').system.evalFudge(newResult, userFudges[fudgeIndex].operator, userFudges[fudgeIndex].operatorValue)
+        let evalResult = DieHardSetting('dieHardSettings').system.evalFudge(newResult, userFudges[fudgeIndex].operator, userFudges[fudgeIndex].operatorValue)
         if (evalResult) {
           dieHardLog(false, functionLogName + ' - New result: ' + newResult)
           gen_new_result = false;
           roll.result = newResult
           this.results.push(roll);
-          game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm("Fudge (" + userFudges[fudgeIndex].howFormula + ") values: " + failedRolls.join(', '));
+          DieHard.dmToGm("Raw Fudge (" + userFudges[fudgeIndex].howFormula + ") values: " + failedRolls.join(', ') + "  Final: " + newResult);
+          dieHardLog(false, functionLogName + ' - dmToGm');
         } else {
           // New roll is insufficient, but lets at least check if it is "closer"
-          if (game.settings.get('foundry-die-hard', 'dieHardSettings').system.isBetterFudge(roll.result, newResult, userFudges[fudgeIndex].operator, userFudges[fudgeIndex].operatorValue)) {
+          if (DieHardSetting('dieHardSettings').system.isBetterFudge(roll.result, newResult, userFudges[fudgeIndex].operator, userFudges[fudgeIndex].operatorValue)) {
             dieHardLog(false, functionLogName + ' - New result insufficient, but at least better (' + newResult + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
             roll.result = newResult
           } else {
@@ -168,10 +178,10 @@ export default class DieHardSystem{
         userFudges[fudgeIndex].statusActive = false
 
         // Delete the fudge from the user
-        // let deletedFudge = userFudges.splice(fudgeIndex,1)
+        let deletedFudge = userFudges.splice(fudgeIndex,1)
         game.users.current.setFlag('foundry-die-hard', 'fudges', userFudges);
-        // Check if still have active fudges;
-        game.settings.get('foundry-die-hard', 'dieHardSettings').system.refreshActiveFudgesIcon()
+
+        DieHard.refreshDieHardIcons()
       }
       return roll
     } else {
@@ -180,11 +190,37 @@ export default class DieHardSystem{
     }
   }
 
+  makeId(length) {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+     }
+     return result;
+  }
+
   wrapRollEvaluate(wrapped, eval_options) {
-    let functionLogName = 'DieHardSystem.wrapRollEvaluate'
+    var uuid = game.settings.get('foundry-die-hard', 'dieHardSettings').system.makeId(6)
+    let functionLogName = 'DieHardSystem.wrapRollEvaluate-' + uuid
     dieHardLog(false, functionLogName);
     dieHardLog(false, functionLogName + ' - arguments', arguments);
     dieHardLog(false, functionLogName + ' - this', this);
+
+    // This is Better Rolls 5e; ignore
+    if (this._formula === '0' || isObjectEmpty(this.options)) {
+      // dieHardLog(false, functionLogName + ' - Better Rolls 5e - skip fudge');
+      // return wrapped(eval_options)
+      dieHardLog(false, functionLogName + ' - Better Rolls 5e - Ignore initial roll');
+
+    } else {
+      //dieHardLog(false, functionLogName + ' - NOT Better Rolls 5e - ', this._formula);
+      //dieHardLog(false, functionLogName + ' - NOT Better Rolls 5e - ', this.options);
+      //dieHardLog(false, functionLogName + ' - NOT Better Rolls 5e - ', isObjectEmpty(this.options));
+      dieHardLog(false, functionLogName + ' - Better Rolls 5e - only fudge the second roll');
+      return wrapped(eval_options)
+    }
 
     // dieHardLog(true, 'DieHardDnd5e - wrapRollEvaluate - this.constructor.name', this.constructor.name);
     dieHardLog(false, functionLogName + ' - eval_options', eval_options);
@@ -275,11 +311,13 @@ export default class DieHardSystem{
 
           if (evalResult) {
             dieHardLog(false, functionLogName + ' - Fudge not needed, but still wiped');
-            game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm('DieHard-Fudge: Fudge not needed, but still wiped...');
+            DieHard.dmToGm('DieHard-Fudge: Total Fudge not needed, but still wiped...');
+            dieHardLog(false, functionLogName + ' - dmToGm');
+
           } else {
             gen_new_result = true;
             dieHardLog(false, functionLogName + ' - Start fudging');
-            let dmMessage = "Fudge (" + result.data.fudgeHow + ") values:" + result.total;
+            let dmMessage = "Total Fudge (" + result.data.fudgeHow + ") values:" + result.total;
             let SafetyLoopIndex = game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.maxFudgeAttemptsPerRoll;
             while (gen_new_result && SafetyLoopIndex > 0) {
               SafetyLoopIndex--;
@@ -290,7 +328,8 @@ export default class DieHardSystem{
                 dieHardLog(false, functionLogName + ' - New result: ' + new_roll.total)
                 gen_new_result = false;
                 foundry.utils.mergeObject(this, new_roll);
-                game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm(dmMessage);
+                DieHard.dmToGm(dmMessage + '  Total Final: ' + new_roll.total);
+                dieHardLog(false, functionLogName + ' - dmToGm');
               } else {
                 // New roll is insufficient, but lets at least check if it is "closer"
                 if (game.settings.get('foundry-die-hard', 'dieHardSettings').system.isBetterFudge(this.total, new_roll.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)) {
@@ -304,7 +343,7 @@ export default class DieHardSystem{
             }
             if (SafetyLoopIndex === 0) {
               dieHardLog(false, functionLogName + ' - Tried until retry safety killed...');
-              game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm('DieHard-Fudge: Gave up trying to fudge; loop safety reached...');
+              DieHard.dmToGm('DieHard-Fudge: Gave up trying to fudge; loop safety reached...');
             }
           }
         }
@@ -313,24 +352,6 @@ export default class DieHardSystem{
         result = wrapped(eval_options)
       }
       return result
-      /*
-      // Check if actor has an active fudge
-      let actorFudges = game.actors.get(actorId).getFlag('foundry-die-hard', 'fudges');
-      if (! Array.isArray(actorFudges)) {
-        actorFudges = []
-      }
-      //dieHardLog(false, 'DieHardDnd5e.wrappedRoll - actorFudges', actorFudges);
-      let fudgeIndex = actorFudges.findIndex(element => { return element.whatId === rollType;});
-      if (fudgeIndex !== -1 && actorFudges[fudgeIndex].statusActive) {
-        dieHardLog(false, 'DieHardDnd5e.wrappedRoll - active actor fudge', actorFudges[fudgeIndex]);
-        foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: actorFudges[fudgeIndex].operator, fudgeOperatorValue: actorFudges[fudgeIndex].operatorValue, fudgeHow: actorFudges[fudgeIndex].howFormula }});
-        // Delete the fudge from the actor
-        let deletedFudge = actorFudges.splice(fudgeIndex,1)
-        game.actors.get(actorId).setFlag('foundry-die-hard', 'fudges', actorFudges);
-        // Check if still have active fudges;
-        this.refreshActiveFudgesIcon();
-      }
-       */
     } else {
       // Only this works!  let result = wrapped(eval_options)  return result
       // let result = wrapped(eval_options)
@@ -338,25 +359,7 @@ export default class DieHardSystem{
     }
   }
 
-  dmToGm(message) {
-    var dm_ids = [];
-    // dieHardLog(false, 'DieHardSystem.dmToGm - game.users.values()', game.users.values());
-    for (let user of game.users.values()) {
-      // dieHardLog(false, 'DieHardSystem.dmToGm - user', user);
-      if (user.isGM) {
-        dm_ids.push(user.id)
-        // dieHardLog(false, 'DieHardSystem.dmToGm - Added', user);
-      }
-    }
-    // dieHardLog(false, 'DieHardSystem.dmToGm - dm_ids', dm_ids);
-    let whisper_to_dm = ChatMessage.create({
-      user: game.user.id,
-      type: CONST.CHAT_MESSAGE_TYPES.WHISPER,
-      whisper: dm_ids,
-      blind: true,
-      content: message
-    })
-  }
+
 
   /**
     Return an array of all actors (map of id and name), defaulting to ones associated with an active player
@@ -461,6 +464,18 @@ export default class DieHardSystem{
   }
 
   async refreshActiveFudgesIcon() {
+    /*
+    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+      document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-icon-hidden");
+      //document.getElementById('die-hard-fudge-icon').classList.add("die-hard-icon-hidden");
+      return;
+    } else {
+      document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-icon-hidden");
+      //document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-icon-hidden");
+    }
+
+     */
+
     if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
       document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-icon-hidden");
       document.getElementById('die-hard-fudge-icon').classList.add("die-hard-icon-hidden");
@@ -469,6 +484,8 @@ export default class DieHardSystem{
       document.getElementById('die-hard-pause-fudge-icon').classList.add("die-hard-icon-hidden");
       document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-icon-hidden");
     }
+
+
     if (this.hasActiveFudges()) {
       document.getElementById('die-hard-fudge-icon').classList.add("die-hard-fudge-icon-active");
     } else {
@@ -551,8 +568,8 @@ export default class DieHardSystem{
 
   disableAllFudges() {
     dieHardLog(false, 'DieHardSystem : disableAllFudges', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable)
-    game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable = ! game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable
-    game.settings.get('foundry-die-hard', 'dieHardSettings').system.refreshActiveFudgesIcon();
+    DieHardSetting('dieHardSettings').fudgeConfig.globalDisable = ! game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable
+    DieHard.refreshDieHardIcons();
   }
 
   static registerTests = context => {

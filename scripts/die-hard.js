@@ -1,29 +1,30 @@
 
 import {dieHardLog, insertAfter} from "./lib/helpers.js";
-import {registerDieHardTests} from "./classes/DieHardTests.js";
 
-import DieHard from "./classes/DieHard.js";
-import DieHardConfig from "./classes/DieHardConfig.js";
+import DieHard, {DieHardSetting} from "./classes/DieHard.js";
 import DieHardVersionNotification from "./classes/DieHardVersionNotification.js";
 
 Hooks.once('init', () => {
   dieHardLog(true, 'Initializing...')
-
-  // CONFIG.diehard.allActors = true;
-  DieHardConfig.registerSettings();
-
+  DieHard.registerSettings();
+  debounce(DieHard.refreshDieHardIcons, 500)
 });
 
 Hooks.once('ready', () => {
   dieHardLog(true, 'Ready...')
-  if (game.settings.get('foundry-die-hard', 'dieHardSettings').system == null) {
+  if (DieHardSetting('dieHardSettings').system == null) {
     dieHardLog(false, 'Unsupported system for world; not rendering side bar')
     return
   }
-  game.settings.get('foundry-die-hard', 'dieHardSettings').system.hookReady();
+  DieHardSetting('dieHardSettings').system.hookReady();
 
   // Check if new version; if so send DM to GM
   DieHardVersionNotification.checkVersion()
+
+  if (game.modules.get("betterrolls5e") !== undefined && game.modules.get("betterrolls5e")?.active === true) {
+    dieHardLog(true, 'WARNING - DieHard is incompatible with Better Rolls 5e.')
+    DieHardSetting('dieHardSettings').system.dmToGm('WARNING - DieHard is incompatible with Better Rolls 5e.');
+  }
 });
 
 Hooks.on('renderSidebarTab', (app, html, data) => {
@@ -31,10 +32,8 @@ Hooks.on('renderSidebarTab', (app, html, data) => {
   if (!game.user.isGM) return;
 
   if (document.getElementById('die-hard-fudge-icon') == null) {
-    // Button hasn't been added yet
-    //dieHardLog(true, 'debounce...')
     // ToDo: Figure out how to debounce this
-    DieHard.renderFudgeIcon()
+    DieHard.renderDieHardIcons()
     // foundry.utils.debounce(() => , 100)
   }
 });
@@ -43,5 +42,3 @@ Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
   registerPackageDebugFlag('foundry-die-hard');
 });
 
-// If FVTT-Quench installed, register tests
-Hooks.on('quenchReady', registerDieHardTests);
