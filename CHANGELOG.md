@@ -40,3 +40,8 @@ Aug 1, 2022
 ## v0.0.8
 Aug 2, 2022
 * Fix issue with fudges dialog from Times removal
+
+## v0.0.9
+Aug 7, 2022
+* Lots of refactoring to cleanup code
+* Simple and Avg Karma
