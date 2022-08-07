@@ -17,6 +17,9 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   flex: 0 0 0;
   padding-left: 0px;
   color: #FFA500;
+  /*color: red;
+  */
+
 }
 .die-hard-status-button {
   margin-right: 5px;
@@ -31,7 +34,14 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
 
    */
 }
+#chat-controls .die-hard-karma-icon {
+  flex: 0 0 0;
+  padding-left: 5px;
+}
 
+#chat-controls .die-hard-karma-icon-active {
+  color: #FFA500;
+}
 
 .die-hard-column {
   width: 490px;

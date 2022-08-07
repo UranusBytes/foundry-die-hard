@@ -24,14 +24,20 @@ Currently being (quasi) managed here: https://github.com/users/UranusBytes/proje
 Extensive logging is used within the module, with debug logging enabled with the package debugging enabled
 
 ## Known Issues
-* Raw die rolls for actors not working (even if fudge defined on GM/Player)
 * It's possible to define a fudge that is impossible to achieve (especially when considering modifiers.  Or to define a fudge of "> 20" for a d20).  The failsafe is attempting to fudge 150 times, at which point the closest possible is provided.
 * When the fudge config dialog is open, fudge status/list is not updated if any are changed by other GMs and/or PC/Actor rolls
 * Completely incompatible with [Better Rolls for 5e](https://github.com/RedReign/FoundryVTT-BetterRolls5e) #6
+* If both Fudge and Karma are enabled, a single roll that's being fudged can be influed by karma
 
 # Current module Functionality
 ## Fudge
 Allow the GM to influence raw die rolls (just the dice) or roll totals (dice + modifiers)
+## Karma
+Keep a history of die rolls per user, and if they are below a threshold over a defined history, either force the next roll to be above a minimum value (Simple), or increase the roll by a small amount until the average is above the threshold (Average)
+
+# Global Config
+The individual functionality can be enabled/disabled within the module settings
+![die-hard-fudge](docs/die-hard-config.jpg)
 
 # Fudge
 ![die-hard-fudge](docs/die-hard-fudge.jpg)
@@ -70,16 +76,37 @@ A green circular arrow means the fudge will re-enable itself after being used (p
 
 ![die-hard-fudge-3](docs/die-hard-fudge-3.jpg)
 
-# Mechanics
+## Mechanics
 The way Fudge works is that the next die roll of that type (either system specific, total result w/ modifiers, or a raw die roll) for that Player or Actor will be evaluated against the formula defined.  If it doesn't meet the formula criteria, then the result is rerolled in the background (max of 150 times), with the final result presented to the PC.  As it is re-rolling, if the attempted re-roll is "closer" to the desired fudge value, it will be kept.  (For circumstances where the fudge can never be achieved, at least get as close as possible)  The GM will get a whisper that outlines if the fudge was used (with all failed results), or if it was removed without being used (if first roll met formula criteria).  When a fudge is used to influence a die (or would have, but original result was sufficient), then the fudge is disabled (unless persistence is enabled). 
 
 ![die-hard-fudge-4](docs/die-hard-fudge-4.jpg)
 
+# Karma
+![die-hard-fudge](docs/die-hard-karma.jpg)
+
+With the module enabled, a praying hands icon will be displayed above the message tray. 
+
+![die-hard-fudge](docs/die-hard-karma-0.jpg)
+
+Clicking on this icon will open a configuration dialog.
+The available karma options can be enabled by clicking on the button
+
+![die-hard-fudge](docs/die-hard-karma-1.jpg)
+
+Within the dialog, the logic used to influence each Karma module is adjustable.
+The current history of player rolls is displayed.
+
+![die-hard-fudge-2](docs/die-hard-karma-2.jpg)
+
+
+# Mechanics
+Karma only works on raw die rolls; it does not influence total rolls directly (only indirectly by influencing the raw rolls) 
+
 
 
 # Future Planned Functionality
-## Karmic dice
-All for gradual adjustment/influence of player dice over time...
+## RNG Alternatives
+Alternative RNG 
 
 # Thanks
 None of this module would be possible without the inspiration, and continued guidance/support/feedback, from @apoapostolov.  Thank you!

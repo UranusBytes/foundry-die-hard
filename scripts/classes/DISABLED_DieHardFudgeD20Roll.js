@@ -9,7 +9,7 @@ Because this extends D20Roll, I could not find a clean way to import.  I tried m
 import D20Roll from '../../../../systems/dnd5e/module/dice/d20-roll.js'
 import {dieHardLog} from "../lib/helpers.js";
 
-export default class DieHardFudgeD20Roll extends D20Roll {
+export default class DISABLED_DieHardFudgeD20Roll extends D20Roll {
   // This is a simple extension
   constructor(formula, data, options) {
     super(formula, data, options);
