@@ -18,6 +18,8 @@ Hooks.once('ready', () => {
   }
   DieHardSetting('dieHardSettings').system.hookReady();
 
+  DieHard.refreshWrappers()
+
   // Check if new version; if so send DM to GM
   DieHardVersionNotification.checkVersion()
 
@@ -30,11 +32,11 @@ Hooks.once('ready', () => {
 Hooks.on('renderSidebarTab', (app, html, data) => {
   // Only display for GM
   if (!game.user.isGM) return;
-
   if (document.getElementById('die-hard-fudge-icon') == null) {
     // ToDo: Figure out how to debounce this
     DieHard.renderDieHardIcons()
     // foundry.utils.debounce(() => , 100)
+    DieHard.refreshDieHardStatus()
   }
 });
 

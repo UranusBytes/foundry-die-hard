@@ -1,0 +1,61 @@
+<form id="die-hard-karma-config">
+<div>
+        <h3 class="form-header" id="karmaSimpleHeader"><span style="font-weight: bold;">Simple Karma: </span> Gentle nudges...</h3>
+
+        <div class="die-hard-form-group">
+            <input type="checkbox" name="karmaSimpleEnabled" value="true" class="die-hard-checkbox" id="karmaSimpleEnabled" {{#if simpleKarma.enabled}}checked{{/if}}><label for="karmaSimpleEnabled" style="display: block; margin-left: auto; margin-right: auto;">Enable Simple Karma</label>
+        </div>
+        <div class="form-group" id="divKarmaSimpleHistory" {{#unless simpleKarma.enabled}}style="display:none;"{{/unless}}  >
+            <label for="karmaSimpleHistory">History</label>
+            <input type="range" name="karmaSimpleHistory" value="{{ simpleKarma.history }}" min="5" max="50" step="5" data-dtype="Number" style="max-width:150px; padding-right: 20px"/>
+            <p class="notes">If the last <span class="range-value" style="font-weight: bold;">{{ simpleKarma.history }}</span> d20 dice rolls...</p>
+        </div>
+        <div class="form-group" id="divKarmaSimpleThreshold" {{#unless simpleKarma.enabled}}style="display:none;"{{/unless}}>
+            <label for="karmaSimpleThreshold">Threshold</label>
+            <input type="range" name="karmaSimpleThreshold" value="{{ simpleKarma.threshold }}" min="1" max="20" step="1" data-dtype="Number" style="max-width:150px; padding-right: 20px"/>
+            <p class="notes">... are equal or less than <span class="range-value" style="font-weight: bold;">{{ simpleKarma.threshold }}</span>, then...</p>
+        </div>
+        <div class="form-group" id="divKarmaSimpleFloor" {{#unless simpleKarma.enabled}}style="display:none;"{{/unless}}>
+            <label for="karmaSimpleFloor">Next Roll Floor</label>
+            <input type="range" name="karmaSimpleFloor" value="{{ simpleKarma.floor }}" min="1" max="20" step="1" data-dtype="Number" style="max-width:150px; padding-right: 20px"/>
+            <p class="notes">...the next die roll will be <span class="range-value" style="font-weight: bold">{{ simpleKarma.floor }}</span> or higher.</p>
+        </div>
+        <div class="form-group" id="divKarmaSimplePlayerStats" {{#unless simpleKarma.enabled}}style="display:none;"{{/unless}}>
+            Current Player Stats
+            {{#each simpleKarmaPlayerStats}}
+            <p class="notes" style="padding-left: 20px"><span style="font-weight: bold;">{{ name }}:</span> {{#each stats}}{{#if (lte this @root.simpleKarma.threshold) }}<span style="font-weight: bold;font-style: italic">{{/if}}{{ this }}{{#if (lte this @root.simpleKarma.threshold) }}</span>{{/if}}{{#unless @last}}, {{/unless}}{{/each}}</p>
+            {{/each}}
+        </div>
+        <div class="form-group" style="height:20px">
+            &nbsp;
+        </div>
+
+        <h3 class="form-header" id="karmaAvgHeader"><span style="font-weight: bold;">Avg Karma: </span> Raise a below average streak...</h3>
+        <div class="die-hard-form-group">
+        <input type="checkbox" name="karmaAvgEnabled" value="true" class="die-hard-checkbox" id="karmaAvgEnabled" {{#if avgKarma.enabled}}checked{{/if}}><label for="karmaAvgEnabled" style="display: block; margin-left: auto; margin-right: auto;">Enable Average Karma</label>
+        </div>
+        <div class="form-group" id="divKarmaAvgHistory" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}  >
+            <label for="karmaAvgHistory" style="font-style: italic;">History</label>
+            <input type="range" name="karmaAvgHistory" value="{{ avgKarma.history }}" min="5" max="50" step="5" data-dtype="Number" style="max-width:150px; padding-right: 20px"//>
+            <p class="notes" style="font-style: italic;">If the last <span class="range-value" style="font-weight: bold;">{{ avgKarma.history }}</span> d20 dice rolls...</p>
+        </div>
+        <div class="form-group" id="divKarmaAvgThreshold" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}  >
+            <label for="karmaAvgThreshold">Threshold</label>
+            <input type="range" name="karmaAvgThreshold" value="{{ avgKarma.threshold }}" min="1" max="20" step="1" data-dtype="Number" style="max-width:150px; padding-right: 20px"/ />
+            <p class="notes">...is equal or less than <span class="range-value" style="font-weight: bold;">{{ avgKarma.threshold }}</span>, then...</p>
+        </div>
+        <div class="form-group" id="divKarmaAvgNudge" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}  >
+            <label for="karmaAvgNudge">Next Roll Increase</label>
+            <input type="range" name="karmaAvgNudge" value="{{ avgKarma.nudge }}" min="1" max="10" step="1" data-dtype="Number" style="max-width:150px; padding-right: 20px"/ />
+            <p class="notes">...the next die roll and each following roll will be increased by <span class="range-value" style="font-weight: bold;">{{ avgKarma.nudge }}</span>, cumulatively, until the average is equal or higher than <span id="karmaAvgThresholdMore" style="font-weight: bold;">{{ avgKarma.threshold }}</span>.</p>
+        </div>
+        <div class="form-group" id="divKarmaAvgPlayerStats" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}>
+            Current Player Stats
+            {{#each avgKarmaPlayerStats}}
+            <p class="notes" style="padding-left: 20px"><span style="font-weight: bold;">{{ name }}:</span> [{{ statsString }}] = <span style="font-weight: bold;">{{ avg }}</span> avg</p>
+            {{/each}}
+
+        </div>
+
+</div>
+</form>

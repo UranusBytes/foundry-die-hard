@@ -1,4 +1,5 @@
 import {dieHardLog} from "../lib/helpers.js";
+import DieHard, {DieHardSetting} from "./DieHard.js";
 
 export default class DieHardFudgeDialog extends FormApplication {
   static get defaultOptions() {
@@ -23,7 +24,7 @@ export default class DieHardFudgeDialog extends FormApplication {
     this.operatorValue = null;
     Hooks.once('closeApplication', (app, html) => {
       if (app.id === 'die-hard-fudge-config') {
-        game.settings.get('foundry-die-hard', 'dieHardSettings').system.refreshActiveFudgesIcon()
+        DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
       }
     })
   }
@@ -31,7 +32,7 @@ export default class DieHardFudgeDialog extends FormApplication {
   async getData() {
     dieHardLog(false, 'DieHardFudgeDialog - getData')
     let activeFudges = []
-    let allFudges = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getAllFudges()
+    let allFudges = DieHardSetting('dieHardSettings').system.getAllFudges()
     for (let fudgeType in allFudges) {
       dieHardLog(false, 'DieHardFudgeDialog - fudgeType', fudgeType, allFudges[fudgeType])
       for (let typeObject in allFudges[fudgeType]) {
@@ -46,10 +47,10 @@ export default class DieHardFudgeDialog extends FormApplication {
     }
 
     let dialogData = {
-      whoGmOptions: game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhoGmOptions(),
-      whoUserOptions: game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhoUserOptions(),
-      whoActorOptions: game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhoActorOptions(),
-      whatOptions: game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatOptions(),
+      whoGmOptions: DieHardSetting('dieHardSettings').system.getFudgeWhoGmOptions(),
+      whoUserOptions: DieHardSetting('dieHardSettings').system.getFudgeWhoUserOptions(),
+      //whoActorOptions: DieHardSetting('dieHardSettings').system.getFudgeWhoActorOptions(),
+      whatOptions: DieHardSetting('dieHardSettings').system.getFudgeWhatOptions(),
       activeFudges: activeFudges
     };
     dieHardLog(false, 'DieHardFudgeDialog - dialogData', dialogData)
@@ -248,11 +249,11 @@ export default class DieHardFudgeDialog extends FormApplication {
         }
         let whatOption = {}
         if (formData.fudgeWhat.slice(0,3) === 'raw') {
-          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatRawOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = DieHardSetting('dieHardSettings').system.getFudgeWhatRawOptions().find(element => element.id === formData.fudgeWhat);
         } else  if (formData.fudgeWhat.slice(0,5) === 'total') {
-          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatTotalOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = DieHardSetting('dieHardSettings').system.getFudgeWhatTotalOptions().find(element => element.id === formData.fudgeWhat);
         } else {
-          whatOption = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = DieHardSetting('dieHardSettings').system.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
         }
 
         let fudgeTimes = 1;

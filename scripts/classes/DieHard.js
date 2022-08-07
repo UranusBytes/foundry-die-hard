@@ -1,6 +1,6 @@
 import {dieHardLog, insertAfter} from '../lib/helpers.js';
 import DieHardFudgeDialog from './DieHardFudgeDialog.js';
-import DieHardKarmicDialog from './DieHardKarmicDialog.js';
+import DieHardKarmaDialog from './DieHardKarmaDialog.js';
 import DieHardDnd5e from './DieHardDnd5e.js';
 import DieHardPf2e from './DieHardPf2e.js';
 
@@ -20,7 +20,7 @@ export default class DieHard {
     }
     dieHardLog(false, 'Render side bar')
 
-    if (DieHardSetting('fudgeEnabled') && document.querySelector('.die-hard-pause-fudge-icon') === null) {
+    if (document.querySelector('.die-hard-pause-fudge-icon') === null) {
       let fudgeButton = document.createElement('label');
       fudgeButton.classList.add('die-hard-fudge-icon');
       fudgeButton.innerHTML = '<span title="Fudge Paused"><i id="die-hard-pause-fudge-icon" class="fas fa-pause-circle die-hard-icon-hidden"></i></span><span title="Fudge"><i id="die-hard-fudge-icon" class="fas fa-poop"></i></span>';
@@ -36,30 +36,31 @@ export default class DieHard {
       try {
         //insertAfter(pauseButton, document.querySelector('.chat-control-icon'));
         insertAfter(fudgeButton, document.querySelector('.chat-control-icon'));
-        DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
+        //DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
       }
       catch (e) {  }
     }
 
-    if (DieHardSetting('karmaEnabled') && document.querySelector('.die-hard-karmic-icon') === null) {
-      let karmicButton = document.createElement('label');
-      karmicButton.classList.add('die-hard-karmic-icon');
-      karmicButton.innerHTML = '<span title="Karmic"><i id="die-hard-karmic-icon" class="fas fa-praying-hands"></i></span>';
-      karmicButton.addEventListener('click', async (ev) => {
-        new DieHardKarmicDialog().render(true);
+    if (document.querySelector('.die-hard-karma-icon') === null) {
+      let karmaButton = document.createElement('label');
+      karmaButton.classList.add('die-hard-karma-icon');
+      karmaButton.innerHTML = '<span title="Karma"><i id="die-hard-karma-icon" class="fas fa-praying-hands"></i></span>';
+      karmaButton.addEventListener('click', async (ev) => {
+        new DieHardKarmaDialog().render(true);
       });
 
       // ToDo: Fix this ugly hack
       // the document object isn't existing sometimes yet, so just ignore.  It'll eventually render
       try {
-        insertAfter(karmicButton, document.querySelector('.chat-control-icon'));
+        insertAfter(karmaButton, document.querySelector('.chat-control-icon'));
       } catch (e) {
       }
     }
+    DieHard.refreshDieHardIcons();
   }
 
-  static registerSettings() {
-    dieHardLog(false, 'DieHard.registerSettings')
+  static getDefaultDieHardSettings() {
+    dieHardLog(false, 'DieHard.getDefaultDieHardSettings')
     let dieHardSettings = {
       system: null,
       debug: {
@@ -81,14 +82,29 @@ export default class DieHard {
     } else {
       dieHardLog(true, 'Unsupport game system: ' + game.system.id)
     }
+    return dieHardSettings
+  }
 
-    game.settings.register('foundry-die-hard', 'dieHardSettings', {
-      name: '',
-      default: dieHardSettings,
-      type: Object,
-      scope: 'world',
-      config: false,
-    });
+  static getDefaultSimpleKarmaSettings() {
+    return {
+      enabled: true,
+      history: 5,
+      threshold: 5,
+      floor: 5
+    }
+  }
+
+  static getAvgSimpleKarmaSettings() {
+    return {
+    enabled: true,
+      history: 5,
+      threshold: 5,
+      nudge: 5
+    }
+  }
+
+  static registerSettings() {
+    dieHardLog(false, 'DieHard.registerSettings')
 
     // Enables fudge
 		game.settings.register('foundry-die-hard', 'fudgeEnabled', {
@@ -111,43 +127,98 @@ export default class DieHard {
 			type: Boolean,
       onChange: DieHard.refreshDieHardStatus
 		});
+
+    // Enables debug die
+		game.settings.register('foundry-die-hard', 'debugDieResultEnabled', {
+			name: 'Debug Die Result Enabled',
+			hint: 'Enable the use of Debug Die Result',
+			scope: 'world',
+			config: true,
+			default: true,
+			type: Boolean
+		});
+		game.settings.register('foundry-die-hard', 'debugDieResult', {
+			name: 'Debug Die Result',
+			hint: 'Make every initial roll of die value',
+			scope: 'world',
+			config: true,
+			default: 5,
+			type: Number,
+      range: {
+        min: 1,
+        max: 20,
+        step: 1
+      }
+		});
+
+    game.settings.register('foundry-die-hard', 'dieHardSettings', {
+      name: '',
+      default: DieHard.getDefaultDieHardSettings(),
+      type: Object,
+      scope: 'world',
+      config: false,
+    });
+
+    // Enables fudge
+		game.settings.register('foundry-die-hard', 'simpleKarmaSettings', {
+			name: 'Simple Karma Settings',
+			hint: 'Simple Karma Settings',
+			scope: 'world',
+			config: false,
+			default: DieHard.getDefaultSimpleKarmaSettings(),
+			type: Object
+		});
+
+    // Enables karma
+		game.settings.register('foundry-die-hard', 'avgKarmaSettings', {
+			name: 'Average Karma Settings',
+			hint: 'Average Karma Settings',
+			scope: 'world',
+			config: false,
+			default: DieHard.getAvgSimpleKarmaSettings(),
+			type: Object
+		});
+
+
   }
 
   static async refreshDieHardStatus() {
-    if (DieHardSetting('fudgeEnabled')) {
-      DieHardSetting('dieHardSettings').system.registerLibWraps()
-    } else {
-      DieHardSetting('dieHardSettings').system.unregisterLibWraps()
-    }
-    DieHard.refreshDieHardIcons()
+    dieHardLog(false, 'DieHard.refreshDieHardStatus');
+    await DieHard.refreshDieHardIcons()
+    DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
   }
 
   static async refreshDieHardIcons() {
     dieHardLog(false, 'DieHard.refreshDieHardIcons');
-    if (DieHardSetting('fudgeEnabled')) {
-      if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-        document.getElementById('die-hard-pause-fudge-icon').classList.remove('die-hard-icon-hidden');
-        document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-hidden');
-        return;
+    // Ugly fix for objects not existing yet
+    // ToDo: clean this up
+    try{
+      if (DieHardSetting('fudgeEnabled')) {
+        if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+          document.getElementById('die-hard-pause-fudge-icon').classList.remove('die-hard-icon-hidden');
+          document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-hidden');
+          return;
+        } else {
+          document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
+          document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-hidden');
+        }
+        if (DieHardSetting('dieHardSettings').system.hasActiveFudges()) {
+          document.getElementById('die-hard-fudge-icon').classList.add('die-hard-fudge-icon-active');
+        } else {
+          document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-fudge-icon-active');
+        }
       } else {
         document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
-        document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-hidden');
+        document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-hidden');
       }
-      if (DieHardSetting('dieHardSettings').system.hasActiveFudges()) {
-        document.getElementById('die-hard-fudge-icon').classList.add('die-hard-fudge-icon-active');
-      } else {
-        document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-fudge-icon-active');
-      }
-    } else {
-      document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
-      document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-hidden');
-    }
 
-    if (DieHardSetting('karmaEnabled')) {
-      document.getElementById('die-hard-karmic-icon').classList.remove('die-hard-icon-hidden');
-    } else {
-      document.getElementById('die-hard-karmic-icon').classList.add('die-hard-icon-hidden');
+      if (DieHardSetting('karmaEnabled')) {
+        document.getElementById('die-hard-karma-icon').classList.remove('die-hard-icon-hidden');
+      } else {
+        document.getElementById('die-hard-karma-icon').classList.add('die-hard-icon-hidden');
+      }
     }
+    catch (e) {  }
   }
 
   static async dmToGm(message) {

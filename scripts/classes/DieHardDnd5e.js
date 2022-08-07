@@ -9,9 +9,14 @@ export default class DieHardDnd5e extends DieHardSystem{
     dieHardLog(false, 'DieHardDnd5e.constructor');
     super();
 
-    if (DieHardSetting('fudgeEnabled')) {
-      this.registerLibWraps()
-    }
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
+
+    libWrapper.register('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
+
+    libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
 
     // See notes in DISABLED_DieHardFudgeD20Roll
     CONFIG.Dice.DieHardFudgeD20Roll = DISABLED_DieHardFudgeD20Roll;
@@ -41,33 +46,11 @@ export default class DieHardDnd5e extends DieHardSystem{
     ]
   }
 
-  registerLibWraps() {
-    dieHardLog(false, 'DieHardDnd5e.registerLibWraps');
-    this.registerBaseLibWraps()
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
-  }
-
-  unregisterLibWraps() {
-    dieHardLog(false, 'DieHardDnd5e.registerLibWraps');
-    this.unregisterBaseLibWraps()
-    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
-    libWrapper.unregister('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
-    libWrapper.unregister('foundry-die-hard', 'CONFIG.Item.documentClass.prototype.rollAttack', this.entityRollAttack, 'WRAPPER');
-    libWrapper.unregister('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
-  }
-
   hookReady() {
     dieHardLog(false, 'Dnd 5e System Hook - Ready');
   }
 
-  /*
+
   fudgeD20Roll(result, evaluate_options) {
     let functionLogName = 'DieHardDnd5e.fudgeD20Roll'
     dieHardLog(false, functionLogName);
@@ -134,8 +117,6 @@ export default class DieHardDnd5e extends DieHardSystem{
     return result
   }
 
-
-   */
   d20rollEvaluate(wrapped, evaluate_options) {
     dieHardLog(false, 'DieHardDnd5e.d20rollEvaluate', this.data);
 
@@ -157,81 +138,39 @@ export default class DieHardDnd5e extends DieHardSystem{
     let result = wrapped.call(evaluate_options)
     // If a fudge re-roll is allowed
     if (fudge){
-      result.then(function(value) {game.settings.get('foundry-die-hard', 'dieHardSettings').system.fudgeD20Roll(value, evaluate_options)})
+      result.then(function(value) {DieHardSetting('dieHardSettings').system.fudgeD20Roll(value, evaluate_options)})
     }
-
-    /*
-    Original WORKING ???
-    //let result = wrapped(evaluate_options); - ORIGINAL
-    let result = wrapped.bind(this)(evaluate_options);
-    // If a fudge re-roll is allowed
-    if (fudge){
-      result.then((value) => game.settings.get('foundry-die-hard', 'dieHardSettings').system.fudgeD20Roll(value, evaluate_options));
-    }
-     */
 
     return result
   }
 
-  /**
-   * Generic wrapper for all rolls
-   * @param options
-   * @param actorId
-   * @param rollType
-   */
-
-  wrappedRoll(options, actorId, rollType) {
+   wrappedRoll(options, actorId, rollType) {
     let functionLogName = 'DieHardDnd5e.wrappedRoll'
-    //dieHardLog(false, 'DieHardDnd5e.wrappedRoll - this', this);
-    //dieHardLog(false, 'DieHardDnd5e.wrappedRoll - options', options);
-    //dieHardLog(false, 'DieHardDnd5e.wrappedRoll - actorId', actorId);
     dieHardLog(false, functionLogName + ' - rollType', rollType);
 
-    // Check if actor has an active fudge
-    let actorFudges = game.actors.get(actorId).getFlag('foundry-die-hard', 'fudges');
-    if (! Array.isArray(actorFudges)) {
-      actorFudges = []
-    }
-    dieHardLog(false, functionLogName + ' - actorFudges', actorFudges);
-    let fudgeIndex = actorFudges.findIndex(element => { return ((element.whatId === rollType) && (element.statusActive));});
-    if (fudgeIndex !== -1) {
-      dieHardLog(false, functionLogName + ' - active actor fudge', actorFudges[fudgeIndex]);
-      foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: actorFudges[fudgeIndex].operator, fudgeOperatorValue: actorFudges[fudgeIndex].operatorValue, fudgeHow: actorFudges[fudgeIndex].howFormula }});
-      if (actorFudges[fudgeIndex].statusEndless) {
-        dieHardLog(false, functionLogName + ' - fudge is endless');
-      } else {
-        // Disable the fudge
-        actorFudges[fudgeIndex].statusActive = false
-
-        // Delete the fudge from the actor
-        // let deletedFudge = actorFudges.splice(fudgeIndex, 1)
-        game.actors.get(actorId).setFlag('foundry-die-hard', 'fudges', actorFudges);
-        // Check if still have active fudges;
-        this.refreshActiveFudgesIcon();
-      }
-    }
-
-    // Check if user has an active fudge
-    let userFudges = game.users.current.getFlag('foundry-die-hard', 'fudges');
-    if (! Array.isArray(userFudges)) {
-      userFudges = []
-    }
-    dieHardLog(false, functionLogName + ' - userFudges', userFudges);
-    fudgeIndex = userFudges.findIndex(element => { return ((element.whatId === rollType) && (element.statusActive));});
-    if (fudgeIndex !== -1) {
-      dieHardLog(false, functionLogName + ' - active user fudge', userFudges[fudgeIndex]);
-      foundry.utils.mergeObject(options, {data: {fudge: true, fudgeOperator: userFudges[fudgeIndex].operator, fudgeOperatorValue: userFudges[fudgeIndex].operatorValue, fudgeHow: userFudges[fudgeIndex].howFormula }});
-      if (userFudges[fudgeIndex].statusEndless) {
-        dieHardLog(false, functionLogName + ' - fudge is endless');
-      } else {
-        // Disable the fudge
-        userFudges[fudgeIndex].statusActive = false
-
-        // Delete the fudge from the user
-        // let deletedFudge = userFudges.splice(fudgeIndex, 1)
-        game.users.current.setFlag('foundry-die-hard', 'fudges', userFudges);
-        // Check if still have active fudges;
-        this.refreshActiveFudgesIcon();
+    if (! DieHardSetting('fudgeEnabled') ) {
+      dieHardLog(true, functionLogName + ' - Fudge disabled');
+    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+      dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
+    } else {
+      // Check if user has an active fudge
+      let userFudge = this.getUserFudge(rollType)
+      if (userFudge !== null) {
+        dieHardLog(false, functionLogName + ' - active user fudge', userFudge);
+        foundry.utils.mergeObject(options, {
+          data: {
+            fudge: true,
+            fudgeOperator: userFudge.operator,
+            fudgeOperatorValue: userFudge.operatorValue,
+            fudgeHow: userFudge.howFormula
+          }
+        });
+        if (userFudge.statusEndless) {
+          dieHardLog(false, functionLogName + ' - fudge is endless');
+        } else {
+          // Disable the fudge
+          this.disableUserFudge(userFudge.id)
+        }
       }
     }
   }
