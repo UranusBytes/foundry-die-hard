@@ -1,4 +1,5 @@
 import {dieHardLog} from "../lib/helpers.js";
+import DieHard from "./DieHard.js";
 /*
  * Provides a mechanism to send whisper to GM when new version installed.
  */
@@ -50,7 +51,7 @@ export default class DieHardVersionNotification {
       finalMessage += commonFooter
 
       // GM has never seen current version message
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm(finalMessage);
+      DieHard.dmToGm(finalMessage);
 
       // Update the saved version
       game.user.setFlag('foundry-die-hard', 'versionNotification', notificationVersion)
