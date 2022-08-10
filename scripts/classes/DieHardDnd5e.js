@@ -1,7 +1,7 @@
 import {dieHardLog} from "../lib/helpers.js";
 
 import DieHardSystem from "./DieHardSystem.js";
-import DISABLED_DieHardFudgeD20Roll from "./DISABLED_DieHardFudgeD20Roll.js";
+import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
 import {DieHardSetting} from "./DieHard.js";
 
 export default class DieHardDnd5e extends DieHardSystem{
@@ -18,8 +18,8 @@ export default class DieHardDnd5e extends DieHardSystem{
 
     libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
 
-    // See notes in DISABLED_DieHardFudgeD20Roll
-    CONFIG.Dice.DieHardFudgeD20Roll = DISABLED_DieHardFudgeD20Roll;
+    // See notes in DieHardFudgeD20Roll
+    CONFIG.Dice.DieHardFudgeD20Roll = DieHardFudgeD20Roll;
 
     this.totalRollClassName = ["Roll", "D20Roll"]
     this.fudgeWhatOptions = [
@@ -73,7 +73,7 @@ export default class DieHardDnd5e extends DieHardSystem{
         SafetyLoopIndex--;
 
         // ToDo: Can a "clone()" or a "reroll()" be used instead?  https://foundryvtt.com/api/Roll.html#clone
-        const new_roll = new DISABLED_DieHardFudgeD20Roll(
+        const new_roll = new DieHardFudgeD20Roll(
           result.formula,
           result.data, {
             flavor: result.options.flavor,
