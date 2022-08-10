@@ -211,7 +211,7 @@ export default class DieHardSystem {
         if (userFudge.statusEndless) {
           dieHardLog(false, functionLogName + ' - fudge is endless');
         } else {
-          this.disableUserFudge(userFudge.id)
+          DieHardSetting('dieHardSettings').system.disableUserFudge(userFudge.id)
         }
         // Return the fudged roll; no taking karma into consideration
         return roll
@@ -386,7 +386,7 @@ export default class DieHardSystem {
             if (userFudge.statusEndless) {
               dieHardLog(false, functionLogName + ' - fudge is endless');
             } else {
-              this.disableUserFudge(userFudge.id)
+              DieHardSetting('dieHardSettings').system.disableUserFudge(userFudge.id)
             }
             // This is a root roll, so allow fudge re-roll
             // Stop looking for more opportunities to fudge
