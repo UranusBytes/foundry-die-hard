@@ -14,7 +14,7 @@ export default class DieHard {
 
   static renderDieHardIcons() {
     dieHardLog(false, 'DieHard.renderDieHardIcons')
-    if (DieHardSetting('dieHardSettings').system == null) {
+    if (game.dieHardSystem == null) {
       dieHardLog(false, 'Unsupported system for world; not rendering side bar')
       return
     }
@@ -36,7 +36,7 @@ export default class DieHard {
       try {
         //insertAfter(pauseButton, document.querySelector('.chat-control-icon'));
         insertAfter(fudgeButton, document.querySelector('.chat-control-icon'));
-        //DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
+        //game.dieHardSystem.refreshActiveFudgesIcon()
       }
       catch (e) {  }
     }
@@ -62,7 +62,6 @@ export default class DieHard {
   static getDefaultDieHardSettings() {
     dieHardLog(false, 'DieHard.getDefaultDieHardSettings')
     let dieHardSettings = {
-      system: null,
       debug: {
         allActors: true
       },
@@ -72,16 +71,6 @@ export default class DieHard {
       },
       gmFudges: []
     };
-
-    if (game.system.id == 'dnd5e') {
-      dieHardLog(true, 'Configuring for dndn5e system')
-      dieHardSettings.system = new DieHardDnd5e;
-    } else if (game.system.id == 'pf2e') {
-      dieHardLog(true, 'Configuring for pf2e system')
-      dieHardSettings.system = new DieHardPf2e;
-    } else {
-      dieHardLog(true, 'Unsupport game system: ' + game.system.id)
-    }
     return dieHardSettings
   }
 
@@ -105,6 +94,16 @@ export default class DieHard {
 
   static registerSettings() {
     dieHardLog(false, 'DieHard.registerSettings')
+    
+    if (game.system.id === 'dnd5e') {
+      dieHardLog(true, 'Configuring for dndn5e system')
+      game.dieHardSystem = new DieHardDnd5e;
+    } else if (game.system.id === 'pf2e') {
+      dieHardLog(true, 'Configuring for pf2e system')
+      game.dieHardSystem = new DieHardPf2e;
+    } else {
+      dieHardLog(true, 'Unsupport game system: ' + game.system.id)
+    }
 
     // Enables fudge
 		game.settings.register('foundry-die-hard', 'fudgeEnabled', {
@@ -185,7 +184,7 @@ export default class DieHard {
   static async refreshDieHardStatus() {
     dieHardLog(false, 'DieHard.refreshDieHardStatus');
     await DieHard.refreshDieHardIcons()
-    DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
+    game.dieHardSystem.refreshActiveFudgesIcon()
   }
 
   static async refreshDieHardIcons() {
@@ -202,7 +201,7 @@ export default class DieHard {
           document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
           document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-hidden');
         }
-        if (DieHardSetting('dieHardSettings').system.hasActiveFudges()) {
+        if (game.dieHardSystem.hasActiveFudges()) {
           document.getElementById('die-hard-fudge-icon').classList.add('die-hard-fudge-icon-active');
         } else {
           document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-fudge-icon-active');

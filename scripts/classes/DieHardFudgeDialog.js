@@ -24,7 +24,7 @@ export default class DieHardFudgeDialog extends FormApplication {
     this.operatorValue = null;
     Hooks.once('closeApplication', (app, html) => {
       if (app.id === 'die-hard-fudge-config') {
-        DieHardSetting('dieHardSettings').system.refreshActiveFudgesIcon()
+        game.dieHardSystem.refreshActiveFudgesIcon()
       }
     })
   }
@@ -32,7 +32,7 @@ export default class DieHardFudgeDialog extends FormApplication {
   async getData() {
     dieHardLog(false, 'DieHardFudgeDialog - getData')
     let activeFudges = []
-    let allFudges = DieHardSetting('dieHardSettings').system.getAllFudges()
+    let allFudges = game.dieHardSystem.getAllFudges()
     for (let fudgeType in allFudges) {
       dieHardLog(false, 'DieHardFudgeDialog - fudgeType', fudgeType, allFudges[fudgeType])
       for (let typeObject in allFudges[fudgeType]) {
@@ -47,10 +47,10 @@ export default class DieHardFudgeDialog extends FormApplication {
     }
 
     let dialogData = {
-      whoGmOptions: DieHardSetting('dieHardSettings').system.getFudgeWhoGmOptions(),
-      whoUserOptions: DieHardSetting('dieHardSettings').system.getFudgeWhoUserOptions(),
-      //whoActorOptions: DieHardSetting('dieHardSettings').system.getFudgeWhoActorOptions(),
-      whatOptions: DieHardSetting('dieHardSettings').system.getFudgeWhatOptions(),
+      whoGmOptions: game.dieHardSystem.getFudgeWhoGmOptions(),
+      whoUserOptions: game.dieHardSystem.getFudgeWhoUserOptions(),
+      //whoActorOptions: game.dieHardSystem.getFudgeWhoActorOptions(),
+      whatOptions: game.dieHardSystem.getFudgeWhatOptions(),
       activeFudges: activeFudges
     };
     dieHardLog(false, 'DieHardFudgeDialog - dialogData', dialogData)
@@ -249,11 +249,11 @@ export default class DieHardFudgeDialog extends FormApplication {
         }
         let whatOption = {}
         if (formData.fudgeWhat.slice(0,3) === 'raw') {
-          whatOption = DieHardSetting('dieHardSettings').system.getFudgeWhatRawOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = game.dieHardSystem.getFudgeWhatRawOptions().find(element => element.id === formData.fudgeWhat);
         } else  if (formData.fudgeWhat.slice(0,5) === 'total') {
-          whatOption = DieHardSetting('dieHardSettings').system.getFudgeWhatTotalOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = game.dieHardSystem.getFudgeWhatTotalOptions().find(element => element.id === formData.fudgeWhat);
         } else {
-          whatOption = DieHardSetting('dieHardSettings').system.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
+          whatOption = game.dieHardSystem.getFudgeWhatOptions().find(element => element.id === formData.fudgeWhat);
         }
 
         let fudgeTimes = 1;

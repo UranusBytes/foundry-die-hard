@@ -160,7 +160,7 @@ export default class DieHardSystem {
       dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active raw fudge
-      let userFudge = DieHardSetting('dieHardSettings').system.getUserFudge('rawd' + this.faces)
+      let userFudge = game.dieHardSystem.getUserFudge('rawd' + this.faces)
       dieHardLog(true, functionLogName + ' - userFudge', userFudge);
       if (userFudge !== null) {
         dieHardLog(false, functionLogName + ' - active user raw fudge', userFudge);
@@ -186,7 +186,7 @@ export default class DieHardSystem {
             else newResult = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
           }
 
-          let evalResult = DieHardSetting('dieHardSettings').system.evalFudge(newResult, userFudge.operator, userFudge.operatorValue)
+          let evalResult = game.dieHardSystem.evalFudge(newResult, userFudge.operator, userFudge.operatorValue)
           if (evalResult) {
             dieHardLog(false, functionLogName + ' - New result: ' + newResult)
             gen_new_result = false;
@@ -195,7 +195,7 @@ export default class DieHardSystem {
             DieHard.dmToGm("Raw Fudge (" + userFudge.howFormula + ") values: " + failedRolls.join(', ') + "  Final: " + newResult);
           } else {
             // New roll is insufficient, but lets at least check if it is "closer"
-            if (DieHardSetting('dieHardSettings').system.isBetterFudge(roll.result, newResult, userFudge.operator, userFudge.operatorValue)) {
+            if (game.dieHardSystem.isBetterFudge(roll.result, newResult, userFudge.operator, userFudge.operatorValue)) {
               dieHardLog(false, functionLogName + ' - New result insufficient, but at least better (' + newResult + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
               roll.result = newResult
             } else {
@@ -211,7 +211,7 @@ export default class DieHardSystem {
         if (userFudge.statusEndless) {
           dieHardLog(false, functionLogName + ' - fudge is endless');
         } else {
-          DieHardSetting('dieHardSettings').system.disableUserFudge(userFudge.id)
+          game.dieHardSystem.disableUserFudge(userFudge.id)
         }
         // Return the fudged roll; no taking karma into consideration
         return roll
@@ -361,7 +361,7 @@ export default class DieHardSystem {
       dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if a total die roll (otherwise some type of system specific roll)
-      if (DieHardSetting('dieHardSettings').system.totalRollClassName.indexOf(this.constructor.name) !== -1) {
+      if (game.dieHardSystem.totalRollClassName.indexOf(this.constructor.name) !== -1) {
         dieHardLog(false, functionLogName + ' - total roll; figure out if needs to be fudged or is a recursive fudge');
 
         for (let die in this.dice) {
@@ -371,7 +371,7 @@ export default class DieHardSystem {
           }
 
           dieHardLog(false, functionLogName + ' - dice faces', this.dice[die].faces);
-          let userFudge = DieHardSetting('dieHardSettings').system.getUserFudge('totald' + this.dice[die].faces)
+          let userFudge = game.dieHardSystem.getUserFudge('totald' + this.dice[die].faces)
           if (userFudge !== null) {
             dieHardLog(false, functionLogName + ' - active user total fudge', userFudge);
             foundry.utils.mergeObject(this, {
@@ -386,7 +386,7 @@ export default class DieHardSystem {
             if (userFudge.statusEndless) {
               dieHardLog(false, functionLogName + ' - fudge is endless');
             } else {
-              DieHardSetting('dieHardSettings').system.disableUserFudge(userFudge.id)
+              game.dieHardSystem.disableUserFudge(userFudge.id)
             }
             // This is a root roll, so allow fudge re-roll
             // Stop looking for more opportunities to fudge
@@ -403,7 +403,7 @@ export default class DieHardSystem {
             dieHardLog(false, functionLogName + ' - base roll', this);
             dieHardLog(false, functionLogName + ' - result', result);
             let gen_new_result = false;
-            let evalResult = DieHardSetting('dieHardSettings').system.evalFudge(this.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)
+            let evalResult = game.dieHardSystem.evalFudge(this.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)
 
             if (evalResult) {
               dieHardLog(false, functionLogName + ' - Fudge not needed, but still disabled');
@@ -419,7 +419,7 @@ export default class DieHardSystem {
                 SafetyLoopIndex--;
                 let new_roll = new DieHardFudgeRoll(this._formula, this.data, this.options)
                 new_roll.evaluate({async: false})
-                evalResult = DieHardSetting('dieHardSettings').system.evalFudge(new_roll.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)
+                evalResult = game.dieHardSystem.evalFudge(new_roll.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)
                 if (evalResult) {
                   dieHardLog(false, functionLogName + ' - New result: ' + new_roll.total)
                   gen_new_result = false;
@@ -427,7 +427,7 @@ export default class DieHardSystem {
                   DieHard.dmToGm("Total Fudge (" + result.data.fudgeHow + ") values: " + failedRolls.join(', ') + "  Final: " + new_roll.total);
                 } else {
                   // New roll is insufficient, but lets at least check if it is "closer"
-                  if (DieHardSetting('dieHardSettings').system.isBetterFudge(this.total, new_roll.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)) {
+                  if (game.dieHardSystem.isBetterFudge(this.total, new_roll.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)) {
                     dieHardLog(false, functionLogName + ' - New result insufficient, but at least better (' + new_roll.total + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
                     foundry.utils.mergeObject(this, new_roll);
                   } else {

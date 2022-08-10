@@ -138,7 +138,7 @@ export default class DieHardDnd5e extends DieHardSystem{
     let result = wrapped.call(evaluate_options)
     // If a fudge re-roll is allowed
     if (fudge){
-      result.then(function(value) {DieHardSetting('dieHardSettings').system.fudgeD20Roll(value, evaluate_options)})
+      result.then(function(value) {game.dieHardSystem.fudgeD20Roll(value, evaluate_options)})
     }
 
     return result
@@ -178,7 +178,7 @@ export default class DieHardDnd5e extends DieHardSystem{
   actorRollSkill(wrapped, skillId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollSkill', this);
     if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollSkill')
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollSkill')
     }
     wrapped(skillId, options);
   }
@@ -186,7 +186,7 @@ export default class DieHardDnd5e extends DieHardSystem{
   actorRollAbilitySave(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilitySave', this);
     if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilitySave')
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollAbilitySave')
     }
     wrapped(abilityId, options);
   }
@@ -194,7 +194,7 @@ export default class DieHardDnd5e extends DieHardSystem{
   actorRollAbilityTest(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilityTest', this);
     if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilityTest')
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollAbilityTest')
     }
     wrapped(abilityId, options);
   }
@@ -202,7 +202,7 @@ export default class DieHardDnd5e extends DieHardSystem{
   actorRollDeathSave(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollDeathSave', this);
     if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollDeathSave')
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollDeathSave')
     }
     wrapped(options);
   }
@@ -210,7 +210,7 @@ export default class DieHardDnd5e extends DieHardSystem{
   entityRollAttack(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.entityRollAttack', this);
     if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
+      game.dieHardSystem.wrappedRoll(options, this.actor.id, 'entityRollAttack')
     }
     wrapped(options);
   }
