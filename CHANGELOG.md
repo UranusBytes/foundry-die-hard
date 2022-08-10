@@ -46,3 +46,9 @@ Aug 7, 2022
 * Lots of refactoring to cleanup code
 * Remove fudges for actors
 * Simple and Avg Karma
+
+## v0.0.10
+Aug 10, 2022
+* Fixes for disabling fudge 
+* Fix for version notification
+* Fix for making DM not visible to users #22

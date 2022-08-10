@@ -222,18 +222,21 @@ export default class DieHard {
   }
 
   static async dmToGm(message) {
-    var dm_ids = [];
-    for (let user of game.users.values()) {
-      if (user.isGM) {
-        dm_ids.push(user.id)
-      }
-    }
+    dieHardLog(false, 'DieHard.dmToGm');
     ChatMessage.create({
       user: game.user.id,
-      type: CONST.CHAT_MESSAGE_TYPES.WHISPER,
-      whisper: dm_ids,
       blind: true,
-      content: message
+      content: message,
+      whisper : game.users.filter(u => u.isGM),
+      flags: {'foundry-die-hard': {dieHardWhisper: true}}
     })
+  }
+
+  // Inspired from https://github.com/ElfFriend-DnD/foundryvtt-attack-roll-check-5e
+  static hideDieHardWhisper(message, html) {
+    dieHardLog(false, 'DieHard.refreshDieHardStatus');
+    if (!game.user.isGM && message.getFlag('foundry-die-hard', 'dieHardWhisper')) {
+      html.addClass('die-hard-blind-whisper');
+    }
   }
 }

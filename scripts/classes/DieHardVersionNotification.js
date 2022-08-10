@@ -1,11 +1,12 @@
 import {dieHardLog} from "../lib/helpers.js";
+import DieHard from "./DieHard.js";
 /*
  * Provides a mechanism to send whisper to GM when new version installed.
  */
 export default class DieHardVersionNotification {
   static checkVersion() {
     let functionLogName = 'DieHardVersionNotification.checkVersion'
-    let notificationVersion = 4
+    let notificationVersion = 5
     if (game.user.isGM && game.user.getFlag('foundry-die-hard', 'versionNotification') !== notificationVersion) {
       dieHardLog(false, functionLogName + ' - Send version notification');
       let commonFooter = "<p>To report problems:<ul><li>open a GitHub issue <a href='https://github.com/UranusBytes/foundry-die-hard/issues' target='_blank'>here</a></li><li>send a message on Discord to <a href='https://discordapp.com/users/530108795796455437' target='_blank'>Glutious#7241</a></li></ul></p>"
@@ -37,6 +38,11 @@ export default class DieHardVersionNotification {
           "<li>Simple and Avg Karma</li>" +
           "<li>Lots of refactoring to cleanup code</li>" +
           "</ul>",
+        5: "<b>Die Hard v0.0.10</b><p>" +
+            "This version includes the following major changes:</p><ul>" +
+          "<li>Fix for version notification</li>" +
+          "<li>Fix for making DM not visible to users #22</li>" +
+          "</ul>"
       }
       let finalMessage = ""
       let startVersion = game.user.getFlag('foundry-die-hard', 'versionNotification')
@@ -50,7 +56,7 @@ export default class DieHardVersionNotification {
       finalMessage += commonFooter
 
       // GM has never seen current version message
-      game.settings.get('foundry-die-hard', 'dieHardSettings').system.dmToGm(finalMessage);
+      DieHard.dmToGm(finalMessage);
 
       // Update the saved version
       game.user.setFlag('foundry-die-hard', 'versionNotification', notificationVersion)

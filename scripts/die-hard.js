@@ -18,8 +18,6 @@ Hooks.once('ready', () => {
   }
   DieHardSetting('dieHardSettings').system.hookReady();
 
-  DieHard.refreshWrappers()
-
   // Check if new version; if so send DM to GM
   DieHardVersionNotification.checkVersion()
 
@@ -28,6 +26,8 @@ Hooks.once('ready', () => {
     DieHardSetting('dieHardSettings').system.dmToGm('WARNING - DieHard is incompatible with Better Rolls 5e.');
   }
 });
+
+Hooks.on('renderChatMessage', DieHard.hideDieHardWhisper);
 
 Hooks.on('renderSidebarTab', (app, html, data) => {
   // Only display for GM
