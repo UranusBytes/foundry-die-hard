@@ -6,7 +6,7 @@ export default class DieHardFudgeDialog extends FormApplication {
     return mergeObject(super.defaultOptions, {
       classes: ['form'],
       closeOnSubmit: false,
-      submitOnChange: true,
+      submitOnChange: false,
       submitOnClose: true,
       popOut: true,
       editable: game.user.isGM,
@@ -18,7 +18,7 @@ export default class DieHardFudgeDialog extends FormApplication {
   }
 
   constructor() {
-    dieHardLog(false, 'DieHardFudgeDialog - constructor')
+    dieHardLog(false, 'DieHardFudgeDialog.constructor')
     super();
     this.operator = null;
     this.operatorValue = null;
@@ -226,19 +226,53 @@ export default class DieHardFudgeDialog extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    dieHardLog(false, 'DieHardFudgeDialog : _updateObject')
+    dieHardLog(false, 'DieHardFudgeDialog._updateObject')
 
     // If any form errors, stop
     if (this._isFormError(event, formData)) {
       return
     }
 
-    if (event.submitter?.name === 'create') {
-      dieHardLog(false, 'DieHardFudgeDialog : Create Fudge');
-      dieHardLog(false, 'DieHardFudgeDialog : formData', formData);
+    if (event.submitter?.name === 'cancel') {
+      dieHardLog(false, 'DieHardFudgeDialog : Cancel fudge')
 
-      for (let whoIndex = 0; whoIndex < formData.fudgeWho.length; whoIndex++) {
-        let whoId = formData.fudgeWho[whoIndex];
+      this.pendingHowOperator = null;
+      this.pendingHowOperatorValue = null;
+
+      this.close();
+    } else if (event.submitter?.name === 'create') {
+      dieHardLog(false, 'DieHardFudgeDialog._updateObject : Create Fudge');
+      dieHardLog(false, 'DieHardFudgeDialog._updateObject : formData', formData);
+
+      //Ugly hack for v10
+      let formWho
+      if (isNewerVersion(game.version, 9.9999)) {
+        let whoOptions = ['hidden']
+        for (const gm of game.dieHardSystem.getFudgeWhoGmOptions()) {
+          dieHardLog(false, 'DieHardFudgeDialog._updateObject : gm', gm);
+          whoOptions.push(gm.id)
+        }
+        for (const player of game.dieHardSystem.getFudgeWhoUserOptions()) {
+          dieHardLog(false, 'DieHardFudgeDialog._updateObject : player', player);
+          whoOptions.push(player.id)
+        }
+        formWho = []
+        dieHardLog(false, 'DieHardFudgeDialog._updateObject : formData.fudgeWho', formData.fudgeWho);
+        for (let index = 0; index < formData.fudgeWho.length; index++) {
+          if (formData.fudgeWho[index]) {
+            formWho.push(whoOptions[index])
+          }
+        }
+      } else {
+        formWho = formData.fudgeWho
+      }
+      dieHardLog(false, 'DieHardFudgeDialog._updateObject : formWho', formWho);
+      //for (let whoIndex = 0; whoIndex < formData.fudgeWho.length; whoIndex++) {
+      //  let whoId = formData.fudgeWho[whoIndex];
+
+      for (let whoIndex = 0; whoIndex < formWho.length; whoIndex++) {
+        let whoId = formWho[whoIndex];
+
         let who = this._getWho(whoId)
 
         dieHardLog(false, 'DieHardFudgeDialog : whoId', whoId);
@@ -290,13 +324,6 @@ export default class DieHardFudgeDialog extends FormApplication {
         this.pendingHowOperatorValue = null;
       }
       this.render(true)
-    } else if (event.submitter?.name === 'cancel') {
-      dieHardLog(false, 'DieHardFudgeDialog : Cancel fudge')
-
-      this.pendingHowOperator = null;
-      this.pendingHowOperatorValue = null;
-
-      this.close();
     }
   }
 
@@ -375,13 +402,21 @@ export default class DieHardFudgeDialog extends FormApplication {
   }
 
   activateListeners(html) {
-    dieHardLog(false, 'DieHardFudgeDialog : activateListeners')
+    dieHardLog(false, 'DieHardFudgeDialog.activateListeners')
     super.activateListeners(html);
-    html.find(".delete-fudge").on('click', this._deleteFudge.bind(this));
-    html.find(".toggle-fudge").on('click', this._toggleFudge.bind(this));
-    html.find(".endless-fudge").on('click', this._toggleEndlessFudge.bind(this));
-    html.find(".fudge-help-formula").on('click', this._helpFudgeFormula.bind(this));
-    html.find(".fudge-help-times").on('click', this._helpFudgeTimes.bind(this));
+    html.find(".delete-fudge")?.on('click', this._deleteFudge.bind(this));
+    html.find(".toggle-fudge")?.on('click', this._toggleFudge.bind(this));
+    html.find(".endless-fudge")?.on('click', this._toggleEndlessFudge.bind(this));
+    html.find(".fudge-help-formula")?.on('click', this._helpFudgeFormula.bind(this));
+    html.find(".fudge-help-times")?.on('click', this._helpFudgeTimes.bind(this));
+  }
+
+  _onSubmit(event, __namedParameters) {
+    dieHardLog(false, 'DieHardFudgeDialog._onSubmit', event, __namedParameters)
+    // Hack for v10
+    if (event.path.length > 0) {
+      super._onSubmit(event, __namedParameters)
+    }
   }
 }
 

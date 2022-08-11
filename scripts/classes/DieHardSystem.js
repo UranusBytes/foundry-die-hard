@@ -572,12 +572,12 @@ export default class DieHardSystem {
     dieHardLog(false, 'DieHardSystem : hookReady')
   }
 
-  // game.settings.get('foundry-die-hard', 'dieHardSettings').system.deleteAllFudges()
+  // game.dieHardSystem.deleteAllFudges()
   deleteAllFudges() {
     dieHardLog(false, 'DieHardSystem : deleteAllFudges')
 
     // Players
-    let users = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getUsers(false);
+    let users = game.dieHardSystem.getUsers(false);
     for (let user in users) {
       try {
         game.user.get(users[user].id).setFlag('foundry-die-hard', 'fudges', null)
@@ -589,7 +589,7 @@ export default class DieHardSystem {
 
 
     // Players
-    let gms = game.settings.get('foundry-die-hard', 'dieHardSettings').system.getUsers(false, false, true);
+    let gms = game.dieHardSystem.getUsers(false, false, true);
     for (let user in gms) {
       try {
         game.user.get(users[user].id).setFlag('foundry-die-hard', 'fudges', null)
@@ -603,7 +603,9 @@ export default class DieHardSystem {
 
   disableAllFudges() {
     dieHardLog(false, 'DieHardSystem : disableAllFudges', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable)
-    DieHardSetting('dieHardSettings').fudgeConfig.globalDisable = !game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable
+    let settings = game.settings.get('foundry-die-hard', 'dieHardSettings')
+    settings.fudgeConfig.globalDisable = !settings.fudgeConfig.globalDisable
+    game.settings.set('foundry-die-hard', 'dieHardSettings', settings)
     DieHard.refreshDieHardIcons();
   }
 

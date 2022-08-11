@@ -28,7 +28,7 @@ export default class DieHard {
                     new DieHardFudgeDialog().render(true);
                 });
       fudgeButton.addEventListener('contextmenu', async (ev) => {
-                    game.settings.get('foundry-die-hard', 'dieHardSettings').system.disableAllFudges();
+                    game.dieHardSystem.disableAllFudges();
                 });
 
       // ToDo: Fix this ugly hack
@@ -133,7 +133,7 @@ export default class DieHard {
 			hint: 'Enable the use of Debug Die Result',
 			scope: 'world',
 			config: true,
-			default: true,
+			default: false,
 			type: Boolean
 		});
 		game.settings.register('foundry-die-hard', 'debugDieResult', {
@@ -192,7 +192,9 @@ export default class DieHard {
     // Ugly fix for objects not existing yet
     // ToDo: clean this up
     try{
+      dieHardLog(false, 'DieHard.refreshDieHardIcons - DieHardSetting(\'fudgeEnabled\')', DieHardSetting('fudgeEnabled'));
       if (DieHardSetting('fudgeEnabled')) {
+        dieHardLog(false, 'DieHard.refreshDieHardIcons - DieHardSetting(\'dieHardSettings\').fudgeConfig.globalDisable', DieHardSetting('dieHardSettings').fudgeConfig.globalDisable);
         if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
           document.getElementById('die-hard-pause-fudge-icon').classList.remove('die-hard-icon-hidden');
           document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-hidden');
@@ -217,7 +219,8 @@ export default class DieHard {
         document.getElementById('die-hard-karma-icon').classList.add('die-hard-icon-hidden');
       }
     }
-    catch (e) {  }
+    catch (e) {
+    }
   }
 
   static async dmToGm(message) {
