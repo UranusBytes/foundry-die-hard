@@ -1,11 +1,20 @@
 import {dieHardLog} from "../lib/helpers.js";
 
 import DieHardSystem from "./DieHardSystem.js";
-import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
+//import DieHardFudgeD20Roll from "./DieHardFudgeD20Roll.js";
 import {DieHardSetting} from "./DieHard.js";
 
 export default class DieHardDnd5e extends DieHardSystem{
   constructor() {
+    // Dynamic register
+    let DieHardFudgeD20RollImport
+    if (isNewerVersion(game.version, 9.99999)) {
+      console.log('Newer')
+      DieHardFudgeD20RollImport = import('./DieHardFudgeD20Roll-v10.js')
+    } else {
+      console.log('Older')
+      DieHardFudgeD20RollImport = import('./DieHardFudgeD20Roll.js')
+    }
     dieHardLog(false, 'DieHardDnd5e.constructor');
     super();
 
@@ -19,7 +28,7 @@ export default class DieHardDnd5e extends DieHardSystem{
     libWrapper.register('foundry-die-hard', 'game.dnd5e.dice.D20Roll.prototype._evaluate', this.d20rollEvaluate, 'WRAPPER');
 
     // See notes in DieHardFudgeD20Roll
-    CONFIG.Dice.DieHardFudgeD20Roll = DieHardFudgeD20Roll;
+    CONFIG.Dice.DieHardFudgeD20Roll = DieHardFudgeD20RollImport.DieHardFudgeD20Roll;
 
     this.totalRollClassName = ["Roll", "D20Roll"]
     this.fudgeWhatOptions = [
@@ -73,7 +82,7 @@ export default class DieHardDnd5e extends DieHardSystem{
         SafetyLoopIndex--;
 
         // ToDo: Can a "clone()" or a "reroll()" be used instead?  https://foundryvtt.com/api/Roll.html#clone
-        const new_roll = new DieHardFudgeD20Roll(
+        const new_roll = new DISABLED_DieHardFudgeD20Roll(
           result.formula,
           result.data, {
             flavor: result.options.flavor,
