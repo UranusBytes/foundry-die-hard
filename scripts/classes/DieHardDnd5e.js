@@ -147,19 +147,19 @@ export default class DieHardDnd5e extends DieHardSystem{
     let result = wrapped.call(evaluate_options)
     // If a fudge re-roll is allowed
     if (fudge){
-      result.then(function(value) {DieHardSetting('dieHardSettings').system.fudgeD20Roll(value, evaluate_options)})
+      result.then(function(value) {game.dieHardSystem.fudgeD20Roll(value, evaluate_options)})
     }
 
     return result
   }
 
-   wrappedRoll(options, actorId, rollType) {
+  wrappedRoll(options, actorId, rollType) {
     let functionLogName = 'DieHardDnd5e.wrappedRoll'
     dieHardLog(false, functionLogName + ' - rollType', rollType);
 
     if (! DieHardSetting('fudgeEnabled') ) {
       dieHardLog(true, functionLogName + ' - Fudge disabled');
-    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active fudge
@@ -186,40 +186,40 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollSkill(wrapped, skillId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollSkill', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollSkill')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollSkill')
     }
     wrapped(skillId, options);
   }
 
   actorRollAbilitySave(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilitySave', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilitySave')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollAbilitySave')
     }
     wrapped(abilityId, options);
   }
 
   actorRollAbilityTest(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilityTest', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollAbilityTest')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollAbilityTest')
     }
     wrapped(abilityId, options);
   }
 
   actorRollDeathSave(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollDeathSave', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.id, 'actorRollDeathSave')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
+      game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollDeathSave')
     }
     wrapped(options);
   }
 
   entityRollAttack(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.entityRollAttack', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      DieHardSetting('dieHardSettings').system.wrappedRoll(options, this.actor.id, 'entityRollAttack')
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
+      game.dieHardSystem.wrappedRoll(options, this.actor.id, 'entityRollAttack')
     }
     wrapped(options);
   }

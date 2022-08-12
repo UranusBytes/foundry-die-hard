@@ -156,7 +156,7 @@ export default class DieHardSystem {
 
     if (! DieHardSetting('fudgeEnabled') ) {
       dieHardLog(true, functionLogName + ' - Fudge disabled');
-    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active raw fudge
@@ -357,7 +357,7 @@ export default class DieHardSystem {
 
     if (! DieHardSetting('fudgeEnabled') ) {
       dieHardLog(true, functionLogName + ' - Fudge disabled');
-    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if a total die roll (otherwise some type of system specific roll)
@@ -523,7 +523,7 @@ export default class DieHardSystem {
   async refreshActiveFudgesIcon() {
     /*
     Handled in DieHard.refreshDieHardIcons
-    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable) {
+    if (game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globallyDisabled) {
       document.getElementById('die-hard-pause-fudge-icon').classList.remove("die-hard-icon-hidden");
       document.getElementById('die-hard-fudge-icon').classList.add("die-hard-icon-hidden");
       return;
@@ -602,11 +602,11 @@ export default class DieHardSystem {
   }
 
   disableAllFudges() {
-    dieHardLog(false, 'DieHardSystem : disableAllFudges', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globalDisable)
+    dieHardLog(false, 'DieHardSystem : disableAllFudges', game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.globallyDisabled)
     let settings = game.settings.get('foundry-die-hard', 'dieHardSettings')
-    settings.fudgeConfig.globalDisable = !settings.fudgeConfig.globalDisable
+    settings.fudgeConfig.globallyDisabled = !settings.fudgeConfig.globallyDisabled
     game.settings.set('foundry-die-hard', 'dieHardSettings', settings)
-    DieHard.refreshDieHardIcons();
+    DieHard.refreshDieHardIcons(settings.fudgeConfig.globallyDisabled);
   }
 
   static registerTests = context => {
