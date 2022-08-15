@@ -9,7 +9,7 @@ export const DieHardSetting = (setting) => game.settings.get('foundry-die-hard',
 export default class DieHard {
 
   constructor() {
-    dieHardLog(true, 'DieHard - constructor');
+    dieHardLog(false, 'DieHard - constructor');
   }
 
   static renderDieHardIcons() {
