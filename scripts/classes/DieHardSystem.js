@@ -485,15 +485,27 @@ export default class DieHardSystem {
     Return true if there are any active fudges (GM or Actor)
    */
   hasActiveFudges() {
-    dieHardLog(false, 'DieHardSystem : hasActiveFudges')
-    let curFudges = this.getAllFudges()
-    for (let fudgeType in curFudges) {
-      for (let typeObject in curFudges[fudgeType]) {
+    dieHardLog(false, 'DieHardSystem.hasActiveFudges')
+    let allFudges = this.getAllFudges()
+    dieHardLog(false, 'DieHardSystem.hasActiveFudges - allFudges', allFudges)
+    for (let fudgeType in allFudges) {
+      dieHardLog(false, 'DieHardSystem.hasActiveFudges - fudgeType', fudgeType)
+      for (let fudgeSource of allFudges[fudgeType]) {
         try {
-          if (curFudges[fudgeType][typeObject].fudges.length > 0) {
-            return true;
+          dieHardLog(false, 'DieHardSystem.hasActiveFudges - fudgeSource', fudgeSource)
+          dieHardLog(false, 'DieHardSystem.hasActiveFudges - fudgeSource.fudges.length', fudgeSource.fudges.length)
+          if (fudgeSource.fudges.length > 0) {
+            let fudgeIndex = fudgeSource.fudges.findIndex(element => {
+              return (element.statusActive);
+            });
+            dieHardLog(false, 'DieHardSystem.hasActiveFudges - fudgeIndex', fudgeIndex)
+            if (fudgeIndex !== -1) {
+
+              return true;
+            }
           }
         } catch (e) {
+          dieHardLog(false, 'DieHardSystem.hasActiveFudges - baddddd', e)
         }
       }
     }
