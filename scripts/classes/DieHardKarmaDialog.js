@@ -66,6 +66,14 @@ export default class DieHardKarmaDialog extends FormApplication {
   async _updateObject(event, formData) {
     dieHardLog(false, 'DieHardKarmaDialog._updateObject')
 
+    if (formData.karmaSimpleEnabled && formData.karmaAvgEnabled) {
+      document.getElementById('karmaWarningHeader').style.display = '';
+      document.getElementById('karmaWarningBody').style.display = '';
+    } else {
+      document.getElementById('karmaWarningHeader').style.display = 'none';
+      document.getElementById('karmaWarningBody').style.display = 'none';
+    }
+
     let originalKarmaSimpleSettings = game.settings.get('foundry-die-hard', 'simpleKarmaSettings')
     let karmaSimpleSettings = {
       enabled: formData.karmaSimpleEnabled,
