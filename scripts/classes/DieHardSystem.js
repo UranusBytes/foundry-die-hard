@@ -281,37 +281,47 @@ export default class DieHardSystem {
 
         if (avgKarmaSettings.enabled) {
           dieHardLog(false, functionLogName + ' - Avg Karma', this);
-          let avgKarmaData = game.users.current.getFlag('foundry-die-hard', 'avgKarma')
-          if (!Array.isArray(avgKarmaData)) {
-            avgKarmaData = []
+          let avgKarmaData = game.users.current.getFlag('foundry-die-hard', 'avgKarmaData')
+          
+          if (avgKarmaData === undefined) {
+            avgKarmaData = {
+              history:  [],
+              cumulative: 0
+            }
           }
-          avgKarmaData.push(roll.result)
-          while (avgKarmaData.length > avgKarmaSettings.history) {
-            avgKarmaData.shift()
+          avgKarmaData.history.push(roll.result)
+          while (avgKarmaData.history.length > avgKarmaSettings.history) {
+            avgKarmaData.history.shift()
           }
-          dieHardLog(false, functionLogName + ' - Avg Karma Data', avgKarmaData);
-          let tempResult = avgKarmaData.reduce((a, b) => a + b, 0) / avgKarmaData.length;
+          dieHardLog(false, functionLogName + ' - Avg Karma Data', avgKarmaData.history);
+          let tempResult = avgKarmaData.history.reduce((a, b) => a + b, 0) / avgKarmaData.history.length;
           dieHardLog(false, functionLogName + ' - Avg Karma tempResult', tempResult);
-          if (avgKarmaData.length === avgKarmaSettings.history && tempResult <= avgKarmaSettings.threshold) {
+          if (avgKarmaData.history.length === avgKarmaSettings.history && tempResult <= avgKarmaSettings.threshold) {
             dieHardLog(false, functionLogName + ' - Avg Karma adjustment needed', roll.result);
             let originalResult = roll.result
-            roll.result += avgKarmaSettings.nudge
+            if (avgKarmaSettings.cumulative) {
+              avgKarmaData.cumulative += 1
+            } else {
+              avgKarmaData.cumulative = 1
+            }
+            roll.result += (avgKarmaData.cumulative * avgKarmaSettings.nudge)
 
+            // Max at num faces
             if (roll.result > this.faces) {
               roll.result = this.faces
             }
-            roll.result = roll.result
             dieHardLog(false, functionLogName + ' - Avg Karma adjustment - new result', roll.result);
 
-            avgKarmaData.push(roll.result)
-            while (avgKarmaData.length > avgKarmaData.history) {
-              avgKarmaData.shift()
+            avgKarmaData.history.push(roll.result)
+            while (avgKarmaData.history.length > avgKarmaData.history.history) {
+              avgKarmaData.history.shift()
             }
             DieHard.dmToGm('DieHard-Karma: Avg Karma for ' + game.users.current.name + ' adjusted a roll of ' + originalResult + ' to a ' + roll.result);
           } else {
-            dieHardLog(false, functionLogName + ' - Avg Karma adjustment not needed', avgKarmaData.length, avgKarmaSettings.history, avgKarmaSettings.threshold);
+            dieHardLog(false, functionLogName + ' - Avg Karma adjustment not needed', avgKarmaData.history.length, avgKarmaSettings.history, avgKarmaSettings.threshold);
+            avgKarmaData.cumulative = 0
           }
-          game.users.current.setFlag('foundry-die-hard', 'avgKarma', avgKarmaData)
+          game.users.current.setFlag('foundry-die-hard', 'avgKarmaData', avgKarmaData)
         } else {
           dieHardLog(false, functionLogName + ' - avg Karma disabled');
         }
