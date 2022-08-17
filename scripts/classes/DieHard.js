@@ -76,7 +76,7 @@ export default class DieHard {
 
   static getDefaultSimpleKarmaSettings() {
     return {
-      enabled: true,
+      enabled: false,
       history: 5,
       threshold: 5,
       floor: 5
@@ -85,7 +85,7 @@ export default class DieHard {
 
   static getAvgSimpleKarmaSettings() {
     return {
-    enabled: true,
+    enabled: false,
       history: 5,
       threshold: 5,
       nudge: 5
