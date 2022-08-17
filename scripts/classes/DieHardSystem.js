@@ -466,6 +466,9 @@ export default class DieHardSystem {
           let newUser = {id: userId, name: curUser.name}
           if (includeFudges) {
             newUser.fudges = curUser.getFlag('foundry-die-hard', 'fudges')
+            if (!Array.isArray(newUser.fudges)){
+              newUser.fudges = []
+            }
           }
           activeUsers.push(newUser)
         }
@@ -474,6 +477,9 @@ export default class DieHardSystem {
           let newUser = {id: userId, name: curUser.name}
           if (includeFudges) {
             newUser.fudges = curUser.getFlag('foundry-die-hard', 'fudges')
+            if (!Array.isArray(newUser.fudges)){
+              newUser.fudges = []
+            }
           }
           activeUsers.push(newUser)
         }
