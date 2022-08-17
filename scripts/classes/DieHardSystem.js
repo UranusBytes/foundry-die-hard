@@ -125,7 +125,7 @@ export default class DieHardSystem {
     let fudgeIndex = userFudges.findIndex(element => {
       return ((element.whatId === fudgeType) && (element.statusActive));
     });
-    dieHardLog(false, 'DieHardSystem.getUserFudge - fudgeIndex', fudgeIndex);
+    dieHardLog(false, 'DieHardSystem.getUserFudge - fudgeIndex', fudgeIndex, fudgeType);
     if (fudgeIndex !== -1) {
       return userFudges[fudgeIndex]
     } else {
