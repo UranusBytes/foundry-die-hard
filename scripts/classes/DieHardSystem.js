@@ -225,121 +225,101 @@ export default class DieHardSystem {
       dieHardLog(false, functionLogName + ' - Karma enabled, but wrong die type', this.faces);
     } else {
       let simpleKarmaSettings = DieHardSetting('simpleKarmaSettings')
-      if (simpleKarmaSettings.enabled) {
-        dieHardLog(false, functionLogName + ' - Simple Karma', this);
-        let simpleKarmaData = game.users.current.getFlag('foundry-die-hard', 'simpleKarma')
-        if (!Array.isArray(simpleKarmaData)) {
-          simpleKarmaData = []
-        }
+      let avgKarmaSettings = DieHardSetting('avgKarmaSettings')
+      if (simpleKarmaSettings.enabled || avgKarmaSettings.enabled) {
+        dieHardLog(false, functionLogName + ' - Karma is enabled', simpleKarmaSettings.enabled, avgKarmaSettings.enabled);
 
-        let newResult = undefined
+        // Make the initial roll
         let roll = {result: undefined, active: true};
-
         // This is copied from resources/app/client/dice/terms/dice.js - rolls method
         if (eval_options.minimize) roll.result = Math.min(1, this.faces);
-        else if (eval_options.maximize) newResult = this.faces;
-        else newResult = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
+        else if (eval_options.maximize) roll.result = this.faces;
+        else roll.result = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
+        dieHardLog(false, functionLogName + ' - Karma - initial roll', roll);
 
-        // ToDo: remove this hack
+        // If the Die Hard debug roll is enabled, then override the roll
         if (DieHardSetting('debugDieResultEnabled')) {
-          newResult = DieHardSetting('debugDieResult')
-          dieHardLog(false, functionLogName + ' - debugDieResult used', newResult);
+          roll.result = DieHardSetting('debugDieResult')
+          dieHardLog(false, functionLogName + ' - debugDieResult used', roll.result);
         }
 
-        roll.result = newResult
-        simpleKarmaData.push(newResult)
-
-        while (simpleKarmaData.length > simpleKarmaSettings.history) {
-          simpleKarmaData.shift()
-        }
-        dieHardLog(false, functionLogName + ' - Simple Karma Data', simpleKarmaData);
-        let tempResult = simpleKarmaData.findIndex(element => {return element > simpleKarmaSettings.threshold})
-        dieHardLog(false, functionLogName + ' - Simple Karma tempResult', tempResult);
-        if (simpleKarmaData.length === simpleKarmaSettings.history && tempResult === -1) {
-          dieHardLog(false, functionLogName + ' - Simple Karma adjustment needed', newResult);
-          let originalResult = newResult
-          while (newResult < simpleKarmaSettings.floor) {
-            // This is copied from resources/app/client/dice/terms/dice.js - rolls method
-            if (eval_options.minimize) roll.result = Math.min(1, this.faces);
-            else if (eval_options.maximize) newResult = this.faces;
-            else newResult = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
-            roll.result = newResult
-            dieHardLog(false, functionLogName + ' - Simple Karma adjustment - new result', newResult);
+        if (simpleKarmaSettings.enabled) {
+          dieHardLog(false, functionLogName + ' - Simple Karma', this);
+          let simpleKarmaData = game.users.current.getFlag('foundry-die-hard', 'simpleKarma')
+          if (!Array.isArray(simpleKarmaData)) {
+            simpleKarmaData = []
           }
+          simpleKarmaData.push(roll.result)
 
-          simpleKarmaData.push(newResult)
           while (simpleKarmaData.length > simpleKarmaSettings.history) {
             simpleKarmaData.shift()
           }
-          DieHard.dmToGm('DieHard-Karma: Simple Karma for ' + game.users.current.name + ' adjusted a roll of ' + originalResult + ' to a ' + newResult);
-        }
+          dieHardLog(false, functionLogName + ' - Simple Karma Data', simpleKarmaData);
+          let tempResult = simpleKarmaData.findIndex(element => {
+            return element > simpleKarmaSettings.threshold
+          })
+          dieHardLog(false, functionLogName + ' - Simple Karma tempResult', tempResult);
+          if (simpleKarmaData.length === simpleKarmaSettings.history && tempResult === -1) {
+            dieHardLog(false, functionLogName + ' - Simple Karma adjustment needed from ' + roll.result);
+            let originalResult = roll.result
+            while (roll.result < simpleKarmaSettings.floor) {
+              // This is copied from resources/app/client/dice/terms/dice.js - rolls method
+              if (eval_options.minimize) roll.result = Math.min(1, this.faces);
+              else if (eval_options.maximize) roll.result = this.faces;
+              else roll.result = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
+              dieHardLog(false, functionLogName + ' - Simple Karma adjustment - new result', roll.result);
+            }
 
-        game.users.current.setFlag('foundry-die-hard', 'simpleKarma', simpleKarmaData)
-        this.results.push(roll);
-        return roll
-      } else {
-        dieHardLog(false, functionLogName + ' - Simple Karma disabled');
-      }
-
-      let avgKarmaSettings = DieHardSetting('avgKarmaSettings')
-      if (avgKarmaSettings.enabled) {
-        dieHardLog(false, functionLogName + ' - Avg Karma', this);
-        let avgKarmaData = game.users.current.getFlag('foundry-die-hard', 'avgKarma')
-        if (!Array.isArray(avgKarmaData)) {
-          avgKarmaData = []
-        }
-
-        let newResult = undefined
-        let roll = {result: undefined, active: true};
-
-        // This is copied from resources/app/client/dice/terms/dice.js - rolls method
-        if (eval_options.minimize) roll.result = Math.min(1, this.faces);
-        else if (eval_options.maximize) newResult = this.faces;
-        else newResult = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
-
-        // ToDo: remove this hack
-        if (DieHardSetting('debugDieResultEnabled')) {
-          newResult = DieHardSetting('debugDieResult')
-          dieHardLog(false, functionLogName + ' - debugDieResult used', newResult);
-        }
-
-        roll.result = newResult
-        avgKarmaData.push(newResult)
-
-        while (avgKarmaData.length > avgKarmaSettings.history) {
-          avgKarmaData.shift()
-        }
-        dieHardLog(false, functionLogName + ' - Avg Karma Data', avgKarmaData);
-        let tempResult = avgKarmaData.reduce((a, b) => a + b, 0) / avgKarmaData.length;
-        dieHardLog(false, functionLogName + ' - Avg Karma tempResult', tempResult);
-        if (avgKarmaData.length === avgKarmaSettings.history && tempResult <= avgKarmaSettings.threshold) {
-          dieHardLog(false, functionLogName + ' - Avg Karma adjustment needed', newResult);
-          let originalResult = newResult
-          newResult += avgKarmaSettings.nudge
-
-          if (newResult > this.faces) {
-            newResult = this.faces
+            simpleKarmaData.push(roll.result)
+            while (simpleKarmaData.length > simpleKarmaSettings.history) {
+              simpleKarmaData.shift()
+            }
+            DieHard.dmToGm('DieHard-Karma: Simple Karma for ' + game.users.current.name + ' adjusted a roll of ' + originalResult + ' to a ' + roll.result);
           }
-          roll.result = newResult
-          dieHardLog(false, functionLogName + ' - Avg Karma adjustment - new result', newResult);
+          game.users.current.setFlag('foundry-die-hard', 'simpleKarma', simpleKarmaData)
+        }
 
-          avgKarmaData.push(newResult)
-          while (avgKarmaData.length > avgKarmaData.history) {
+        if (avgKarmaSettings.enabled) {
+          dieHardLog(false, functionLogName + ' - Avg Karma', this);
+          let avgKarmaData = game.users.current.getFlag('foundry-die-hard', 'avgKarma')
+          if (!Array.isArray(avgKarmaData)) {
+            avgKarmaData = []
+          }
+          avgKarmaData.push(roll.result)
+          while (avgKarmaData.length > avgKarmaSettings.history) {
             avgKarmaData.shift()
           }
-          DieHard.dmToGm('DieHard-Karma: Avg Karma for ' + game.users.current.name + ' adjusted a roll of ' + originalResult + ' to a ' + newResult);
-        } else {
-          dieHardLog(false, functionLogName + ' - Avg Karma adjustment not needed', avgKarmaData.length, avgKarmaSettings.history, avgKarmaSettings.threshold);
-        }
+          dieHardLog(false, functionLogName + ' - Avg Karma Data', avgKarmaData);
+          let tempResult = avgKarmaData.reduce((a, b) => a + b, 0) / avgKarmaData.length;
+          dieHardLog(false, functionLogName + ' - Avg Karma tempResult', tempResult);
+          if (avgKarmaData.length === avgKarmaSettings.history && tempResult <= avgKarmaSettings.threshold) {
+            dieHardLog(false, functionLogName + ' - Avg Karma adjustment needed', roll.result);
+            let originalResult = roll.result
+            roll.result += avgKarmaSettings.nudge
 
-        game.users.current.setFlag('foundry-die-hard', 'avgKarma', avgKarmaData)
+            if (roll.result > this.faces) {
+              roll.result = this.faces
+            }
+            roll.result = roll.result
+            dieHardLog(false, functionLogName + ' - Avg Karma adjustment - new result', roll.result);
+
+            avgKarmaData.push(roll.result)
+            while (avgKarmaData.length > avgKarmaData.history) {
+              avgKarmaData.shift()
+            }
+            DieHard.dmToGm('DieHard-Karma: Avg Karma for ' + game.users.current.name + ' adjusted a roll of ' + originalResult + ' to a ' + roll.result);
+          } else {
+            dieHardLog(false, functionLogName + ' - Avg Karma adjustment not needed', avgKarmaData.length, avgKarmaSettings.history, avgKarmaSettings.threshold);
+          }
+          game.users.current.setFlag('foundry-die-hard', 'avgKarma', avgKarmaData)
+        } else {
+          dieHardLog(false, functionLogName + ' - avg Karma disabled');
+        }
         this.results.push(roll);
         return roll
       } else {
-        dieHardLog(false, functionLogName + ' - avg Karma disabled');
+        dieHardLog(false, functionLogName + ' - Simple and Avg Karma Disabled');
       }
-
-
     }
     return wrapped(eval_options)
   }
