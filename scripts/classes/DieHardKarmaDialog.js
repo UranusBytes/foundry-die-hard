@@ -99,7 +99,10 @@ export default class DieHardKarmaDialog extends FormApplication {
       enabled: formData.karmaAvgEnabled,
       history: formData.karmaAvgHistory,
       threshold: formData.karmaAvgThreshold,
-      nudge: formData.karmaAvgNudge
+      nudge: formData.karmaAvgNudge,
+      nudge2: formData.karmaAvgNudge * 2,
+      nudge3: formData.karmaAvgNudge * 3,
+      cumulative: formData.karmaAvgCumulative
     }
     document.getElementById('karmaAvgThresholdMore').innerText = formData.karmaAvgThreshold;
     await game.settings.set('foundry-die-hard', 'avgKarmaSettings', karmaAvgSettings)
@@ -108,11 +111,21 @@ export default class DieHardKarmaDialog extends FormApplication {
       document.getElementById('divKarmaAvgThreshold').style.display = '';
       document.getElementById('divKarmaAvgNudge').style.display = '';
       document.getElementById('divKarmaAvgPlayerStats').style.display = '';
+      document.getElementById('divKarmaAvgCumulative').style.display = '';
+      if (formData.karmaAvgCumulative) {
+        document.getElementById('spanKarmaAvgCumulativeDesc').style.display = '';
+      } else {
+        document.getElementById('spanKarmaAvgCumulativeDesc').style.display = 'none';
+      }
+      document.getElementById('avgKarmaNudge1').innerText = '+' + formData.karmaAvgNudge;
+      document.getElementById('avgKarmaNudge2').innerText = '+' + (formData.karmaAvgNudge * 2);
+      document.getElementById('avgKarmaNudge3').innerText = '+' + (formData.karmaAvgNudge * 3);
     } else {
       document.getElementById('divKarmaAvgHistory').style.display = 'none';
       document.getElementById('divKarmaAvgThreshold').style.display = 'none';
       document.getElementById('divKarmaAvgNudge').style.display = 'none';
       document.getElementById('divKarmaAvgPlayerStats').style.display = 'none';
+      document.getElementById('divKarmaAvgCumulative').style.display = 'none';
     }
 
     if (originalKarmaSimpleSettings.enabled !== formData.karmaSimpleEnabled || originalKarmaAvgSettings.enabled !== formData.karmaAvgEnabled){
