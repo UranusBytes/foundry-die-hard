@@ -12,18 +12,18 @@ Hooks.once('init', () => {
 
 Hooks.once('ready', () => {
   dieHardLog(true, 'Ready...')
-  if (DieHardSetting('dieHardSettings').system == null) {
+  if (game.dieHardSystem == null) {
     dieHardLog(false, 'Unsupported system for world; not rendering side bar')
     return
   }
-  DieHardSetting('dieHardSettings').system.hookReady();
+  game.dieHardSystem.hookReady();
 
   // Check if new version; if so send DM to GM
   DieHardVersionNotification.checkVersion()
 
   if (game.modules.get("betterrolls5e") !== undefined && game.modules.get("betterrolls5e")?.active === true) {
     dieHardLog(true, 'WARNING - DieHard is incompatible with Better Rolls 5e.')
-    DieHardSetting('dieHardSettings').system.dmToGm('WARNING - DieHard is incompatible with Better Rolls 5e.');
+    game.dieHardSystem.dmToGm('WARNING - DieHard is incompatible with Better Rolls 5e.');
   }
 });
 
