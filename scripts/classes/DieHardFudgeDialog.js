@@ -222,7 +222,7 @@ export default class DieHardFudgeDialog extends FormApplication {
       }
     }
     catch (e) {}
-    dieHardLog(true, 'DieHardFudgeDialog : _getWho - Who not found - ', whoId);
+    dieHardLog(false, 'DieHardFudgeDialog : _getWho - Who not found - ', whoId);
   }
 
   async _updateObject(event, formData) {

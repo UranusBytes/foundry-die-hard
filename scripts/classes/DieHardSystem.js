@@ -155,13 +155,13 @@ export default class DieHardSystem {
     dieHardLog(false, functionLogName);
 
     if (! DieHardSetting('fudgeEnabled') ) {
-      dieHardLog(true, functionLogName + ' - Fudge disabled');
+      dieHardLog(false, functionLogName + ' - Fudge disabled');
     } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
-      dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
+      dieHardLog(false, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active raw fudge
       let userFudge = game.dieHardSystem.getUserFudge('rawd' + this.faces)
-      dieHardLog(true, functionLogName + ' - userFudge', userFudge);
+      dieHardLog(false, functionLogName + ' - userFudge', userFudge);
       if (userFudge !== null) {
         dieHardLog(false, functionLogName + ' - active user raw fudge', userFudge);
 
@@ -178,7 +178,7 @@ export default class DieHardSystem {
           // Only force the roll on the first die
           if (DieHardSetting('debugDieResultEnabled') && newResult === undefined) {
             newResult = DieHardSetting('debugDieResult')
-            dieHardLog(true, functionLogName + ' - debugDieResult used', newResult);
+            dieHardLog(false, functionLogName + ' - debugDieResult used', newResult);
           } else {
             // This is copied from resources/app/client/dice/terms/dice.js - rolls method
             if (eval_options.minimize) roll.result = Math.min(1, this.faces);
@@ -220,13 +220,13 @@ export default class DieHardSystem {
     }
 
     if (! DieHardSetting('karmaEnabled') ) {
-      dieHardLog(true, functionLogName + ' - Karma disabled');
+      dieHardLog(false, functionLogName + ' - Karma disabled');
     } else if (this.faces !== 20) {
-      dieHardLog(true, functionLogName + ' - Karma enabled, but wrong die type', this.faces);
+      dieHardLog(false, functionLogName + ' - Karma enabled, but wrong die type', this.faces);
     } else {
       let simpleKarmaSettings = DieHardSetting('simpleKarmaSettings')
       if (simpleKarmaSettings.enabled) {
-        dieHardLog(true, functionLogName + ' - Simple Karma', this);
+        dieHardLog(false, functionLogName + ' - Simple Karma', this);
         let simpleKarmaData = game.users.current.getFlag('foundry-die-hard', 'simpleKarma')
         if (!Array.isArray(simpleKarmaData)) {
           simpleKarmaData = []
@@ -243,7 +243,7 @@ export default class DieHardSystem {
         // ToDo: remove this hack
         if (DieHardSetting('debugDieResultEnabled')) {
           newResult = DieHardSetting('debugDieResult')
-          dieHardLog(true, functionLogName + ' - debugDieResult used', newResult);
+          dieHardLog(false, functionLogName + ' - debugDieResult used', newResult);
         }
 
         roll.result = newResult
@@ -252,11 +252,11 @@ export default class DieHardSystem {
         while (simpleKarmaData.length > simpleKarmaSettings.history) {
           simpleKarmaData.shift()
         }
-        dieHardLog(true, functionLogName + ' - Simple Karma Data', simpleKarmaData);
+        dieHardLog(false, functionLogName + ' - Simple Karma Data', simpleKarmaData);
         let tempResult = simpleKarmaData.findIndex(element => {return element > simpleKarmaSettings.threshold})
-        dieHardLog(true, functionLogName + ' - Simple Karma tempResult', tempResult);
+        dieHardLog(false, functionLogName + ' - Simple Karma tempResult', tempResult);
         if (simpleKarmaData.length === simpleKarmaSettings.history && tempResult === -1) {
-          dieHardLog(true, functionLogName + ' - Simple Karma adjustment needed', newResult);
+          dieHardLog(false, functionLogName + ' - Simple Karma adjustment needed', newResult);
           let originalResult = newResult
           while (newResult < simpleKarmaSettings.floor) {
             // This is copied from resources/app/client/dice/terms/dice.js - rolls method
@@ -264,7 +264,7 @@ export default class DieHardSystem {
             else if (eval_options.maximize) newResult = this.faces;
             else newResult = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
             roll.result = newResult
-            dieHardLog(true, functionLogName + ' - Simple Karma adjustment - new result', newResult);
+            dieHardLog(false, functionLogName + ' - Simple Karma adjustment - new result', newResult);
           }
 
           simpleKarmaData.push(newResult)
@@ -278,12 +278,12 @@ export default class DieHardSystem {
         this.results.push(roll);
         return roll
       } else {
-        dieHardLog(true, functionLogName + ' - Simple Karma disabled');
+        dieHardLog(false, functionLogName + ' - Simple Karma disabled');
       }
 
       let avgKarmaSettings = DieHardSetting('avgKarmaSettings')
       if (avgKarmaSettings.enabled) {
-        dieHardLog(true, functionLogName + ' - Avg Karma', this);
+        dieHardLog(false, functionLogName + ' - Avg Karma', this);
         let avgKarmaData = game.users.current.getFlag('foundry-die-hard', 'avgKarma')
         if (!Array.isArray(avgKarmaData)) {
           avgKarmaData = []
@@ -300,7 +300,7 @@ export default class DieHardSystem {
         // ToDo: remove this hack
         if (DieHardSetting('debugDieResultEnabled')) {
           newResult = DieHardSetting('debugDieResult')
-          dieHardLog(true, functionLogName + ' - debugDieResult used', newResult);
+          dieHardLog(false, functionLogName + ' - debugDieResult used', newResult);
         }
 
         roll.result = newResult
@@ -309,11 +309,11 @@ export default class DieHardSystem {
         while (avgKarmaData.length > avgKarmaSettings.history) {
           avgKarmaData.shift()
         }
-        dieHardLog(true, functionLogName + ' - Avg Karma Data', avgKarmaData);
+        dieHardLog(false, functionLogName + ' - Avg Karma Data', avgKarmaData);
         let tempResult = avgKarmaData.reduce((a, b) => a + b, 0) / avgKarmaData.length;
-        dieHardLog(true, functionLogName + ' - Avg Karma tempResult', tempResult);
+        dieHardLog(false, functionLogName + ' - Avg Karma tempResult', tempResult);
         if (avgKarmaData.length === avgKarmaSettings.history && tempResult <= avgKarmaSettings.threshold) {
-          dieHardLog(true, functionLogName + ' - Avg Karma adjustment needed', newResult);
+          dieHardLog(false, functionLogName + ' - Avg Karma adjustment needed', newResult);
           let originalResult = newResult
           newResult += avgKarmaSettings.nudge
 
@@ -321,7 +321,7 @@ export default class DieHardSystem {
             newResult = this.faces
           }
           roll.result = newResult
-          dieHardLog(true, functionLogName + ' - Avg Karma adjustment - new result', newResult);
+          dieHardLog(false, functionLogName + ' - Avg Karma adjustment - new result', newResult);
 
           avgKarmaData.push(newResult)
           while (avgKarmaData.length > avgKarmaData.history) {
@@ -329,14 +329,14 @@ export default class DieHardSystem {
           }
           DieHard.dmToGm('DieHard-Karma: Avg Karma for ' + game.users.current.name + ' adjusted a roll of ' + originalResult + ' to a ' + newResult);
         } else {
-          dieHardLog(true, functionLogName + ' - Avg Karma adjustment not needed', avgKarmaData.length, avgKarmaSettings.history, avgKarmaSettings.threshold);
+          dieHardLog(false, functionLogName + ' - Avg Karma adjustment not needed', avgKarmaData.length, avgKarmaSettings.history, avgKarmaSettings.threshold);
         }
 
         game.users.current.setFlag('foundry-die-hard', 'avgKarma', avgKarmaData)
         this.results.push(roll);
         return roll
       } else {
-        dieHardLog(true, functionLogName + ' - avg Karma disabled');
+        dieHardLog(false, functionLogName + ' - avg Karma disabled');
       }
 
 
@@ -356,9 +356,9 @@ export default class DieHardSystem {
     dieHardLog(false, functionLogName);
 
     if (! DieHardSetting('fudgeEnabled') ) {
-      dieHardLog(true, functionLogName + ' - Fudge disabled');
+      dieHardLog(false, functionLogName + ' - Fudge disabled');
     } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
-      dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
+      dieHardLog(false, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if a total die roll (otherwise some type of system specific roll)
       if (game.dieHardSystem.totalRollClassName.indexOf(this.constructor.name) !== -1) {

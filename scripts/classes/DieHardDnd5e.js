@@ -158,9 +158,9 @@ export default class DieHardDnd5e extends DieHardSystem{
     dieHardLog(false, functionLogName + ' - rollType', rollType);
 
     if (! DieHardSetting('fudgeEnabled') ) {
-      dieHardLog(true, functionLogName + ' - Fudge disabled');
+      dieHardLog(false, functionLogName + ' - Fudge disabled');
     } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
-      dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
+      dieHardLog(false, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active fudge
       let userFudge = this.getUserFudge(rollType)
