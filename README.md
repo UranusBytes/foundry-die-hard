@@ -28,6 +28,7 @@ Extensive logging is used within the module, with debug logging enabled with the
 * When the fudge config dialog is open, fudge status/list is not updated if any are changed by other GMs and/or PC/Actor rolls
 * Completely incompatible with [Better Rolls for 5e](https://github.com/RedReign/FoundryVTT-BetterRolls5e) #6
 * If both Fudge and Karma are enabled, a single roll that's being fudged can be influed by karma
+* Incompatible with [Monk's Token Bar](https://github.com/ironmonk88/monks-tokenbar) #24
 
 # Current module Functionality
 ## Fudge
@@ -93,16 +94,18 @@ The available karma options can be enabled by clicking on the button
 
 ![die-hard-fudge](docs/die-hard-karma-1.jpg)
 
-Within the dialog, the logic used to influence each Karma module is adjustable.
+Within the dialog, the logic used to influence each Karma module is adjustable.  For Avg Karma, the adjustment can be consistent (+X, +X, +X, etc.) until the threshold is reached, or it can be cumulative (+X, +2X, +3X, etc...) until the threshold is reached.
 The current history of player rolls is displayed.
 
 ![die-hard-fudge-2](docs/die-hard-karma-2.jpg)
 
 
 # Mechanics
-Karma only works on raw die rolls; it does not influence total rolls directly (only indirectly by influencing the raw rolls) 
+Karma only works on raw die rolls; it does not influence total rolls directly (only indirectly by influencing the raw rolls).
 
+For Simple Karma, it looks at the previous N rolls, and if all are below the threshold it will ensure that the following roll is over the value of Y.
 
+For Avg Karma, it averages the previous N rolls, and if the average is below the threshold it will adjust (nudge) the result by an increment of Y.  Y can be consistent (+X, +X, +X, etc.) or cumulative (+X, +2X, +3X, etc...).  Each successive roll will be adjusted until the avg threshold is reached.
 
 # Future Planned Functionality
 ## RNG Alternatives

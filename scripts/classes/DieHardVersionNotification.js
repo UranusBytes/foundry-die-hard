@@ -6,7 +6,7 @@ import DieHard from "./DieHard.js";
 export default class DieHardVersionNotification {
   static checkVersion() {
     let functionLogName = 'DieHardVersionNotification.checkVersion'
-    let notificationVersion = 5
+    let notificationVersion = 6
 
     // First time module is being loaded
     if (game.user.isGM && game.user.getFlag('foundry-die-hard', 'versionNotification') !== notificationVersion) {
@@ -45,6 +45,21 @@ export default class DieHardVersionNotification {
             "This version includes the following major changes:</p><ul>" +
           "<li>Fix for version notification</li>" +
           "<li>Fix for making DM not visible to users #22</li>" +
+          "</ul>",
+        6: "<b>v0.0.11</b><p>" +
+            "This version includes the following major changes:</p><ul>" +
+          "<li>Fixes for global disables</li>" +
+          "<li>Improvements to VersionNotification</li>" +
+          "<li>Move lots of debug logging to using the debug flag</li>" +
+          "<li>Adjust Simple and Avg Karma default to disabled</li>" +
+          "<li>Adjust Simple and Avg Karma so they can both influence the die roll</li>" +
+          "<li>Improvements to Fudge Icon #27</li>" +
+          "<li>Add 'warning' to Karma dialog for conflict issues</li>" +
+          "<li>Add Cumulative option to Karma dialog</li>" +
+          "<li>Add Karma Cumulative logic</li>" +
+          "<li>Add enable/disable coloring of Karma button</li>" +
+          "<li>Add notification when debugDieResult changes die result</li>" +
+          "<li>Fix for version notification</li>" +
           "</ul>"
       }
       let finalMessage = ""

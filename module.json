@@ -3,9 +3,9 @@
   "title": "Die Hard",
   "description": "Adjustments for DND5e & PF2e die rolls like fudging...",
   "author": "Jeremy (UranusBytes)",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "9",
+  "compatibleCoreVersion": "10",
   "esmodules": [
     "scripts/die-hard.js"
   ],
