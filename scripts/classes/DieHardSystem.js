@@ -177,8 +177,10 @@ export default class DieHardSystem {
           // ToDo: remove this hack
           // Only force the roll on the first die
           if (DieHardSetting('debugDieResultEnabled') && newResult === undefined) {
-            newResult = DieHardSetting('debugDieResult')
-            dieHardLog(false, functionLogName + ' - debugDieResult used', newResult);
+            let debugResult = DieHardSetting('debugDieResult')
+            dieHardLog(false, functionLogName + ' - debugDieResult used to change ' + newResult + ' to ' + debugResult);
+            DieHard.dmToGm('debugDieResult used to change ' + newResult + ' to ' + debugResult);
+            newResult = debugResult
           } else {
             // This is copied from resources/app/client/dice/terms/dice.js - rolls method
             if (eval_options.minimize) roll.result = Math.min(1, this.faces);
@@ -239,8 +241,10 @@ export default class DieHardSystem {
 
         // If the Die Hard debug roll is enabled, then override the roll
         if (DieHardSetting('debugDieResultEnabled')) {
-          roll.result = DieHardSetting('debugDieResult')
-          dieHardLog(false, functionLogName + ' - debugDieResult used', roll.result);
+          let debugResult = DieHardSetting('debugDieResult')
+          dieHardLog(false, functionLogName + ' - debugDieResult used to change ' + roll.result + ' to ' + debugResult);
+          DieHard.dmToGm('debugDieResult used to change ' + roll.result + ' to ' + debugResult);
+          roll.result = debugResult
         }
 
         if (simpleKarmaSettings.enabled) {
