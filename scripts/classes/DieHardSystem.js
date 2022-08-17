@@ -522,6 +522,20 @@ export default class DieHardSystem {
     return false;
   }
 
+
+  /*
+    Return true if there are any active Karma
+   */
+  hasActiveKarma() {
+    dieHardLog(false, 'DieHardSystem.hasActiveKarma')
+    let avgKarmaSettings = game.settings.get('foundry-die-hard', 'avgKarmaSettings')
+    let simpleKarmaSettings = game.settings.get('foundry-die-hard', 'simpleKarmaSettings')
+    if (avgKarmaSettings.enabled || simpleKarmaSettings.enabled) {
+      return true;
+    }
+    return false;
+  }
+
   async refreshActiveFudgesIcon() {
     /*
     Handled in DieHard.refreshDieHardIcons
@@ -539,9 +553,9 @@ export default class DieHardSystem {
     // ToDo: clean this up
     try{
       if (this.hasActiveFudges()) {
-        document.getElementById('die-hard-fudge-icon').classList.add("die-hard-fudge-icon-active");
+        document.getElementById('die-hard-fudge-icon').classList.add("die-hard-icon-active");
       } else {
-        document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-fudge-icon-active");
+        document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-icon-active");
       }
     }
     catch (e) {  }

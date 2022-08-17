@@ -215,9 +215,9 @@ export default class DieHard {
           document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-hidden');
         }
         if (game.dieHardSystem.hasActiveFudges()) {
-          document.getElementById('die-hard-fudge-icon').classList.add('die-hard-fudge-icon-active');
+          document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-active');
         } else {
-          document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-fudge-icon-active');
+          document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-active');
         }
       } else {
         document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
@@ -226,6 +226,11 @@ export default class DieHard {
 
       if (DieHardSetting('karmaEnabled')) {
         document.getElementById('die-hard-karma-icon').classList.remove('die-hard-icon-hidden');
+        if (game.dieHardSystem.hasActiveKarma()) {
+          document.getElementById('die-hard-karma-icon').classList.add('die-hard-icon-active');
+        } else {
+          document.getElementById('die-hard-karma-icon').classList.remove('die-hard-icon-active');
+        }
       } else {
         document.getElementById('die-hard-karma-icon').classList.add('die-hard-icon-hidden');
       }
