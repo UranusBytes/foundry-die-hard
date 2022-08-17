@@ -53,8 +53,12 @@
         </div>
         <div class="form-group" id="divKarmaAvgNudge" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}  >
             <label for="karmaAvgNudge">Next Roll Increase</label>
-            <input type="range" name="karmaAvgNudge" value="{{ avgKarma.nudge }}" min="1" max="10" step="1" data-dtype="Number" style="max-width:150px; padding-right: 20px"/ />
-            <p class="notes">...the next die roll and each following roll will be increased by <span class="range-value" style="font-weight: bold;">{{ avgKarma.nudge }}</span>, cumulatively, until the average is equal or higher than <span id="karmaAvgThresholdMore" style="font-weight: bold;">{{ avgKarma.threshold }}</span>.</p>
+            <input type="range" name="karmaAvgNudge" value="{{ avgKarma.nudge }}" min="1" max="5" step="1" data-dtype="Number" style="max-width:150px; padding-right: 20px"/ />
+            <p class="notes">...the next die roll and each following roll will be increased by <span class="range-value" style="font-weight: bold;">{{ avgKarma.nudge }}</span>, <span id="spanKarmaAvgCumulativeDesc"{{#unless avgKarma.cumulative}}style="display:none;"{{/unless}}>cumulatively (<span id="avgKarmaNudge1" class="range-value" style="font-weight: bold;">+{{ avgKarma.nudge }}</span>, then <span id="avgKarmaNudge2" class="range-value" style="font-weight: bold;">+{{ avgKarma.nudge2 }}</span>, then <span id="avgKarmaNudge3" class="range-value" style="font-weight: bold;">+{{ avgKarma.nudge3 }}</span>, etc...), </span>until the average is equal or higher than <span id="karmaAvgThresholdMore" style="font-weight: bold;">{{ avgKarma.threshold }}</span>.</p>
+        </div>
+        <div class="form-group" id="divKarmaAvgCumulative" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}  >
+            <label for="karmaAvgNudge">Cumulative Roll Increase</label>
+            <input type="checkbox" name="karmaAvgCumulative" value="true" id="karmaAvgCumulative" {{#if avgKarma.cumulative}}checked{{/if}}>
         </div>
         <div class="form-group" id="divKarmaAvgPlayerStats" {{#unless avgKarma.enabled}}style="display:none;"{{/unless}}>
             Current Player Stats
