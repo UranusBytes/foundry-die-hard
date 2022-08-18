@@ -3,9 +3,9 @@
   "title": "Die Hard",
   "description": "Adjustments for DND5e & PF2e die rolls like fudging...",
   "author": "Jeremy (UranusBytes)",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "10",
+  "compatibleCoreVersion": "10.277",
   "esmodules": [
     "scripts/die-hard.js"
   ],
@@ -25,6 +25,11 @@
       "path": "lang/en.json"
     }
   ],
+  "flags": {
+    "fvttdevleague": {
+        "package-jam": 2022
+    }
+  },
   "url": "https://github.com/UranusBytes/foundry-die-hard",
   "manifest": "TBD",
   "readme": "https://github.com/UranusBytes/foundry-die-hard/blob/main/README.md",
