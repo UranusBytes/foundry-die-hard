@@ -34,7 +34,7 @@ export default class DieHardKarmaDialog extends FormApplication {
       simpleKarma: DieHardSetting('simpleKarmaSettings'),
       simpleKarmaPlayerStats: this.getkarmaPlayerStats('simpleKarma'),
       avgKarma: DieHardSetting('avgKarmaSettings'),
-      avgKarmaPlayerStats: this.getkarmaPlayerStats('avgKarma')
+      avgKarmaPlayerStats: this.getkarmaPlayerStats('avgKarmaData')
     };
     dieHardLog(false, 'DieHardKarmaDialog.getData', dialogData)
     return dialogData;
@@ -42,10 +42,24 @@ export default class DieHardKarmaDialog extends FormApplication {
 
   getkarmaPlayerStats(karmaType) {
     let playerStats = []
+    dieHardLog(false, 'DieHardKarmaDialog.getkarmaPlayerStats - game.users.keys()', game.users.keys())
     for (let userId of game.users.keys()) {
       let curUser = game.users.get(userId);
       dieHardLog(false, 'DieHardKarmaDialog.getkarmaPlayerStats - game.users[user]', curUser)
-      let curUserStats = curUser.getFlag('foundry-die-hard', karmaType)
+      let curUserStats = []
+      if (karmaType === 'simpleKarma'){
+        curUserStats = curUser.getFlag('foundry-die-hard', karmaType)
+      } else {
+        try {
+          let karmaData = curUser.getFlag('foundry-die-hard', karmaType)
+          curUserStats = karmaData.history          
+        }
+        catch (e) {
+          
+        }
+      }
+
+      dieHardLog(false, 'DieHardKarmaDialog.getkarmaPlayerStats - curUserStats', curUserStats)
       if (!Array.isArray(curUserStats)) {
         curUserStats = []
       }
