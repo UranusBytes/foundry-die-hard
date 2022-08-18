@@ -6,7 +6,7 @@ import DieHard from "./DieHard.js";
 export default class DieHardVersionNotification {
   static checkVersion() {
     let functionLogName = 'DieHardVersionNotification.checkVersion'
-    let notificationVersion = 6
+    let notificationVersion = 7
 
     // First time module is being loaded
     if (game.user.isGM && game.user.getFlag('foundry-die-hard', 'versionNotification') !== notificationVersion) {
@@ -60,6 +60,14 @@ export default class DieHardVersionNotification {
           "<li>Add enable/disable coloring of Karma button</li>" +
           "<li>Add notification when debugDieResult changes die result</li>" +
           "<li>Fix for version notification</li>" +
+          "</ul>",
+        7: "<b>v0.1.0</b><p>" +
+            "This version includes the following major changes:</p><ul>" +
+          "<li>* Fix: Catch if user (GM or player) doesn't have any fudges yet</li>" +
+          "<li>* Fix: Initial fudge definition not rendering in dialog #26</li>" +
+          "<li>* Fix: DND5e skill roll mis-categorized</li>" +
+          "<li>* Fix: Avg Karma History not showing</li>" +
+          "<li>* Improve documentation</li>" +
           "</ul>"
       }
       let finalMessage = ""

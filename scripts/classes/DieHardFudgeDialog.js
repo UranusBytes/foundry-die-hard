@@ -319,7 +319,7 @@ export default class DieHardFudgeDialog extends FormApplication {
         }
 
         dieHardLog(false, 'DieHardFudgeDialog : Set Fudge', whoFudges);
-        who.setFlag('foundry-die-hard', 'fudges', whoFudges);
+        await who.setFlag('foundry-die-hard', 'fudges', whoFudges);
         this.pendingHowOperator = null;
         this.pendingHowOperatorValue = null;
       }
