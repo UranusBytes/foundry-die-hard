@@ -23,7 +23,7 @@ Hooks.once('ready', () => {
 
   if (game.modules.get("betterrolls5e") !== undefined && game.modules.get("betterrolls5e")?.active === true) {
     dieHardLog(true, 'WARNING - DieHard is incompatible with Better Rolls 5e.')
-    game.dieHardSystem.dmToGm('WARNING - DieHard is incompatible with Better Rolls 5e.');
+    DieHard.dmToGm('WARNING - DieHard is incompatible with Better Rolls 5e.');
   }
 });
 
