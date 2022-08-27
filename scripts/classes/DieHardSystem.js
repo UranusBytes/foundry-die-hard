@@ -1,6 +1,6 @@
-import {dieHardLog, makeId} from "../lib/helpers.js";
-import DieHardFudgeRoll from "./DieHardFudgeRoll.js";
-import DieHard, {DieHardSetting} from "./DieHard.js";
+import {dieHardLog, makeId} from '../lib/helpers.js';
+import DieHardFudgeRoll from './DieHardFudgeRoll.js';
+import DieHard, {DieHardSetting} from './DieHard.js';
 
 export default class DieHardSystem {
   constructor() {
@@ -540,9 +540,9 @@ export default class DieHardSystem {
     // ToDo: clean this up
     try{
       if (this.hasActiveFudges()) {
-        document.getElementById('die-hard-fudge-icon').classList.add("die-hard-fudge-icon-active");
+        document.getElementById('die-hard-fudge-icon').classList.add('die-hard-fudge-icon-active');
       } else {
-        document.getElementById('die-hard-fudge-icon').classList.remove("die-hard-fudge-icon-active");
+        document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-fudge-icon-active');
       }
     }
     catch (e) {  }
