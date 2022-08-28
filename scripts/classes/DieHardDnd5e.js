@@ -19,7 +19,7 @@ export default class DieHardDnd5e extends DieHardSystem{
     super();
 
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollSkill, 'WRAPPER');
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
 
@@ -158,9 +158,9 @@ export default class DieHardDnd5e extends DieHardSystem{
     dieHardLog(false, functionLogName + ' - rollType', rollType);
 
     if (! DieHardSetting('fudgeEnabled') ) {
-      dieHardLog(true, functionLogName + ' - Fudge disabled');
+      dieHardLog(false, functionLogName + ' - Fudge disabled');
     } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
-      dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
+      dieHardLog(false, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active fudge
       let userFudge = this.getUserFudge(rollType)
