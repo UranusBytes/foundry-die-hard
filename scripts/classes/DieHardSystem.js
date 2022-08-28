@@ -1,6 +1,6 @@
-import {dieHardLog, makeId} from "../lib/helpers.js";
-import DieHardFudgeRoll from "./DieHardFudgeRoll.js";
-import DieHard, {DieHardSetting} from "./DieHard.js";
+import {dieHardLog, makeId} from '../lib/helpers.js';
+import DieHardFudgeRoll from './DieHardFudgeRoll.js';
+import DieHard, {DieHardSetting} from './DieHard.js';
 
 export default class DieHardSystem {
   constructor() {
@@ -194,14 +194,18 @@ export default class DieHardSystem {
             gen_new_result = false;
             roll.result = newResult
             this.results.push(roll);
-            DieHard.dmToGm("Raw Fudge (" + userFudge.howFormula + ") values: " + failedRolls.join(', ') + "  Final: " + newResult);
+            if (failedRolls.length === 0) {
+              DieHard.dmToGm('DieHard-Fudge: Total Fudge not needed (' + newResult + ' ' + userFudge.howFormula + ')');
+            } else {
+              DieHard.dmToGm('DieHard-Fudge: Raw Fudge (' + userFudge.howFormula + ') values: ' + failedRolls.join(', ') + '  Final: ' + newResult);
+            }
           } else {
             // New roll is insufficient, but lets at least check if it is "closer"
             if (game.dieHardSystem.isBetterFudge(roll.result, newResult, userFudge.operator, userFudge.operatorValue)) {
-              dieHardLog(false, functionLogName + ' - New result insufficient, but at least better (' + newResult + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
+              dieHardLog(false, functionLogName + ' - New result (' + newResult + ') insufficient (' + userFudge.fudgeOperator + ' ' + userFudge.fudgeOperatorValue + '), but at least better.  Try again (tries left: ' + SafetyLoopIndex + ')...')
               roll.result = newResult
             } else {
-              dieHardLog(false, functionLogName + ' - New result insufficient (' + newResult + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
+              dieHardLog(false, functionLogName + ' - New result (' + newResult + ') insufficient (' + userFudge.fudgeOperator + ' ' + userFudge.fudgeOperatorValue + ').  Try again (tries left: ' + SafetyLoopIndex + ')...')
             }
             failedRolls.push(newResult);
           }
@@ -286,7 +290,7 @@ export default class DieHardSystem {
         if (avgKarmaSettings.enabled) {
           dieHardLog(false, functionLogName + ' - Avg Karma', this);
           let avgKarmaData = game.users.current.getFlag('foundry-die-hard', 'avgKarmaData')
-          
+
           if (avgKarmaData === undefined) {
             avgKarmaData = {
               history:  [],
@@ -347,7 +351,7 @@ export default class DieHardSystem {
   wrapRollEvaluate(wrapped, eval_options) {
     let uuid = makeId(6)
     let functionLogName = 'DieHardSystem.wrapRollEvaluate-' + uuid
-    dieHardLog(false, functionLogName);
+    dieHardLog(false, functionLogName, this, eval_options);
 
     if (! DieHardSetting('fudgeEnabled') ) {
       dieHardLog(false, functionLogName + ' - Fudge disabled');
@@ -394,14 +398,13 @@ export default class DieHardSystem {
           if (this instanceof CONFIG.Dice.DieHardFudgeRoll) {
             dieHardLog(false, functionLogName + 'e - recursive roll', this);
           } else {
-            dieHardLog(false, functionLogName + ' - base roll', this);
-            dieHardLog(false, functionLogName + ' - result', result);
+            dieHardLog(false, functionLogName + ' - base roll', this, result);
             let gen_new_result = false;
             let evalResult = game.dieHardSystem.evalFudge(this.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)
 
             if (evalResult) {
-              dieHardLog(false, functionLogName + ' - Fudge not needed, but still disabled');
-              DieHard.dmToGm('DieHard-Fudge: Total Fudge not needed, but still disabled...');
+              dieHardLog(false, functionLogName + ' - Fudge not needed (' + this.total + ' ' + this.data.fudgeOperator + ' ' + this.data.fudgeOperatorValue + ')');
+              DieHard.dmToGm('DieHard-Fudge: Total Fudge not needed (' + this.total + ' ' + this.data.fudgeOperator + ' ' + this.data.fudgeOperatorValue + ')');
               dieHardLog(false, functionLogName + ' - dmToGm');
 
             } else {
@@ -418,14 +421,14 @@ export default class DieHardSystem {
                   dieHardLog(false, functionLogName + ' - New result: ' + new_roll.total)
                   gen_new_result = false;
                   foundry.utils.mergeObject(this, new_roll);
-                  DieHard.dmToGm("Total Fudge (" + result.data.fudgeHow + ") values: " + failedRolls.join(', ') + "  Final: " + new_roll.total);
+                  DieHard.dmToGm('DieHard-Fudge: Total Fudge (' + result.data.fudgeHow + ') values: ' + failedRolls.join(', ') + '  Final: ' + new_roll.total);
                 } else {
                   // New roll is insufficient, but lets at least check if it is "closer"
                   if (game.dieHardSystem.isBetterFudge(this.total, new_roll.total, this.data.fudgeOperator, this.data.fudgeOperatorValue)) {
-                    dieHardLog(false, functionLogName + ' - New result insufficient, but at least better (' + new_roll.total + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
+                    dieHardLog(false, functionLogName + ' - New result (' + new_roll.total + ') insufficient (' + this.data.fudgeOperator + ' ' + this.data.fudgeOperatorValue + '), but at least better.  Try again (tries left: ' + SafetyLoopIndex + ')...')
                     foundry.utils.mergeObject(this, new_roll);
                   } else {
-                    dieHardLog(false, functionLogName + ' - New result insufficient (' + new_roll.total + ").  Try again (tries left: " + SafetyLoopIndex + ")...")
+                    dieHardLog(false, functionLogName + ' - New result (' + new_roll.total + ') insufficient (' + this.data.fudgeOperator + ' ' + this.data.fudgeOperatorValue + ').  Try again (tries left: ' + SafetyLoopIndex + ')...')
                   }
                   failedRolls.push(new_roll.total);
                 }
