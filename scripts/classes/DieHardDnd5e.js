@@ -6,6 +6,14 @@ import {DieHardSetting} from "./DieHard.js";
 
 export default class DieHardDnd5e extends DieHardSystem{
   constructor() {
+    if (game.modules.get("ready-set-roll-5e") !== undefined && game.modules.get("ready-set-roll-5e")?.active === true) {
+      dieHardLog(false, 'DieHardDnd5e.constructor - Ready Set Roll 5e - disable 5e specific functions');
+      super();
+      this.totalRollClassName = ["Roll", "D20Roll"]
+      this.fudgeWhatOptions = []
+      return
+    }
+
     // Dynamic register
     let DieHardFudgeD20RollImport
     if (isNewerVersion(game.version, 9.99999)) {
