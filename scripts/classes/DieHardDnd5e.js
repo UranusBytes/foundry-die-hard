@@ -27,7 +27,7 @@ export default class DieHardDnd5e extends DieHardSystem{
     super();
 
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilitySave', this.actorRollAbilitySave, 'WRAPPER');
-    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollAbilitySave, 'WRAPPER');
+    libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollSkill', this.actorRollSkill, 'WRAPPER');
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollAbilityTest', this.actorRollAbilityTest, 'WRAPPER');
     libWrapper.register('foundry-die-hard', 'CONFIG.Actor.documentClass.prototype.rollDeathSave', this.actorRollDeathSave, 'WRAPPER');
 
@@ -90,7 +90,7 @@ export default class DieHardDnd5e extends DieHardSystem{
         SafetyLoopIndex--;
 
         // ToDo: Can a "clone()" or a "reroll()" be used instead?  https://foundryvtt.com/api/Roll.html#clone
-        const new_roll = new DieHardFudgeD20Roll(
+        const new_roll = new DISABLED_DieHardFudgeD20Roll(
           result.formula,
           result.data, {
             flavor: result.options.flavor,
@@ -161,14 +161,14 @@ export default class DieHardDnd5e extends DieHardSystem{
     return result
   }
 
-   wrappedRoll(options, actorId, rollType) {
+  wrappedRoll(options, actorId, rollType) {
     let functionLogName = 'DieHardDnd5e.wrappedRoll'
     dieHardLog(false, functionLogName + ' - rollType', rollType);
 
     if (! DieHardSetting('fudgeEnabled') ) {
-      dieHardLog(true, functionLogName + ' - Fudge disabled');
-    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
-      dieHardLog(true, functionLogName + ' - Fudging Globally disabled');
+      dieHardLog(false, functionLogName + ' - Fudge disabled');
+    } else if (DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
+      dieHardLog(false, functionLogName + ' - Fudging Globally disabled');
     } else {
       // Check if user has an active fudge
       let userFudge = this.getUserFudge(rollType)
@@ -194,7 +194,7 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollSkill(wrapped, skillId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollSkill', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollSkill')
     }
     wrapped(skillId, options);
@@ -202,7 +202,7 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollAbilitySave(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilitySave', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollAbilitySave')
     }
     wrapped(abilityId, options);
@@ -210,7 +210,7 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollAbilityTest(wrapped, abilityId, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollAbilityTest', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollAbilityTest')
     }
     wrapped(abilityId, options);
@@ -218,7 +218,7 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   actorRollDeathSave(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.actorRollDeathSave', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       game.dieHardSystem.wrappedRoll(options, this.id, 'actorRollDeathSave')
     }
     wrapped(options);
@@ -226,7 +226,7 @@ export default class DieHardDnd5e extends DieHardSystem{
 
   entityRollAttack(wrapped, options={}) {
     dieHardLog(false, 'DieHardDnd5e.entityRollAttack', this);
-    if (!DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+    if (!DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled) {
       game.dieHardSystem.wrappedRoll(options, this.actor.id, 'entityRollAttack')
     }
     wrapped(options);

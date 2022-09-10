@@ -52,3 +52,25 @@ Aug 10, 2022
 * Fixes for disabling fudge 
 * Fix for version notification
 * Fix for making DM not visible to users #22
+
+## v0.0.11
+Aug 17, 2022
+* Fixes for global disables
+* Improvements to VersionNotification
+* Move lots of debug logging to using the debug flag
+* Adjust Simple and Avg Karma default to disabled
+* Adjust Simple and Avg Karma so they can both influence the die roll
+* Improvements to Fudge Icon #27
+* Add "warning" to Karma dialog for conflict issues
+* Add Cumulative option to Karma dialog
+* Add Karma Cumulative logic
+* Add enable/disable coloring of Karma button
+* Add notification when debugDieResult changes die result
+
+## v0.1.0
+Aug 18, 2022
+* Fix: Catch if user (GM or player) doesn't have any fudges yet
+* Fix: Initial fudge definition not rendering in dialog #26
+* Fix: DND5e skill roll mis-categorized
+* Fix: Avg Karma History not showing
+* Improve documentation

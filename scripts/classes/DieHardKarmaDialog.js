@@ -34,7 +34,7 @@ export default class DieHardKarmaDialog extends FormApplication {
       simpleKarma: DieHardSetting('simpleKarmaSettings'),
       simpleKarmaPlayerStats: this.getkarmaPlayerStats('simpleKarma'),
       avgKarma: DieHardSetting('avgKarmaSettings'),
-      avgKarmaPlayerStats: this.getkarmaPlayerStats('avgKarma')
+      avgKarmaPlayerStats: this.getkarmaPlayerStats('avgKarmaData')
     };
     dieHardLog(false, 'DieHardKarmaDialog.getData', dialogData)
     return dialogData;
@@ -42,10 +42,24 @@ export default class DieHardKarmaDialog extends FormApplication {
 
   getkarmaPlayerStats(karmaType) {
     let playerStats = []
+    dieHardLog(false, 'DieHardKarmaDialog.getkarmaPlayerStats - game.users.keys()', game.users.keys())
     for (let userId of game.users.keys()) {
       let curUser = game.users.get(userId);
       dieHardLog(false, 'DieHardKarmaDialog.getkarmaPlayerStats - game.users[user]', curUser)
-      let curUserStats = curUser.getFlag('foundry-die-hard', karmaType)
+      let curUserStats = []
+      if (karmaType === 'simpleKarma'){
+        curUserStats = curUser.getFlag('foundry-die-hard', karmaType)
+      } else {
+        try {
+          let karmaData = curUser.getFlag('foundry-die-hard', karmaType)
+          curUserStats = karmaData.history          
+        }
+        catch (e) {
+          
+        }
+      }
+
+      dieHardLog(false, 'DieHardKarmaDialog.getkarmaPlayerStats - curUserStats', curUserStats)
       if (!Array.isArray(curUserStats)) {
         curUserStats = []
       }
@@ -65,6 +79,14 @@ export default class DieHardKarmaDialog extends FormApplication {
 
   async _updateObject(event, formData) {
     dieHardLog(false, 'DieHardKarmaDialog._updateObject')
+
+    if (formData.karmaSimpleEnabled && formData.karmaAvgEnabled) {
+      document.getElementById('karmaWarningHeader').style.display = '';
+      document.getElementById('karmaWarningBody').style.display = '';
+    } else {
+      document.getElementById('karmaWarningHeader').style.display = 'none';
+      document.getElementById('karmaWarningBody').style.display = 'none';
+    }
 
     let originalKarmaSimpleSettings = game.settings.get('foundry-die-hard', 'simpleKarmaSettings')
     let karmaSimpleSettings = {
@@ -91,7 +113,10 @@ export default class DieHardKarmaDialog extends FormApplication {
       enabled: formData.karmaAvgEnabled,
       history: formData.karmaAvgHistory,
       threshold: formData.karmaAvgThreshold,
-      nudge: formData.karmaAvgNudge
+      nudge: formData.karmaAvgNudge,
+      nudge2: formData.karmaAvgNudge * 2,
+      nudge3: formData.karmaAvgNudge * 3,
+      cumulative: formData.karmaAvgCumulative
     }
     document.getElementById('karmaAvgThresholdMore').innerText = formData.karmaAvgThreshold;
     await game.settings.set('foundry-die-hard', 'avgKarmaSettings', karmaAvgSettings)
@@ -100,11 +125,21 @@ export default class DieHardKarmaDialog extends FormApplication {
       document.getElementById('divKarmaAvgThreshold').style.display = '';
       document.getElementById('divKarmaAvgNudge').style.display = '';
       document.getElementById('divKarmaAvgPlayerStats').style.display = '';
+      document.getElementById('divKarmaAvgCumulative').style.display = '';
+      if (formData.karmaAvgCumulative) {
+        document.getElementById('spanKarmaAvgCumulativeDesc').style.display = '';
+      } else {
+        document.getElementById('spanKarmaAvgCumulativeDesc').style.display = 'none';
+      }
+      document.getElementById('avgKarmaNudge1').innerText = '+' + formData.karmaAvgNudge;
+      document.getElementById('avgKarmaNudge2').innerText = '+' + (formData.karmaAvgNudge * 2);
+      document.getElementById('avgKarmaNudge3').innerText = '+' + (formData.karmaAvgNudge * 3);
     } else {
       document.getElementById('divKarmaAvgHistory').style.display = 'none';
       document.getElementById('divKarmaAvgThreshold').style.display = 'none';
       document.getElementById('divKarmaAvgNudge').style.display = 'none';
       document.getElementById('divKarmaAvgPlayerStats').style.display = 'none';
+      document.getElementById('divKarmaAvgCumulative').style.display = 'none';
     }
 
     if (originalKarmaSimpleSettings.enabled !== formData.karmaSimpleEnabled || originalKarmaAvgSettings.enabled !== formData.karmaAvgEnabled){

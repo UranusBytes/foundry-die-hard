@@ -9,7 +9,7 @@ export const DieHardSetting = (setting) => game.settings.get('foundry-die-hard',
 export default class DieHard {
 
   constructor() {
-    dieHardLog(true, 'DieHard - constructor');
+    dieHardLog(false, 'DieHard - constructor');
   }
 
   static renderDieHardIcons() {
@@ -76,7 +76,7 @@ export default class DieHard {
 
   static getDefaultSimpleKarmaSettings() {
     return {
-      enabled: true,
+      enabled: false,
       history: 5,
       threshold: 5,
       floor: 5
@@ -85,7 +85,7 @@ export default class DieHard {
 
   static getAvgSimpleKarmaSettings() {
     return {
-    enabled: true,
+    enabled: false,
       history: 5,
       threshold: 5,
       nudge: 5
@@ -187,26 +187,37 @@ export default class DieHard {
     game.dieHardSystem.refreshActiveFudgesIcon()
   }
 
-  static async refreshDieHardIcons() {
+  static async refreshDieHardIcons(globallyDisabled = undefined) {
     dieHardLog(false, 'DieHard.refreshDieHardIcons');
+    dieHardLog(false, 'DieHard.refreshDieHardIcons - globallyDisabled', globallyDisabled);
+    let iconDisabled
+    if (globallyDisabled === undefined) {
+      iconDisabled = DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled
+    } else {
+      iconDisabled = globallyDisabled
+    }
     // Ugly fix for objects not existing yet
     // ToDo: clean this up
     try{
       dieHardLog(false, 'DieHard.refreshDieHardIcons - DieHardSetting(\'fudgeEnabled\')', DieHardSetting('fudgeEnabled'));
       if (DieHardSetting('fudgeEnabled')) {
-        dieHardLog(false, 'DieHard.refreshDieHardIcons - DieHardSetting(\'dieHardSettings\').fudgeConfig.globalDisable', DieHardSetting('dieHardSettings').fudgeConfig.globalDisable);
-        if (DieHardSetting('dieHardSettings').fudgeConfig.globalDisable) {
+        dieHardLog(false, 'DieHard.refreshDieHardIcons - DieHardSetting(\'dieHardSettings\').fudgeConfig.globallyDisabled', DieHardSetting('dieHardSettings').fudgeConfig.globallyDisabled);
+        if (iconDisabled) {
+          //Disabled
+          dieHardLog(false, 'DieHard.refreshDieHardIcons - Global Disabled')
           document.getElementById('die-hard-pause-fudge-icon').classList.remove('die-hard-icon-hidden');
           document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-hidden');
           return;
         } else {
+          //Enabled
+          dieHardLog(false, 'DieHard.refreshDieHardIcons - Global Enabled')
           document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
           document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-hidden');
         }
         if (game.dieHardSystem.hasActiveFudges()) {
-          document.getElementById('die-hard-fudge-icon').classList.add('die-hard-fudge-icon-active');
+          document.getElementById('die-hard-fudge-icon').classList.add('die-hard-icon-active');
         } else {
-          document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-fudge-icon-active');
+          document.getElementById('die-hard-fudge-icon').classList.remove('die-hard-icon-active');
         }
       } else {
         document.getElementById('die-hard-pause-fudge-icon').classList.add('die-hard-icon-hidden');
@@ -215,6 +226,11 @@ export default class DieHard {
 
       if (DieHardSetting('karmaEnabled')) {
         document.getElementById('die-hard-karma-icon').classList.remove('die-hard-icon-hidden');
+        if (game.dieHardSystem.hasActiveKarma()) {
+          document.getElementById('die-hard-karma-icon').classList.add('die-hard-icon-active');
+        } else {
+          document.getElementById('die-hard-karma-icon').classList.remove('die-hard-icon-active');
+        }
       } else {
         document.getElementById('die-hard-karma-icon').classList.add('die-hard-icon-hidden');
       }
