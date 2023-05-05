@@ -16,10 +16,13 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
 .die-hard-blind-whisper {
   display: none;
 }
+.die-hard-fudge-icon, .die-hard-karma-icon {
+    color: gray;
+}
 #chat-controls #die-hard-pause-fudge-icon {
   flex: 0 0 0;
   padding-left: 0px;
-  color: #FFA500;
+  color: white;
   /*color: red;
   */
 
@@ -29,7 +32,7 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
   margin-left: 5px;
 }
 #chat-controls .die-hard-icon-active {
-  color: #FFA500;
+  color: white;
   /*
   animation-name: fudge-icon-color;
   animation-duration: 2s;
@@ -43,7 +46,7 @@ Inspiration/plagarism from https://gitlab.com/asacolips-projects/foundry-mods/fo
 }
 
 #chat-controls .die-hard-karma-icon-active {
-  color: #FFA500;
+  color: white;
 }
 
 .die-hard-column {
@@ -172,7 +175,7 @@ div.die-hard-form-group {
   50% {
     background-color: #ff6961;
   }
-  100 {
+  100% {
     background-color: initial;
   }
 }
@@ -186,7 +189,7 @@ div.die-hard-form-group {
     background-color: #77DD77;
     -webkit-text-stroke: 1px #77DD77;
   }
-  100 {
+  100% {
     background-color: initial;
   -webkit-text-stroke: 1px #77DD77;
   }

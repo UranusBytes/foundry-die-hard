@@ -6,7 +6,24 @@
                 <p class="notes" id="karmaWarningBody" {{#if simpleKarma.enabled}}{{#if avgKarma.enabled}}{{ else }}style="display:none;"{{/if}}{{ else }}style="display:none;"{{/if}}>Please be aware that having both Simple Karma and Avg Karma enabled at the same time may have unintended consequences.  In particular, a die roll is first evaluated by Simple Karma (and adjusted if needed).  The die roll is then evaluated by Avg Karma (with the avg influenced by the adjusted value, and adjusted again if needed).</p>
             </div>
 
-
+        <h3 class="form-header" id="karmaWhoHeader"><span style="font-weight: bold;">WHO: </span>Who should be affected by karma?</h3>
+        <!-- ugly hack to make single checkbox still an array -->
+        <input type="checkbox" name="karmaWho" value="hidden" class="die-hard-checkbox" id="karmaWho-hidden" style="visibility: hidden" data-dtype="String" data-value="hidden">
+        <div class="die-hard-form-group">
+        {{#each whoGmOptions}}
+            <input type="checkbox" name="karmaWho" value="{{ id }}" class="die-hard-checkbox" id="karmaWho-{{ id }}" data-dtype="String" data-value="{{ id }}" {{#if karma}}checked{{/if}}><label for="karmaWho-{{ id }}">{{ name }}</label>
+        {{/each}}
+        </div>
+        <div class="die-hard-form-group">
+        {{#each whoUserOptions}}
+            <input type="checkbox" name="karmaWho" value="{{ id }}" class="die-hard-checkbox" id="karmaWho-{{ id }}" data-dtype="String" data-value="{{ id }}" {{#if karma}}checked{{/if}}><label for="karmaWho-{{ id }}">{{ name }}</label>
+        {{/each}}
+        </div>
+        <div class="die-hard-form-group">
+        {{#each whoActorOptions}}
+            <input type="checkbox" name="karmaWho" value="{{ id }}" class="die-hard-checkbox" id="karmaWho-{{ id }}" data-dtype="String" data-value="{{ id }}" {{#if karma}}checked{{/if}}><label for="karmaWho-{{ id }}">{{ name }}</label>
+        {{/each}}
+        </div>
 
         <h3 class="form-header" id="karmaSimpleHeader"><span style="font-weight: bold;">Simple Karma: </span> Gentle nudges...</h3>
         <div class="die-hard-form-group">
