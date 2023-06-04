@@ -34,7 +34,10 @@ export default class DieHardKarmaDialog extends FormApplication {
       simpleKarma: DieHardSetting('simpleKarmaSettings'),
       simpleKarmaPlayerStats: this.getkarmaPlayerStats('simpleKarma'),
       avgKarma: DieHardSetting('avgKarmaSettings'),
-      avgKarmaPlayerStats: this.getkarmaPlayerStats('avgKarmaData')
+      avgKarmaPlayerStats: this.getkarmaPlayerStats('avgKarmaData'),
+      whoGmOptions: game.dieHardSystem.getFudgeWhoGmOptions(),
+      whoUserOptions: game.dieHardSystem.getFudgeWhoUserOptions(),
+      //whoActorOptions: game.dieHardSystem.getFudgeWhoActorOptions(),
     };
     dieHardLog(false, 'DieHardKarmaDialog.getData', dialogData)
     return dialogData;
@@ -78,7 +81,7 @@ export default class DieHardKarmaDialog extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    dieHardLog(false, 'DieHardKarmaDialog._updateObject')
+    dieHardLog(false, 'DieHardKarmaDialog._updateObject');
 
     if (formData.karmaSimpleEnabled && formData.karmaAvgEnabled) {
       document.getElementById('karmaWarningHeader').style.display = '';
@@ -88,14 +91,17 @@ export default class DieHardKarmaDialog extends FormApplication {
       document.getElementById('karmaWarningBody').style.display = 'none';
     }
 
-    let originalKarmaSimpleSettings = game.settings.get('foundry-die-hard', 'simpleKarmaSettings')
+    const who = formData.karmaWho.filter(Boolean);
+    await game.settings.set('foundry-die-hard', 'karmaWho', who);
+
+    let originalKarmaSimpleSettings = DieHardSetting('simpleKarmaSettings');
     let karmaSimpleSettings = {
       enabled: formData.karmaSimpleEnabled,
       history: formData.karmaSimpleHistory,
       threshold: formData.karmaSimpleThreshold,
       floor: formData.karmaSimpleFloor
     }
-    await game.settings.set('foundry-die-hard', 'simpleKarmaSettings', karmaSimpleSettings)
+    await game.settings.set('foundry-die-hard', 'simpleKarmaSettings', karmaSimpleSettings);
     if (formData.karmaSimpleEnabled) {
       document.getElementById('divKarmaSimpleHistory').style.display = '';
       document.getElementById('divKarmaSimpleThreshold').style.display = '';
@@ -108,7 +114,7 @@ export default class DieHardKarmaDialog extends FormApplication {
       document.getElementById('divKarmaSimplePlayerStats').style.display = 'none';
     }
 
-    let originalKarmaAvgSettings = game.settings.get('foundry-die-hard', 'avgKarmaSettings')
+    let originalKarmaAvgSettings = DieHardSetting('avgKarmaSettings');
     let karmaAvgSettings = {
       enabled: formData.karmaAvgEnabled,
       history: formData.karmaAvgHistory,
