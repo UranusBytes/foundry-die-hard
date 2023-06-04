@@ -3,7 +3,7 @@
     "title": "Die Hard",
     "description": "Adjustments for DND5e & PF2e die rolls like fudging...",
     "author": "Jeremy (UranusBytes)",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "esmodules": [
         "scripts/die-hard.js"
     ],
@@ -36,5 +36,5 @@
     "manifest": "https://github.com/UranusBytes/foundry-die-hard/releases/latest/download/module.json",
     "readme": "https://github.com/UranusBytes/foundry-die-hard/blob/main/README.md",
     "changelog": "https://github.com/UranusBytes/foundry-die-hard/blob/main/CHANGELOG.md",
-    "download": "https://github.com/UranusBytes/foundry-die-hard/releases/download/0.1.0/module.zip"
+    "download": "https://github.com/UranusBytes/foundry-die-hard/releases/download/0.1.1/module.zip"
 }
