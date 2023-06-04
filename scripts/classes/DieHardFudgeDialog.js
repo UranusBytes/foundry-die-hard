@@ -410,7 +410,7 @@ export default class DieHardFudgeDialog extends FormApplication {
     html.find(".fudge-help-formula")?.on('click', this._helpFudgeFormula.bind(this));
     html.find(".fudge-help-times")?.on('click', this._helpFudgeTimes.bind(this));
   }
-
+/*
   _onSubmit(event, __namedParameters) {
     dieHardLog(false, 'DieHardFudgeDialog._onSubmit', event, __namedParameters)
     // Hack for v10
@@ -418,5 +418,6 @@ export default class DieHardFudgeDialog extends FormApplication {
       super._onSubmit(event, __namedParameters)
     }
   }
+  */
 }
 
