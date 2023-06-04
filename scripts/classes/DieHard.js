@@ -77,17 +77,17 @@ export default class DieHard {
   static getDefaultSimpleKarmaSettings() {
     return {
       enabled: false,
-      history: 5,
-      threshold: 5,
-      floor: 5
+      history: 2,
+      threshold: 7,
+      floor: 13
     }
   }
 
   static getAvgSimpleKarmaSettings() {
     return {
-    enabled: false,
-      history: 5,
-      threshold: 5,
+      enabled: false,
+      history: 3,
+      threshold: 7,
       nudge: 5
     }
   }
@@ -158,27 +158,33 @@ export default class DieHard {
       config: false,
     });
 
-    // Enables fudge
-		game.settings.register('foundry-die-hard', 'simpleKarmaSettings', {
-			name: 'Simple Karma Settings',
-			hint: 'Simple Karma Settings',
-			scope: 'world',
-			config: false,
-			default: DieHard.getDefaultSimpleKarmaSettings(),
-			type: Object
-		});
+    // Simple Karma
+    game.settings.register('foundry-die-hard', 'simpleKarmaSettings', {
+        name: 'Simple Karma Settings',
+        hint: 'Simple Karma Settings',
+        scope: 'world',
+        config: false,
+        default: DieHard.getDefaultSimpleKarmaSettings(),
+        type: Object
+    });
 
-    // Enables karma
-		game.settings.register('foundry-die-hard', 'avgKarmaSettings', {
-			name: 'Average Karma Settings',
-			hint: 'Average Karma Settings',
-			scope: 'world',
-			config: false,
-			default: DieHard.getAvgSimpleKarmaSettings(),
-			type: Object
-		});
+    // Average Karma
+    game.settings.register('foundry-die-hard', 'avgKarmaSettings', {
+        name: 'Average Karma Settings',
+        hint: 'Average Karma Settings',
+        scope: 'world',
+        config: false,
+        default: DieHard.getAvgSimpleKarmaSettings(),
+        type: Object
+    });
 
-
+    // Karma Who
+    game.settings.register('foundry-die-hard', 'karmaWho', {
+        scope: 'world',
+        config: false,
+        default: [],
+        type: Array
+    });
   }
 
   static async refreshDieHardStatus() {

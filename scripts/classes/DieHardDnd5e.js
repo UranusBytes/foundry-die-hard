@@ -74,7 +74,7 @@ export default class DieHardDnd5e extends DieHardSystem{
       this.dmToGm('DieHard-Fudge: Fudge not needed, but still wiped from actor...');
     } else {
       gen_new_result = true;
-      let dmMessage = "Fudge (" + result.data.fudgeHow + ") values:" + result.total;
+      let dmMessage = "Fudge (" + result.data.fudgeHow + ")\nValues:" + result.total;
 
       // This is a safety to prevent endless loops from possibly sneaking in
       let SafetyLoopIndex = game.settings.get('foundry-die-hard', 'dieHardSettings').fudgeConfig.maxFudgeAttemptsPerRoll;
