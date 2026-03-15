@@ -1,9 +1,16 @@
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/UranusBytes/foundry-die-hard) ![GitHub Releases](https://img.shields.io/github/downloads/UranusBytes/foundry-die-hard/latest/total) ![GitHub Releases](https://img.shields.io/github/downloads/UranusBytes/foundry-die-hard/total)
+MOVED TO https://github.com/surrealzerg/foundry-die-hard-v13
 
-![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ffoundry-die-hard&colorB=4aa94a) ![Foundry Version](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https%3A%2F%2Fgithub.com%2FUranusBytes%2Ffoundry-die-hard%2Freleases%2Flatest%2Fdownload%2Fmodule.json) 
+
+2026-03-07 - UI Fixes
+2026-03-06 - Fixed Monk's Token Bar compatibility
+
+Updated to Work for V13.
+
+Original development by https://github.com/UranusBytes/foundry-die-hard
 
 Die Hard
 ========
+
 This Foundry VTT module is intended to provide functionality that modifies/adjusted die rolls in certain systems.
 
 **NOTE:** This module is still BETA and under active development.  Functionality is still prone to change and/or bugs to be discovered.

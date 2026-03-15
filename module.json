@@ -2,8 +2,8 @@
     "id": "foundry-die-hard",
     "title": "Die Hard",
     "description": "Adjustments for DND5e & PF2e die rolls like fudging...",
-    "author": "Jeremy (UranusBytes)",
-    "version": "0.1.1",
+    "author": "Surreal and Jeremy (UranusBytes)",
+    "version": "0.2.3",
     "esmodules": [
         "scripts/die-hard.js"
     ],
@@ -29,12 +29,11 @@
         }
     },
     "compatibility": {
-		"minimum": 10,
-		"verified": "10.291"
+		"minimum": 13,
+		"verified": "13.351"
 	},
-    "url": "https://github.com/UranusBytes/foundry-die-hard",
-    "manifest": "https://github.com/UranusBytes/foundry-die-hard/releases/latest/download/module.json",
-    "readme": "https://github.com/UranusBytes/foundry-die-hard/blob/main/README.md",
-    "changelog": "https://github.com/UranusBytes/foundry-die-hard/blob/main/CHANGELOG.md",
-    "download": "https://github.com/UranusBytes/foundry-die-hard/releases/download/0.1.1/module.zip"
+    "url": "https://github.com/surrealzerg/foundry-die-hard-v13",
+    "manifest": "https://github.com/surrealzerg/foundry-die-hard-v13/raw/refs/heads/main/module.json",
+    "readme": "https://github.com/surrealzerg/foundry-die-hard-v13/raw/refs/heads/main/README.md",
+    "download": "https://github.com/surrealzerg/foundry-die-hard-v13/raw/refs/heads/main/foundry-die-hard.zip"
 }
